@@ -1,3 +1,4 @@
 //Settings file. Rename to settings.js
 
-exports.port = 3000;
+exports.port = //Port number here
+exports.mongo = //Mongo connection url here

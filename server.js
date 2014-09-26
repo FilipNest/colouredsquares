@@ -4,6 +4,8 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 var url = require('url');
+var MongoClient = require('mongodb').MongoClient;
+var format = require('util').format;
 
 //Settings file
 
@@ -94,9 +96,31 @@ socket.emit('hello',"hello");
 //When user fetches squarefield, parse the url they send and send the relevant squarefield data
     
 socket.on('fetch', function (data) {
-
-socket.emit('load', url.parse(data).pathname)
-      
-  });
     
+var squarefield = url.parse(data).pathname.replace("/","");
+    
+var MongoClient = require('mongodb').MongoClient
+    , format = require('util').format;
+
+  MongoClient.connect(settings.mongo, function(err, db) {
+    if(err) throw err;
+
+    var collection = db.collection('squarefields');
+
+      // Locate all the entries using find
+      collection.find({name:squarefield).toArray(function(err, results) {
+        
+          
+    socket.emit("load",results);
+        
+        //Close the database
+        
+        db.close();    
+          
+      });
+
+  })
+         
+});
+
 });
