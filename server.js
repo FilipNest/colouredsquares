@@ -107,11 +107,9 @@ var MongoClient = require('mongodb').MongoClient
 
     var collection = db.collection('squarefields');
 
-      // Locate all the entries using find
-      collection.find({name:squarefield).toArray(function(err, results) {
-        
+    collection.findOne({name: squarefield}, function(err, document) {     
           
-    socket.emit("load",results);
+    socket.emit("load",document);
         
         //Close the database
         

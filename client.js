@@ -13,8 +13,8 @@ socket.on('hello', function (data) {
 
 socket.on('load',function(data){
 
-if(data[0]){
-document.write("Loaded" + " " + data[0].name);    
+if(data){
+document.write("Loaded" + " " + data.name);    
 }else{
  
 document.write("Failed to load. Does this squarefield exist?");
