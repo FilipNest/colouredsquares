@@ -23,6 +23,8 @@ if(data){
 
 session.squarefield = data.name;
 document.title = "Coloured Squares:"+" "+data.name;
+document.querySelector("#title").innerHTML = data.name;
+
     
 data.squares.forEach(function(element,index){
     
