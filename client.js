@@ -57,7 +57,7 @@ var squareclick = function(square){
     
 var id = square.getAttribute("id").replace("s","");
 
-square.style.backgroundColor = session.colour;
+square.style.background = session.colour;
     
 socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:session.colour})
     
@@ -67,17 +67,36 @@ socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:ses
 
 socket.on("changed",function(data){
     
-document.querySelector("#s"+data.square).style.backgroundColor = data.colour;
+document.querySelector("#s"+data.square).style.background = data.colour;
     
 });
 
-//Hide
+//Navigation
 
-var button = document.querySelector("#palette");
-var panel = document.querySelector("#panel");
+var menu = function(what,where){
+    
+var buttons = document.querySelectorAll('nav button'), content = document.querySelectorAll('.content'), i;
+
+for (i = 0; i < buttons.length; ++i) {
+  buttons[i].setAttribute("class","");
+}
+    
+for (i = 0; i < content.length; ++i) {
+  content[i].style.display = "none";
+}
+
+what.setAttribute("class","active");
+
+document.querySelector("#"+where).style.display = "block";
+    
+};
+
+//Hide
 
 document.querySelector("#palette").onclick = function(e){
 
+var button = document.querySelector("#palette");
+var panel = document.querySelector("#panel");
     
 if(button.getAttribute("class") === "on"){
     
@@ -101,7 +120,7 @@ var red = document.querySelector('input[type=range].red').value;
 var green = document.querySelector('input[type=range].green').value;
 var blue = document.querySelector('input[type=range].blue').value;
       
-document.querySelector("#mixed").style.backgroundColor = "rgb("+red+","+green+","+blue+")";
+document.querySelector("#mixed").style.background = "rgb("+red+","+green+","+blue+")";
     
   }
 
@@ -109,7 +128,62 @@ document.querySelector("#mixed").style.backgroundColor = "rgb("+red+","+green+",
 
 document.querySelector("#mixed").onclick = function(e){
         
-session.colour = e.target.style.backgroundColor;
-document.querySelector(".result").style.backgroundColor = session.colour;
+session.colour = e.target.style.background;
+document.querySelector(".result").src = "";
+document.querySelector(".result").style.background = session.colour;
+    
+};
+
+//Convert image
+
+   function convertImgToBase64(src, callback, outputFormat) {
+    var canvas = document.createElement('CANVAS');
+    var ctx = canvas.getContext('2d');
+    var img = new Image;
+    img.onload = function () {
+        canvas.height = 50;
+        canvas.width = 50;
+        ctx.drawImage(img, 0, 0, 50, 50 * img.height / img.width)
+        var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+        callback.call(this, dataURL);
+        // Clean up
+        canvas = null;
+    };
+    img.src = src;
+}
+
+    
+var convert = function convert(file) {
+
+var file = file.files[0];
+var preview = document.querySelector("#preview");
+  
+var reader  = new FileReader();
+
+reader.onloadend = function () {
+convertImgToBase64(reader.result, function (base64Img) {
+preview.src = reader.result;        
+session.image = base64Img;
+
+});
+  
+  }
+
+  if (file) {
+
+reader.readAsDataURL(file);
+
+  } else {
+    preview.src = "";
+  }
+}
+
+//Select converted image
+
+document.querySelector("#preview").onclick = function(what){
+    
+session.colour = "black url("+session.image+")";
+document.querySelector(".result").src = session.image;
+document.querySelector(".result").style.background = "black";
     
 };

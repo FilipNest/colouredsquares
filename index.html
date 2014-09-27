@@ -1,4 +1,5 @@
 <!doctype HTML>
+<meta name="viewport" content="width=device-width">
 <html>
 <head>
 <title>Coloured Squares</title>
@@ -12,17 +13,17 @@
 <div class="green square"></div>
 <div class="red square"></div>
 <div class="blue square"></div>
-<div class="result square"></div>
+<img class="result square" />
 </div>
 </header>
 <section id="panel" class="off">
 <nav>
-<button id="colour" class="active">Colour</button>
-<button id="image">Image</button>
-<button id="user">Me</button>
-<button id="about">Explore</button>
+<button onclick="menu(this,'colourpicker')" class="active">Colour</button>
+<button onclick="menu(this,'imagepicker')">Image</button>
+<button onclick="menu(this,'me')">Me</button>
+<button onclick="menu(this,'explore')">Explore</button>
 </nav>
-<div class="content">
+<div id="colourpicker" class="content">
 <h2>Colours</h2>
 <p>Pick a colour by mixing red, green and blue. Then touch a square on the squarefield to light it up.</p>
 <label>Red</label><input class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
@@ -31,6 +32,15 @@
 <h3>These colours make. Touch it to use.</h3>
 <div id="mixed"></div>
 </div>
+<div id="imagepicker" class="content">
+<h2>Images</h2>
+<p>Pick an image either by typing in a url or uploading a picture.</p>
+<input type="file" onchange="convert(this)"/>
+<p>You will see a preview of the image below. Touch it when done to select it and then touch a square to light it up.</p>
+<img id="preview" />
+</div>
+<div id="me" class="content"><h2>You</h2></div>
+<div id="explore" class="content"><h2>Explore</h2></div>
 </section>
 <section id="squarefield">
 
