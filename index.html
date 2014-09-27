@@ -25,18 +25,24 @@
 </nav>
 <div id="colourpicker" class="content">
 <h2>Colours</h2>
-<p>Pick a colour by mixing red, green and blue. Then touch a square on the squarefield to light it up.</p>
-<label>Red</label><input class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
-<label>Green</label><input class="green" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
-<label>Blue</label><input class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
-<h3>These colours make. Touch it to use.</h3>
+<p>Make a colour by mixing red, green and blue.</p>
+<div class="slider">
+<label for="red">Red</label><input name="red" class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
+</div>
+<div class="slider">
+<label for="green">Green</label><input name="green" class="green" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
+</div>
+<div class="slider">
+<label for="blue">Blue</label><input name="blue" class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
+</div>
+<h3>Touch the colour you made to use it. Then touch a square on the squarefield to light it up.</h3>
 <div id="mixed"></div>
 </div>
 <div id="imagepicker" class="content">
 <h2>Images</h2>
-<p>Pick an image either by typing in a url or uploading a picture.</p>
+<p>Upload a picture.</p>
 <input type="file" onchange="convert(this)"/>
-<p>You will see a preview of the image below. Touch it when done to select it and then touch a square to light it up.</p>
+<p>You will see a preview of the image below. Touch it when done to select it and then touch a square to light it up with the picture.</p>
 <img id="preview" />
 </div>
 <div id="me" class="content"><h2>You</h2></div>
