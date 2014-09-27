@@ -99,6 +99,9 @@ var type = "text";
       
 switch(extension){
  
+    case "png":
+        type = "image/png";
+        break;
     case "js":
         type = "application/javascript";
         break;
