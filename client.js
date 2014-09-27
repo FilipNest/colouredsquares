@@ -22,6 +22,7 @@ socket.on('load',function(data){
 if(data){
 
 session.squarefield = data.name;
+document.title = "Coloured Squares:"+" "+data.name;
     
 data.squares.forEach(function(element,index){
     
