@@ -11,6 +11,30 @@ var format = require('util').format;
 
 var settings = require('./settings.js');
 
+//Create squarefields collection and home squarefield if they don't already exist
+
+  MongoClient.connect(settings.mongo, function(err, db) {
+    if(err) throw err;
+
+    var collection = db.collection('squarefields');
+
+    collection.findOne({name: "home"}, function(err, document) {     
+              
+        //Close the database
+
+        if(!document){
+         
+        collection.insert({name:"home"},function(err,document){
+            
+        db.close(); 
+            
+        });
+            
+        }
+          
+      });
+  });
+
 //Listen to port in settings file
 
 app.listen(settings.port);
@@ -98,13 +122,18 @@ socket.emit('hello',"hello");
 socket.on('fetch', function (data) {
     
 var squarefield = url.parse(data).pathname.replace("/","");
-    
-var MongoClient = require('mongodb').MongoClient
-    , format = require('util').format;
 
   MongoClient.connect(settings.mongo, function(err, db) {
     if(err) throw err;
 
+    //Load home if no squarefield
+      
+    if(!squarefield){
+        
+    squarefield = "home";
+        
+    }
+      
     var collection = db.collection('squarefields');
 
     collection.findOne({name: squarefield}, function(err, document) {     
