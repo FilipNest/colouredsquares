@@ -181,9 +181,9 @@ reader.readAsDataURL(file);
 //Select converted image
 
 document.querySelector("#preview").onclick = function(what){
-    
+if(session.image){    
 session.colour = "black url("+session.image+")";
 document.querySelector(".result").src = session.image;
 document.querySelector(".result").style.background = "black";
-    
+}
 };
