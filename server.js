@@ -11,6 +11,21 @@ var format = require('util').format;
 
 var settings = require('./settings.js');
 
+//Function for creating squarefield matrix and settings
+
+var create = function(name){
+    
+var i,squares = [];
+for(i=0; i<256; i+=1){
+ 
+squares.push({number:i,colour:"transparent",image:null,access:0});
+    
+}
+    
+return {name:name, squares:squares};
+    
+};
+
 //Create squarefields collection and home squarefield if they don't already exist
 
   MongoClient.connect(settings.mongo, function(err, db) {
@@ -18,13 +33,13 @@ var settings = require('./settings.js');
 
     var collection = db.collection('squarefields');
 
-    collection.findOne({name: "home"}, function(err, document) {     
+    collection.findOne({name:"home"}, function(err, document) {     
               
         //Close the database
 
         if(!document){
          
-        collection.insert({name:"home"},function(err,document){
+        collection.insert(create("home"),function(err,document){
             
         db.close(); 
             
@@ -148,6 +163,29 @@ var squarefield = url.parse(data).pathname.replace("/","");
 
   })
          
+});
+    
+//Change squarefield in database when clicked
+    
+socket.on("squarechange",function(data){
+    
+  MongoClient.connect(settings.mongo, function(err, db) {
+    if(err) throw err;
+      
+    var collection = db.collection('squarefields');
+      
+      var square = parseInt(data.square);
+
+collection.update( { "squares.number": square }, { $set: { "squares.$.colour" : data.colour } },function(err,document){
+   
+socket.broadcast.emit("changed", data);
+    
+ db.close();
+    
+})
+
+  })
+    
 });
 
 });
