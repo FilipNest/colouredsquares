@@ -22,7 +22,7 @@ user-select: none;
 #panel button {background-color:transparent; color:white; border-style:none; padding:12px; font-size:120%; display: inline-block; cursor: pointer; margin:0px; outline:none;}
 #panel button.active {background-color: white; color:#333333;}
 #panel .content {padding:10px; width:270px;}
-#panel input[type="range"] {display: block; width:200px; height:40px;}
+#panel input[type="range"] {width:200px; color:black;}
 #panel label {float:left; width:60px; clear:both; line-height:40px;}
-#panel #mixed {display: block; width:100%; height:50px; background-color:white;}
 #panel h3 {text-align: center; font-weight:normal; font-size:100%;}
+#panel #mixed {display: block; width:100%; height:50px; background-color:white; cursor:pointer;}

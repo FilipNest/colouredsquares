@@ -73,10 +73,10 @@ document.querySelector("#s"+data.square).style.backgroundColor = data.colour;
 
 //Hide
 
-document.querySelector("#palette").onclick = function(e){
-    
 var button = document.querySelector("#palette");
 var panel = document.querySelector("#panel");
+
+document.querySelector("#palette").onclick = function(e){
 
     
 if(button.getAttribute("class") === "on"){
@@ -95,18 +95,21 @@ panel.setAttribute("class","on");
 
 //Colour sliders
 
-var sliders = document.querySelectorAll('input[type=range]'), i;
-
-for (i = 0; i < sliders.length; ++i) {
-  sliders[i].oninput = function(){
+var setcolour = function(){
 
 var red = document.querySelector('input[type=range].red').value;
 var green = document.querySelector('input[type=range].green').value;
 var blue = document.querySelector('input[type=range].blue').value;
       
-session.colour = "rgb("+red+","+green+","+blue+")";
-    
-document.querySelector("#mixed").style.backgroundColor = session.colour;
+document.querySelector("#mixed").style.backgroundColor = "rgb("+red+","+green+","+blue+")";
     
   }
-}
+
+//Select colour
+
+document.querySelector("#mixed").onclick = function(e){
+        
+session.colour = e.target.style.backgroundColor;
+document.querySelector(".result").style.backgroundColor = session.colour;
+    
+};
