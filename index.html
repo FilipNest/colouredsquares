@@ -7,6 +7,31 @@
 <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+<header>
+<div id="palette" class="off">
+<div class="green square"></div>
+<div class="red square"></div>
+<div class="blue square"></div>
+<div class="result square"></div>
+</div>
+</header>
+<section id="panel" class="off">
+<nav>
+<button id="light" class="active">Palette</button>
+<button id="user">Me</button>
+<button id="about">About</button>
+<button id="hide">Done</button>
+</nav>
+<div class="content">
+<h2>Colours</h2>
+<p>Pick a colour by mixing red, green and blue. Then touch a square on the squarefield to light it up.</p>
+<label>Red</label><input class="red" type="range" min="0" max="256"/>
+<label>Green</label><input class="green" type="range" min="0" max="256"/>
+<label>Blue</label><input class="blue" type="range" min="0" max="256"/>
+<h3>These colours make...</h3>
+<div id="mixed"></div>
+</div>
+</section>
 <section id="squarefield">
 
 </section>
