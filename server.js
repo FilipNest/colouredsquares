@@ -385,6 +385,33 @@ cs.fields.findOne({name: name}, function(err, document) {
     
     callback(false);
 };
+    
+//Light up square
+    
+cs.light = function(squarefield,square,colour,user,callback){
+    
+if(!callback){
+
+callback = function(){};
+
+}
+    
+cs.fetchSquarefield(squarefield,function(result){
+
+if(result){
+    
+cs.fields.update({name:squarefield, "squares.number": square},{$set:{"squares.$.colour" : colour}},function(err,document){
+
+callback(document);
+
+})}else{
+    
+}
+    
+});
+    
+};
+
 
 //Create root user and home squarefield if they don't already exist
 
@@ -395,7 +422,12 @@ cs.createSquarefield("home","root","The home squarefield");
 }
 });
 
-//Web Sockets!
+/*
+
+WEBSOCKETS
+Server, meet client.
+
+*/
 
 io.on('connection', function (socket) {
 
@@ -417,7 +449,6 @@ var squarefield = url.parse(data).pathname.replace("/","");
         
     }
 
-
     cs.fetchSquarefield(squarefield, function(document) {     
       
     if(document){
@@ -432,20 +463,17 @@ var squarefield = url.parse(data).pathname.replace("/","");
 //Change squarefield in database when clicked
     
 socket.on("squarechange",function(data){
-      
-    var collection = db.collection('squarefields');
-      
-      var square = parseInt(data.square);
-
-collection.update( { "squares.number": square }, { $set: { "squares.$.colour" : data.colour } },function(err,document){
-   
-socket.broadcast.emit("changed", data);
     
+data.square = parseInt(data.square);
 
+cs.light(data.squarefield,data.square,data.colour,data.user,function(result){
+if(result){
+socket.broadcast.emit("changed", data);
+}
+});
     
 })
     
 });
 
-});
 };

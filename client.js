@@ -12,6 +12,7 @@ socket.on('hello', function (data) {
 //Session settings
 
 session = {};
+session.user = "guest";
 session.squarefield = null;
 session.colour = "rgb(255,255,255)";
 
@@ -62,8 +63,8 @@ var id = square.getAttribute("id").replace("s","");
 
 square.style.background = session.colour;
     
-socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:session.colour})
-    
+socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:session.colour,user:"test"})
+ 
 };
 
 //Change square when changed on server
