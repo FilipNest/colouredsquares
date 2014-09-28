@@ -18,7 +18,7 @@ session.colour = "rgb(255,255,255)";
 //Load requested squarefield
 
 socket.on('load',function(data){
-
+    
 if(data){
 
 session.squarefield = data.name;
@@ -48,8 +48,10 @@ document.querySelector("#squarefield").appendChild(square);
     
 }else{
 
-document.write("Failed to load. Does this squarefield exist?");
-    
+document.title = "Coloured Squares: 404";
+document.querySelector("#title").innerHTML = "404";
+document.querySelector("#description").innerHTML = "Squarefield not found";
+ 
 }
     
 });
