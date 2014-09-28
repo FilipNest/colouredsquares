@@ -115,9 +115,61 @@ res.writeHead(200, {'Content-Type': type,'Content-Length':data.length});
     
 /*
 
-SERVER ROUTING ENDS
+Coloured Squares functions
 
 */
+
+//Wrapper object
+    
+cs = {};
+
+cs.users = db.collection('users');
+cs.fields = db.collection('squarefields');
+
+//Check if username exists
+    
+cs.userexists = function(name,callback){
+    
+cs.users.findOne({name:name}, function(err, document) {
+    
+if(document){
+
+callback(true);
+
+}else{
+    
+callback(false);
+
+}
+    
+    });
+}
+
+//Create user
+    
+var createUser = function(name,email,password){
+    
+cs.userexists(name,function(exists){
+    
+if(!exists){
+    
+cs.users.insert({name:name,password:password,email:email},function(err,document){
+            
+        console.log("User " + name + " created");
+            
+        });
+    
+} else{
+
+console.log("User already exists");
+    
+}
+    
+})
+    
+};
+    
+createUser("filip","filip@bluejumpers.com","rgbw");
     
 //Function for creating squarefield matrix and settings
 
