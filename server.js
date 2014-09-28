@@ -229,23 +229,31 @@ console.log("updated");
 })
 };
 
-//Test functions
+//Check if squarefield exists
     
-//cs.createUser("Test","test@bluejumpers.com","rgbw");
-cs.updateUser("Filip","test@bluejumpers.com","Filip","rgbw","filip@bluejumpers.com",["hello"],["world"]);
+cs.squarefieldexists = function(name,callback){
+    
+cs.fields.findOne({name:name}, function(err, document) {
+    
+if(document){
 
-    
-//Function for creating squarefield matrix and settings
+callback(true);
 
-var create = function(email,password,name,description){
+}else{
     
-if(!name){
- name = email.split("@")[0].replace(".","");   
+callback(false);
+
 }
     
-if(!description){
- description = null;   
+    });
 }
+
+    
+cs.createSquarefield = function(name,owner,description){
+      
+cs.squarefieldexists(name,function(exists){
+    
+if(!exists){
     
 var i,squares = [];
 for(i=1; i<= 256; i+=1){
@@ -254,27 +262,29 @@ squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:
     
 }
     
-return {name:name, description:description, email:email, friends:[], following:[],squares:squares,updated:null};
+var field = {name:name, owner:owner, description:description, friends:[], squares:squares,updated:null};
+    
+cs.fields.insert(field,function(err,document){
+   
+console.log("Created squarefield");
+    
+});
+    
+}else{
+    
+console.log("Already exists");
     
 };
-
-//Create squarefields collection and home squarefield if they don't already exist
-
-    var collection = db.collection('squarefields');
-
-    collection.findOne({name:"home"}, function(err, document) {
-
-        if(!document){
-         
-        collection.insert(create("filip@bluejumpers.com","rgbw","home","The home squarefield"),function(err,document){
-            
-        console.log("inserted");
-            
-        });
-            
-        }
-          
-      });
+    
+});
+    
+};
+    
+//Test functions
+    
+cs.createUser("Filip","filip@bluejumpers.com","rgbw");
+cs.updateUser("Filip","filip@bluejumpers.com","Filip","rgbw","filip@bluejumpers.com",["hello"],["world"]);
+cs.createSquarefield("home","Filip","A test squarefield");
 
 //Web Sockets!
 
