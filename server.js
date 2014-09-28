@@ -248,13 +248,17 @@ callback(false);
     });
 }
 
-    
+//Create new squarefield
+
 cs.createSquarefield = function(name,owner,description){
       
 cs.squarefieldexists(name,function(exists){
     
 if(!exists){
     
+cs.userexists(owner,function(exists){
+if(exists){
+
 var i,squares = [];
 for(i=1; i<= 256; i+=1){
  
@@ -263,16 +267,60 @@ squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:
 }
     
 var field = {name:name, owner:owner, description:description, friends:[], squares:squares,updated:null};
-    
+   
 cs.fields.insert(field,function(err,document){
    
 console.log("Created squarefield");
     
 });
+
+}else{
     
+console.log("user doesn't exist");
+    
+}
+})
+
 }else{
     
 console.log("Already exists");
+    
+};
+    
+});
+    
+};
+    
+//Update squarefield
+    
+cs.updateSquarefield = function(currentname,currentowner,name,owner,description,friends){
+    
+cs.squarefieldexists(name,function(exists){
+    
+if(name === currentname || !exists){
+    
+cs.userexists(owner,function(exists){
+   
+if(exists){
+    
+cs.fields.update({name:currentname},{$set:{name:name,description:description,owner:owner,friends:friends}},function(err,document){
+    
+console.log("updated squarefield");
+    
+})
+    
+    
+}else{
+    
+ console.log("Owner doesn't exist");
+    
+}   
+    
+});
+    
+}else{
+    
+console.log("Squarefield doesn't exist");
     
 };
     
@@ -284,7 +332,8 @@ console.log("Already exists");
     
 cs.createUser("Filip","filip@bluejumpers.com","rgbw");
 cs.updateUser("Filip","filip@bluejumpers.com","Filip","rgbw","filip@bluejumpers.com",["hello"],["world"]);
-cs.createSquarefield("home","Filip","A test squarefield");
+cs.createSquarefield("test","Filip","A test squarefield");
+cs.updateSquarefield("test","Filip","test","Filip","Bang test squarefield",[]);
 
 //Web Sockets!
 
