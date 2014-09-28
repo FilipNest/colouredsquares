@@ -166,7 +166,13 @@ callback(false);
 
 //Create user
     
-cs.createUser = function(name,email,password){
+cs.createUser = function(name,email,password,callback){
+    
+if(!callback){
+ 
+callback = function(){};
+    
+}
     
 cs.userexists(name,function(exists){
     
@@ -181,13 +187,15 @@ if(!exists){
 cs.users.insert({name:name,password:password,email:email,friends:[],bookmarks:[]},function(err,document){
             
         console.log("User " + name + " created");
-            
+        callback(document);
+
         });
     
 }else{
               
             console.log("email already in use");
-              
+    callback(false)
+    
               }
 });
               
@@ -195,15 +203,21 @@ cs.users.insert({name:name,password:password,email:email,friends:[],bookmarks:[]
               } else{
 
 console.log("User already exists");
-    
+    callback(false);
 }
     
 })
     
 };
     
-cs.updateUser = function(currentname,currentemail,name,password,email,friends,bookmarks){
+cs.updateUser = function(currentname,currentemail,name,password,email,friends,bookmarks,callback){
   
+if(!callback){
+ 
+callback = function(){};
+    
+}    
+
 cs.userexists(name,function(exists){
     
 if(!exists || name === currentname){
@@ -214,17 +228,18 @@ if(!exists || email === currentemail){
 cs.users.update({name:currentname},{name:name,email:email,password:password,friends:friends,bookmarks:bookmarks},function(err,document){
     
 console.log("updated");
+callback(document);
     
 })
 }else {
     
     console.log("email in use");
-    
+    callback(false);
 }});
                  }else{
                      
                   console.log("Name already in use");
-                     
+                     callback(false);
                  }
 })
 };
@@ -250,8 +265,14 @@ callback(false);
 
 //Create new squarefield
 
-cs.createSquarefield = function(name,owner,description){
-      
+cs.createSquarefield = function(name,owner,description,callback){
+
+if(!callback){
+ 
+callback = function(){};
+    
+}
+    
 cs.squarefieldexists(name,function(exists){
     
 if(!exists){
@@ -271,19 +292,23 @@ var field = {name:name, owner:owner, description:description, friends:[], square
 cs.fields.insert(field,function(err,document){
    
 console.log("Created squarefield");
+
+callback(document);
     
 });
 
 }else{
     
 console.log("user doesn't exist");
-    
+callback(false);   
+
 }
 })
 
 }else{
     
 console.log("Already exists");
+callback(false);
     
 };
     
@@ -293,7 +318,13 @@ console.log("Already exists");
     
 //Update squarefield
     
-cs.updateSquarefield = function(currentname,currentowner,name,owner,description,friends){
+cs.updateSquarefield = function(currentname,currentowner,name,owner,description,friends,callback){
+
+if(!callback){
+ 
+callback = function(){};
+    
+}
     
 cs.squarefieldexists(name,function(exists){
     
@@ -306,14 +337,14 @@ if(exists){
 cs.fields.update({name:currentname},{$set:{name:name,description:description,owner:owner,friends:friends}},function(err,document){
     
 console.log("updated squarefield");
-    
+callback(document);    
 })
     
     
 }else{
     
  console.log("Owner doesn't exist");
-    
+   callback(false); 
 }   
     
 });
@@ -321,6 +352,7 @@ console.log("updated squarefield");
 }else{
     
 console.log("Squarefield doesn't exist");
+callback(false);
     
 };
     
@@ -328,12 +360,40 @@ console.log("Squarefield doesn't exist");
     
 };
     
-//Test functions
+//Fetch user
     
-cs.createUser("Filip","filip@bluejumpers.com","rgbw");
-cs.updateUser("Filip","filip@bluejumpers.com","Filip","rgbw","filip@bluejumpers.com",["hello"],["world"]);
-cs.createSquarefield("test","Filip","A test squarefield");
-cs.updateSquarefield("test","Filip","test","Filip","Bang test squarefield",[]);
+cs.fetchUser = function(name,callback){
+    
+cs.users.findOne({name: name}, function(err, document) {     
+          
+    callback(document);   
+          
+      });
+    
+    callback(false);
+};
+    
+//Fetch squarefield
+
+cs.fetchSquarefield = function(name,callback){
+    
+cs.fields.findOne({name: name}, function(err, document) {     
+          
+    callback(document);   
+          
+      });
+    
+    callback(false);
+};
+
+//Create root user and home squarefield if they don't already exist
+
+cs.createUser("root","filip@bluejumpers.com","rgbw",function(result){
+    
+if(result){
+cs.createSquarefield("home","root","The home squarefield"); 
+}
+});
 
 //Web Sockets!
 
