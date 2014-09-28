@@ -1,63 +1,28 @@
-//Requred modules
-
-var app = require('http').createServer(handler)
-var io = require('socket.io')(app);
-var fs = require('fs');
-var url = require('url');
-var MongoClient = require('mongodb').MongoClient;
-var format = require('util').format;
-
 //Settings file
 
 var settings = require('./settings.secret');
 
-//Function for creating squarefield matrix and settings
 
-var create = function(email,password,name,description){
-    
-if(!name){
- name = email.split("@")[0].replace(".","");   
-}
-    
-if(!description){
- description = null;   
-}
-    
-var i,squares = [];
-for(i=1; i<= 256; i+=1){
- 
-squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:2}});
-    
-}
-    
-return {name:name, description:description, email:email, friends:[], following:[],squares:squares,updated:null};
-    
-};
+//Connect to database and trigger ready event when done;
 
-//Create squarefields collection and home squarefield if they don't already exist
-
-  MongoClient.connect(settings.mongo, function(err, db) {
+var MongoClient = require('mongodb').MongoClient;
+MongoClient.connect(settings.mongo, function(err, db) {
     if(err) throw err;
+    ready(db);
+})
 
-    var collection = db.collection('squarefields');
+//Coloured Squares
 
-    collection.findOne({name:"home"}, function(err, document) {     
-              
-        //Close the database
-
-        if(!document){
-         
-        collection.insert(create("filip@bluejumpers.com","rgbw","home","The home squarefield"),function(err,document){
-            
-        db.close(); 
-            
-        });
-            
-        }
-          
-      });
-  });
-
+var ready = function(db){
+    
+var app = require('http').createServer(handler)
+var io = require('socket.io')(app);
+var fs = require('fs');
+var url = require('url');
+var format = require('util').format;
+    
+//Server and routing
+    
 //Listen to port in settings file
 
 app.listen(settings.port);
@@ -140,6 +105,47 @@ res.writeHead(200, {'Content-Type': type,'Content-Length':data.length});
         
     }
 }
+    
+//Function for creating squarefield matrix and settings
+
+var create = function(email,password,name,description){
+    
+if(!name){
+ name = email.split("@")[0].replace(".","");   
+}
+    
+if(!description){
+ description = null;   
+}
+    
+var i,squares = [];
+for(i=1; i<= 256; i+=1){
+ 
+squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:2}});
+    
+}
+    
+return {name:name, description:description, email:email, friends:[], following:[],squares:squares,updated:null};
+    
+};
+
+//Create squarefields collection and home squarefield if they don't already exist
+
+    var collection = db.collection('squarefields');
+
+    collection.findOne({name:"home"}, function(err, document) {
+
+        if(!document){
+         
+        collection.insert(create("filip@bluejumpers.com","rgbw","home","The home squarefield"),function(err,document){
+            
+        console.log("inserted");
+            
+        });
+            
+        }
+          
+      });
 
 //Web Sockets!
 
@@ -155,9 +161,6 @@ socket.on('fetch', function (data) {
     
 var squarefield = url.parse(data).pathname.replace("/","");
 
-  MongoClient.connect(settings.mongo, function(err, db) {
-    if(err) throw err;
-
     //Load home if no squarefield
       
     if(!squarefield){
@@ -170,24 +173,15 @@ var squarefield = url.parse(data).pathname.replace("/","");
 
     collection.findOne({name: squarefield}, function(err, document) {     
           
-    socket.emit("load",document);
-        
-        //Close the database
-        
-        db.close();    
+    socket.emit("load",document);   
           
       });
-
-  })
          
 });
     
 //Change squarefield in database when clicked
     
 socket.on("squarechange",function(data){
-    
-  MongoClient.connect(settings.mongo, function(err, db) {
-    if(err) throw err;
       
     var collection = db.collection('squarefields');
       
@@ -197,12 +191,11 @@ collection.update( { "squares.number": square }, { $set: { "squares.$.colour" : 
    
 socket.broadcast.emit("changed", data);
     
- db.close();
+
     
 })
-
-  })
     
 });
 
 });
+};

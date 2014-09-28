@@ -13,7 +13,7 @@ socket.on('hello', function (data) {
 
 session = {};
 session.squarefield = null;
-session.colour = "rgb(255,0,0)";
+session.colour = "rgb(255,255,255)";
 
 //Load requested squarefield
 
@@ -53,8 +53,6 @@ document.write("Failed to load. Does this squarefield exist?");
 }
     
 });
-
-var colour = "rgb(255,0,0)";
 
 var squareclick = function(square){
     
