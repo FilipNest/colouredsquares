@@ -9,20 +9,28 @@ var format = require('util').format;
 
 //Settings file
 
-var settings = require('./settings.js');
+var settings = require('./settings.secret');
 
 //Function for creating squarefield matrix and settings
 
-var create = function(name){
+var create = function(email,password,name,description){
+    
+if(!name){
+ name = email.split("@")[0].replace(".","");   
+}
+    
+if(!description){
+ description = null;   
+}
     
 var i,squares = [];
-for(i=0; i<256; i+=1){
+for(i=1; i<= 256; i+=1){
  
-squares.push({number:i,colour:"transparent",image:null,access:0});
+squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:2}});
     
 }
     
-return {name:name, squares:squares};
+return {name:name, description:description, email:email, friends:[], following:[],squares:squares,updated:null};
     
 };
 
@@ -39,7 +47,7 @@ return {name:name, squares:squares};
 
         if(!document){
          
-        collection.insert(create("home"),function(err,document){
+        collection.insert(create("filip@bluejumpers.com","rgbw","home","The home squarefield"),function(err,document){
             
         db.close(); 
             
@@ -114,10 +122,16 @@ switch(extension){
 }
         
 //Send file
-    
+  
+if(extension !== "secret"){
 res.writeHead(200, {'Content-Type': type,'Content-Length':data.length});
         res.write(data);
         res.end();
+}else{
+     
+    res.end("Not like this.");
+        
+    }
     }
   });
         

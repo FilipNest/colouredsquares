@@ -1,4 +1,5 @@
-html {height: 100%; font-size:16px; font-family: arial;}
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+html {height: 100%; font-size:16px; font-family: Montserrat;}
 body {margin:0; padding:0;}
 header {width:100%; position:fixed; top:0; z-index:1; background-color: white; border-width: 0 0 2px 0; border-color:black; border-style: solid; height:90px;
 -webkit-touch-callout: none;
@@ -8,7 +9,8 @@ header {width:100%; position:fixed; top:0; z-index:1; background-color: white; b
 -ms-user-select: none;
 user-select: none;
 }
-h1#title {width:100%; text-align: center; position: absolute; top:10px; text-transform:capitalize; z-index:0;}
+h1#title {width:100%; text-align: center; position:relative; margin:0; text-transform:capitalize; z-index:0; top:-36px;}
+h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: normal; position: relative; top:-55px;}
 #squarefield {width:864px; height:864px; position:relative; top:100px; z-index:0; margin:auto; padding:15px;}
 .square {float:left; width:50px; height:50px; margin:2px; cursor: pointer; transition: background 500ms;}
 #palette {z-index:1; width:54px; height:54px; position:relative; border-style:solid; border-color:#333333; left:15px; top:15px;}

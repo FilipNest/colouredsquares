@@ -24,6 +24,7 @@ if(data){
 session.squarefield = data.name;
 document.title = "Coloured Squares:"+" "+data.name;
 document.querySelector("#title").innerHTML = data.name;
+document.querySelector("#description").innerHTML = data.description;
 
     
 data.squares.forEach(function(element,index){
