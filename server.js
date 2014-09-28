@@ -166,7 +166,7 @@ callback(false);
 
 //Create user
     
-var createUser = function(name,email,password){
+cs.createUser = function(name,email,password){
     
 cs.userexists(name,function(exists){
     
@@ -175,8 +175,10 @@ if(!exists){
 cs.emailexists(email,function(exists){
     
 if(!exists){
+
+//Database check passed. Still need content validation.
     
-cs.users.insert({name:name,password:password,email:email},function(err,document){
+cs.users.insert({name:name,password:password,email:email,friends:[],bookmarks:[]},function(err,document){
             
         console.log("User " + name + " created");
             
@@ -200,7 +202,38 @@ console.log("User already exists");
     
 };
     
-createUser("Filip","filip@bluejumpers.com","rgbw");
+cs.updateUser = function(currentname,currentemail,name,password,email,friends,bookmarks){
+  
+cs.userexists(name,function(exists){
+    
+if(!exists || name === currentname){
+    
+cs.emailexists(email,function(exists){
+    
+if(!exists || email === currentemail){
+cs.users.update({name:currentname},{name:name,email:email,password:password,friends:friends,bookmarks:bookmarks},function(err,document){
+    
+console.log("updated");
+    
+})
+}else {
+    
+    console.log("email in use");
+    
+}});
+                 }else{
+                     
+                  console.log("Name already in use");
+                     
+                 }
+})
+};
+
+//Test functions
+    
+//cs.createUser("Test","test@bluejumpers.com","rgbw");
+cs.updateUser("Filip","test@bluejumpers.com","Filip","rgbw","filip@bluejumpers.com",["hello"],["world"]);
+
     
 //Function for creating squarefield matrix and settings
 
