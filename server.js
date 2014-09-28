@@ -145,11 +145,34 @@ callback(false);
     });
 }
 
+//Check if email is in use
+
+cs.emailexists = function(email,callback){
+    
+cs.users.findOne({email:email}, function(err, document) {
+    
+if(document){
+
+callback(true);
+
+}else{
+    
+callback(false);
+
+}
+    
+    });
+}
+
 //Create user
     
 var createUser = function(name,email,password){
     
 cs.userexists(name,function(exists){
+    
+if(!exists){
+    
+cs.emailexists(email,function(exists){
     
 if(!exists){
     
@@ -159,7 +182,15 @@ cs.users.insert({name:name,password:password,email:email},function(err,document)
             
         });
     
-} else{
+}else{
+              
+            console.log("email already in use");
+              
+              }
+});
+              
+              
+              } else{
 
 console.log("User already exists");
     
@@ -169,7 +200,7 @@ console.log("User already exists");
     
 };
     
-createUser("filip","filip@bluejumpers.com","rgbw");
+createUser("Filip","filip@bluejumpers.com","rgbw");
     
 //Function for creating squarefield matrix and settings
 
