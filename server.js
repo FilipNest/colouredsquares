@@ -416,13 +416,15 @@ var squarefield = url.parse(data).pathname.replace("/","");
     squarefield = "home";
         
     }
-      
-    var collection = db.collection('squarefields');
 
-    collection.findOne({name: squarefield}, function(err, document) {     
-          
-    socket.emit("load",document);   
-          
+
+    cs.fetchSquarefield(squarefield, function(document) {     
+      
+    if(document){
+    socket.emit("load",document); 
+    }else{
+    socket.emit("load",null);    
+    }
       });
          
 });
