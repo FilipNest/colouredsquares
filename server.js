@@ -2,18 +2,16 @@
 
 var settings = require('./settings.secret');
 
-
 //Connect to database and trigger ready event when done;
 
-var MongoClient = require('mongodb').MongoClient;
-MongoClient.connect(settings.mongo, function(err, db) {
+require('mongodb').MongoClient.connect(settings.mongo, function(err, db) {
     if(err) throw err;
-    ready(db);
+    db_ready(db);
 })
 
-//Coloured Squares
+var db_ready = function(db){
 
-var ready = function(db){
+//Required modules
     
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
@@ -21,7 +19,11 @@ var fs = require('fs');
 var url = require('url');
 var format = require('util').format;
     
-//Server and routing
+/*
+
+SERVER ROUTING
+
+*/
     
 //Listen to port in settings file
 
@@ -35,7 +37,7 @@ function handler (req, res) {
     
     if(req.url !== "favicon.ico"){
 
-//Home page
+//Redirect document root to home page
     
     if(req.url === "/"){
      
@@ -57,10 +59,8 @@ fs.exists(__dirname + req.url, function(exists) {
     fs.readFile(__dirname + req.url,
   function (err, data) {
     if (err) {
-    
-    //File didn't load but exists!?
         
-    res.end("something went wrong");
+    res.end("File didn't load but exists!?");
         
     }else{
         
@@ -68,7 +68,11 @@ fs.exists(__dirname + req.url, function(exists) {
 
 var extension = req.url.split(".")[1];
 
+//Set default type
+
 var type = "text";
+        
+//Change type depending on extention
       
 switch(extension){
  
@@ -86,14 +90,17 @@ switch(extension){
         break
 }
         
-//Send file
+//Send file, unless it's a secret like the settings file
   
 if(extension !== "secret"){
 res.writeHead(200, {'Content-Type': type,'Content-Length':data.length});
         res.write(data);
         res.end();
 }else{
-     
+    
+    // Access denied
+    
+    res.writeHead(403);
     res.end("Not like this.");
         
     }
@@ -105,6 +112,12 @@ res.writeHead(200, {'Content-Type': type,'Content-Length':data.length});
         
     }
 }
+    
+/*
+
+SERVER ROUTING ENDS
+
+*/
     
 //Function for creating squarefield matrix and settings
 
