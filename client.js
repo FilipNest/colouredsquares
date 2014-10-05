@@ -304,13 +304,18 @@ socket.on("signedin",function(user){
     
 session.username = user.name;
 session.userid = user.id;
+
+//Returning user
+    
+if(!user.first){    
 document.querySelector("#personal").innerHTML = "<h2>Hello " + user.name + "</h2>";
-    
-if(user.first){
+}else{
  
-document.querySelector("#personal").innerHTML += "First log in!";
+//New user
     
-}
+document.querySelector("#personal").innerHTML = "<h2>Welcome to your own little part of Coloured Squares</h2><p>Your username is currently &ldquo;"+user.name+"&rdquo;. Change it to something more memorable below. One word, under 15 charcaters.</p><input /><br /><button>Change username</button><button>Skip</button>";
+    
+};
     
 });
 

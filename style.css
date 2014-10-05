@@ -21,12 +21,13 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 #palette .green {background-color:green;}
 #palette .blue {background-color:blue;}
 #palette .result {background-color:white;}
-#panel {background-color:#333333; height:380px; position:fixed; top:92px; z-index:1; color:white; border-style:solid; border-color:#333333; border-width:0 2px 0 0; opacity:1; transition: left 200ms; left:0; bottom:0;}
+#panel {background-color:#333333; height:100%; position:fixed; top:92px; z-index:1; color:white; border-style:solid; border-color:#333333; border-width:0 2px 0 0; opacity:1; transition: left 200ms; left:0; bottom:0;}
 #panel.off {left:-1000px;}
 #panel nav {border-style:solid; border-width:0 0 2px 0;}
-#panel button {background-color:transparent; color:white; border-style:none; padding:5px; font-weight: bold; display: inline-block; cursor: pointer; margin:0px; outline:none;}
+#panel nav button {background-color:transparent; color:white; border-style:none; padding:5px; font-weight: bold; display: inline-block; cursor: pointer; margin:0px; outline:none;}
+#panel nav button.active {background-color: white; color:#333333;}
+#panel button {font-weight:bold; cursor:pointer; border-style:none; padding:5px; color:#333333; background-color:white;}
 #panel p {font-size:80%;}
-#panel button.active {background-color: white; color:#333333;}
 #panel h2 {margin:0px;}
 #panel .content {padding:10px; width:280px; display: none;}
 #panel .content#colourpicker {display: block;}
@@ -53,7 +54,7 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 #passviolet {background-color:violet;}
 #passwhite {background-color:white;}
 
-#passwordpicked {float:right; width:50px; position:relative; top:-5px; left:5px; text-transform:capitalize;}
+#passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
 
 
 @media (max-width: 400px) {
