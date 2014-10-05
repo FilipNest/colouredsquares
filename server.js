@@ -530,14 +530,19 @@ if(!result){
     
 //Set username as total user count
     
-var username = Math.random();
+cs.users.count(function(error, total) {
+
+var username = total;
     
 cs.createUser(username,data.email,data.password,function(){
     
 socket.firsttime = true;
     
 socket.emit("signedup");
+
     
+});
+        
 })
     
 }else{
