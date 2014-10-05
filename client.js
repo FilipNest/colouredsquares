@@ -313,11 +313,18 @@ document.querySelector("#personal").innerHTML = "<h2>Hello " + user.name + "</h2
  
 //New user
     
-document.querySelector("#personal").innerHTML = "<h2>Welcome to your own little part of Coloured Squares</h2><p>Your username is currently &ldquo;"+user.name+"&rdquo;. Change it to something more memorable below. One word, under 15 charcaters.</p><input /><br /><button>Change username</button><button>Skip</button>";
+document.querySelector("#personal").innerHTML = "<h2>Welcome to your own little part of Coloured Squares</h2><p>Your username is currently &ldquo;"+user.name+"&rdquo;. Change it to something more memorable below. One word, under 15 charcaters.</p><input id='newusername'/><br /><button onclick=changeusername(this)>Change username</button><button>Skip</button>";
     
 };
     
 });
+
+var changeusername = function(field){
+    
+console.log(session.userid);
+console.log(document.querySelector("#newusername").value);
+    
+};
 
 socket.on("signedup",function(){
 
