@@ -1,12 +1,29 @@
 //Settings file
 
 var settings = require('./settings.secret');
-
+  
 //Connect to database and trigger ready event when done;
 
 require('mongodb').MongoClient.connect(settings.mongo, function(err, db) {
     if(err) throw err;
-    db_ready(db);
+    
+////TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
+//    
+//db.collection('squarefields').remove(function(){
+//    
+//console.log("squarefields empty");
+//
+//db.collection('users').remove(function(){
+//
+//console.log("users empty");
+//db_ready(db);
+//    
+//});
+//
+//});
+    
+db_ready(db);
+
 })
 
 var db_ready = function(db){
@@ -15,6 +32,7 @@ var db_ready = function(db){
     
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
+var ObjectID = require('mongodb').ObjectID;
 var fs = require('fs');
 var url = require('url');
 var format = require('util').format;
@@ -281,9 +299,9 @@ cs.userexists(owner,function(exists){
 if(exists){
 
 var i,squares = [];
-for(i=1; i<= 256; i+=1){
+for(i=0; i< 256; i+=1){
  
-squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:2}});
+squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:2}, author:"Server"});
     
 }
     
@@ -300,7 +318,7 @@ callback(document);
 }else{
     
 console.log("user doesn't exist");
-callback(false);   
+return false;   
 
 }
 })
@@ -308,7 +326,7 @@ callback(false);
 }else{
     
 console.log("Already exists");
-callback(false);
+return false;
     
 };
     
@@ -344,7 +362,7 @@ callback(document);
 }else{
     
  console.log("Owner doesn't exist");
-   callback(false); 
+   return false; 
 }   
     
 });
@@ -352,7 +370,7 @@ callback(document);
 }else{
     
 console.log("Squarefield doesn't exist");
-callback(false);
+return false;
     
 };
     
@@ -360,17 +378,34 @@ callback(false);
     
 };
     
-//Fetch user
+//Fetch user by email
     
-cs.fetchUser = function(name,callback){
+cs.fetchUserbyEmail = function(email,callback){
     
-cs.users.findOne({name: name}, function(err, document) {     
+cs.users.findOne({email: email}, function(err, document) {     
           
     callback(document);   
           
       });
     
     callback(false);
+};
+    
+//Fetch user by id
+    
+cs.fetchUserbyID = function(id,callback){
+    
+if(id){
+id = ObjectID.createFromHexString(id);
+}else{
+ callback(false);
+}
+    
+cs.users.findOne({_id:id}, function(err, document) {     
+    callback(document); 
+      });
+    
+    return true;
 };
     
 //Fetch squarefield
@@ -388,7 +423,7 @@ cs.fields.findOne({name: name}, function(err, document) {
     
 //Light up square
     
-cs.light = function(squarefield,square,colour,user,callback){
+cs.light = function(squarefield,square,colour,userid,callback){
     
 if(!callback){
 
@@ -400,7 +435,7 @@ cs.fetchSquarefield(squarefield,function(result){
 
 if(result){
     
-cs.fields.update({name:squarefield, "squares.number": square},{$set:{"squares.$.colour" : colour}},function(err,document){
+cs.fields.update({name:squarefield, "squares.number": square},{$set:{"squares.$.colour" : colour,"squares.$.author":userid}},function(err,document){
 
 callback(document);
 
@@ -419,6 +454,7 @@ cs.createUser("root","filip@bluejumpers.com","rgbw",function(result){
     
 if(result){
 cs.createSquarefield("home","root","The home squarefield"); 
+    
 }
 });
 
@@ -454,7 +490,7 @@ var squarefield = url.parse(data).pathname.replace("/","");
     if(document){
     socket.emit("load",document); 
     }else{
-    socket.emit("load",null);    
+    socket.emit("load",null);
     }
       });
          
@@ -465,15 +501,94 @@ var squarefield = url.parse(data).pathname.replace("/","");
 socket.on("squarechange",function(data){
     
 data.square = parseInt(data.square);
+        
+//Get user from ID for proper attribution of square
 
-cs.light(data.squarefield,data.square,data.colour,data.user,function(result){
+cs.fetchUserbyID(data.user,function(user){
+
+if(!user){
+var user = {name:"guest"};
+}
+        
+cs.light(data.squarefield,data.square,data.colour,socket.user,function(result){
 if(result){
-socket.broadcast.emit("changed", data);
+socket.broadcast.emit("changed", {square:data,user:user.name});
 }
 });
+
+})
+    
+})
+
+
+socket.on("signup",function(data){
+  
+cs.emailexists(data.email,function(result){
+  
+if(!result){
+    
+//Set username as total user count
+    
+var username = Math.random();
+    
+cs.createUser(username,data.email,data.password,function(){
+    
+socket.firsttime = true;
+    
+socket.emit("signedup");
     
 })
     
+}else{
+ 
+console.log("email already in use");
+    
+}
+
+})
+
+});
+    
+socket.on("signin",function(data){
+    
+cs.emailexists(data.email,function(result){
+  
+if(result){
+     
+cs.fetchUserbyEmail(data.email,function(user){
+  
+if(user.password === data.password){
+ 
+socket.user = user._id;
+console.log("signed in");
+socket.emit("signedin",{name:user.name,id:user._id,first:socket.firsttime});
+    
+}else{
+    
+console.log("wrong password");
+    
+};
+    
+})
+    
+}else{
+    
+console.log("email not associated with an account");
+    
+}
+
+})
+
 });
 
+//Check logged in user
+
+socket.on("checkuser", function(){
+
+socket.emit("currentuser",socket.user);
+
+});
+
+//Socket conection function ends    
+});
 };

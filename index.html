@@ -48,7 +48,33 @@
 <p>You will see a preview of the image below. Touch it when done to select it and then touch a square to light it up with the picture.</p>
 <img id="preview" />
 </div>
-<div id="personal" class="content"><h2>You</h2></div>
+<div id="personal" class="content">
+<h2>You</h2>
+<div id="signinform">
+<p>Sign up or in to create your own squarefields and keep track of things and people you like.</p>    
+<label>Email</label><input id="email" type="email"/><br />
+<p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
+
+
+<div id="passwordpicker">
+<div class="square" id="passred" onclick=passinput("red")></div>
+<div class="square" id="passorange" onclick=passinput("orange")></div>
+<div class="square" id="passyellow" onclick=passinput("yellow")></div>
+<div class="square" id="passgreen" onclick=passinput("green")></div>
+<div class="square" id="passblue" onclick=passinput("blue")></div>
+<div class="square" id="passindigo" onclick=passinput("indigo")></div>
+<div class="square" id="passviolet" onclick=passinput("violet")></div>
+<div class="square" id="passwhite" onclick=passinput("white")></div>
+</div>
+    
+<div id="passwordpicked">
+
+</div>
+    
+<button onclick=signin()>Sign In</button>
+<button onclick=signup()>New Account</button>
+</div>
+</div>
 <div id="this" class="content">
 <h2>This Squarefield</h2>
 <p>This is a squarefield created by Filip</p>

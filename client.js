@@ -12,7 +12,8 @@ socket.on('hello', function (data) {
 //Session settings
 
 session = {};
-session.user = "guest";
+session.username = "guest";
+session.userid = null;
 session.squarefield = null;
 session.colour = "rgb(255,255,255)";
 
@@ -30,11 +31,18 @@ document.querySelector("#description").innerHTML = data.description;
     
 data.squares.forEach(function(element,index){
     
+//Set guest author
+    
+if(!data.squares[index].author){
+data.squares[index].author = "guest";    
+}
+
 var square = document.createElement("div");
 square.setAttribute("id","s"+index);
 square.setAttribute("class","square");
 square.setAttribute("data-access",data.squares[index].access);
-
+square.setAttribute("data-author",data.squares[index].author);
+square.innerHTML = "<span class='author'>"+data.squares[index].author+"</span>";
 square.style.background = data.squares[index].colour;
     
 square.onclick = function(square){
@@ -62,8 +70,8 @@ var squareclick = function(square){
 var id = square.getAttribute("id").replace("s","");
 
 square.style.background = session.colour;
-    
-socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:session.colour,user:"test"})
+square.setAttribute("data-author",session.username);    
+socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:session.colour,user:session.userid})
  
 };
 
@@ -71,7 +79,16 @@ socket.emit("squarechange",{squarefield:session.squarefield,square:id,colour:ses
 
 socket.on("changed",function(data){
     
-document.querySelector("#s"+data.square).style.background = data.colour;
+var square = document.querySelector("#s"+data.square.square);
+    
+square.style.background = data.square.colour;
+
+//Set authorship
+    
+square.setAttribute("data-author",data.user);
+square.innerhtml = "<span class='author'>"+data.user+"</span>";
+
+    
     
 });
 
@@ -145,9 +162,9 @@ document.querySelector(".result").style.background = session.colour;
     var ctx = canvas.getContext('2d');
     var img = new Image;
     img.onload = function () {
-        canvas.height = 50;
-        canvas.width = 50;
-        ctx.drawImage(img, 0, 0, 50, 50 * img.height / img.width)
+        canvas.height = 100;
+        canvas.width = 100;
+        ctx.drawImage(img, 0, 0, 100, 100)
         var dataURL = canvas.toDataURL(outputFormat || 'image/png');
         callback.call(this, dataURL);
         // Clean up
@@ -155,7 +172,6 @@ document.querySelector(".result").style.background = session.colour;
     };
     img.src = src;
 }
-
     
 var convert = function convert(file) {
 
@@ -191,3 +207,77 @@ document.querySelector(".result").src = session.image;
 document.querySelector(".result").style.background = "black";
 }
 };
+
+//Sign up and sign in functions
+
+//Write password
+
+session.password = "";
+
+var passinput = function(colour){
+    
+var picked = document.querySelector("#passwordpicked");
+
+if(session.password.length > 3){
+    
+session.password = "";
+picked.innerHTML = "";
+    
+}
+    
+session.password += colour.charAt(0);
+        
+picked.innerHTML += "<br />" + colour;
+    
+}
+
+var signin = function(){
+    
+var user = {};
+user.email = document.querySelector("#email").value;
+user.password = session.password;
+    
+socket.emit("signin",user);    
+    
+};
+
+var signup = function(){
+
+var user = {};
+user.email = document.querySelector("#email").value;
+user.password = session.password;
+    
+socket.emit("signup",user);
+    
+};
+
+var checkuser = function(){
+socket.emit("checkuser");
+
+socket.on("currentuser",function(data){
+
+console.log(data);
+    
+})
+return "checking";
+};
+
+socket.on("signedin",function(user){
+    
+session.username = user.name;
+session.userid = user.id;
+document.querySelector("#personal").innerHTML = "<h2>Hello " + user.name + "</h2>";
+    
+if(user.first){
+ 
+document.querySelector("#personal").innerHTML += "First log in!";
+    
+}
+    
+});
+
+socket.on("signedup",function(){
+
+signin();
+
+});

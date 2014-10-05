@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
-html {height: 100%; font-size:16px; font-family: Montserrat;}
+html {height: 100%; font-size:16px; font-family: Montserrat, sans-serif;}
 body {margin:0; padding:0;}
 header {width:100%; position:fixed; top:0; z-index:1; background-color: white; border-width: 0 0 2px 0; border-color:black; border-style: solid; height:90px;
 -webkit-touch-callout: none;
@@ -11,8 +11,9 @@ user-select: none;
 }
 h1#title {width:100%; text-align: center; position:relative; margin:0; text-transform:capitalize; z-index:0; top:-36px;}
 h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: normal; position: relative; top:-55px;}
-#squarefield {width:864px; height:864px; position:relative; top:100px; z-index:0; margin:auto; padding:15px;}
-.square {float:left; width:50px; height:50px; margin:2px; cursor: pointer; transition: background 500ms;}
+#squarefield {width:1728px; height:1728px; position:relative; top:100px; z-index:0; margin:auto; padding:15px;}
+.square {float:left; width:100px; height:100px; margin:4px; cursor: pointer; transition: background 500ms;}
+.square .author {font-size:80%; text-align:right; position:relative; top:70px; background-color:white; padding:2px; display:none;}
 #palette {z-index:1; width:54px; height:54px; position:relative; border-style:solid; border-color:#333333; left:15px; top:15px;}
 #palette .square {width:25px; height:25px; margin:1px;}
 #palette .red {background-color:red;}
@@ -33,6 +34,22 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 #panel #mixed {display: block; width:100%; height:50px; background-color:white; cursor:pointer;}
 #preview {width:200px; height:200px; margin:auto; display: block; cursor: pointer;}
 
+#signinform input {margin-bottom:10px;}
+#signinform label {width:100px; margin-right:10px;}
+#signinform button {color:#333333; background-color:white; cursor:pointer; display:inline-block; width:123px; margin:10px auto;}
+
+#passwordpicker {width:220px; float:left;}
+#passwordpicker .square {width:50px; height:50px; margin:2px;}
+#passred {background-color:red;}
+#passorange {background-color:orange;}
+#passyellow {background-color:yellow;}
+#passgreen {background-color:green;}
+#passblue {background-color:blue;}
+#passindigo {background-color:indigo;}
+#passviolet {background-color:violet;}
+#passwhite {background-color:white;}
+
+#passwordpicked {float:right; width:50px; position:relative; top:-5px; left:5px; text-transform:capitalize;}
 
 @keyframes rotating {
   from {
