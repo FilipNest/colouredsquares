@@ -13,7 +13,7 @@ user-select: none;
 h1#title {width:100%; text-align: center; position:relative; margin:0; text-transform:capitalize; z-index:0; top:-36px;}
 h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: normal; position: relative; top:-55px;}
 #squarefield {width:1728px; height:1728px; position:relative; top:100px; z-index:0; margin:auto; padding:15px;}
-.square {float:left; width:100px; height:100px; margin:4px; cursor: pointer; transition: background 500ms;}
+.square {float:left; width:100px; height:100px; margin:4px; cursor: pointer; transition: background 500ms; background-position:center center !important;}
 .square .author {font-size:80%; text-align:right; position:relative; top:70px; background-color:white; padding:2px; display:none;}
 #palette {z-index:1; width:54px; height:54px; position:relative; border-style:solid; border-color:#333333; left:15px; top:15px;}
 #palette .square {width:25px; height:25px; margin:1px;}

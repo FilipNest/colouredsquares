@@ -164,8 +164,24 @@ var ctx = canvas.getContext("2d");
 img = new Image();
 img.onload = function () {
 
-    canvas.height = 100;
-    canvas.width = 100;
+//Portrait
+    
+if(img.height > img.width){
+
+canvas.width = 100;
+canvas.height = canvas.width * (img.height / img.width);
+    
+}
+ 
+//Landscape
+    
+if(img.width > img.height){
+
+canvas.height = 100;
+canvas.width = canvas.height * (img.width / img.height);
+    
+}
+
 
     /// step 1
     var oc = document.createElement('canvas'),
