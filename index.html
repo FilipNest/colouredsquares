@@ -4,8 +4,7 @@
 <head>
 <title>Coloured Squares</title>
 <link rel="stylesheet" href="style.css" />
-<script src="socket.io/socket.io.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.1.0.js"></script>
 </head>
 <body>
 <header>
@@ -28,7 +27,7 @@
 </nav>
 <div id="colourpicker" class="content">
 <h2>Colours</h2>
-<p>Make a colour by mixing red, green and blue.</p>
+<p>Make a colour by mixing red, green and blue. Then touch the output to select it and touch a square on the field.</p>
 <div class="slider">
 <label for="red">Red</label><input name="red" class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
 </div>
@@ -38,20 +37,19 @@
 <div class="slider">
 <label for="blue">Blue</label><input name="blue" class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
 </div>
-<h3>Touch the colour you made to use it. Then touch a square on the squarefield to light it up.</h3>
 <div id="mixed"></div>
 </div>
 <div id="imagepicker" class="content">
 <h2>Images</h2>
 <p>Upload a picture.</p>
 <input type="file" onchange="convert(this)"/>
-<p>You will see a preview of the image below. Touch it when done to select it and then touch a square to light it up with the picture.</p>
+<p id="image-preview">The image will appear in the empty frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
 <img id="preview" />
 </div>
 <div id="personal" class="content">
-<h2>You</h2>
+<h2>Sign in</h2>
 <div id="signinform">
-<p>Sign up or in to create your own squarefields and keep track of things and people you like.</p>    
+<br />
 <label>Email</label><input id="email" type="email"/><br />
 <p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
 

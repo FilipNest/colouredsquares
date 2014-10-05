@@ -57,9 +57,9 @@ document.querySelector("#squarefield").appendChild(square);
     
 }else{
 
-document.title = "Coloured Squares: 404";
-document.querySelector("#title").innerHTML = "404";
-document.querySelector("#description").innerHTML = "Squarefield not found";
+document.title = "Coloured Squares";
+document.querySelector("#title").innerHTML = "";
+document.querySelector("#description").innerHTML = "";
  
 }
     
@@ -158,19 +158,33 @@ document.querySelector(".result").style.background = session.colour;
 //Convert image
 
    function convertImgToBase64(src, callback, outputFormat) {
-    var canvas = document.createElement('CANVAS');
-    var ctx = canvas.getContext('2d');
-    var img = new Image;
-    img.onload = function () {
-        canvas.height = 100;
-        canvas.width = 100;
-        ctx.drawImage(img, 0, 0, 100, 100)
-        var dataURL = canvas.toDataURL(outputFormat || 'image/png');
-        callback.call(this, dataURL);
-        // Clean up
-        canvas = null;
-    };
-    img.src = src;
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+
+img = new Image();
+img.onload = function () {
+
+    canvas.height = 100;
+    canvas.width = 100;
+
+    /// step 1
+    var oc = document.createElement('canvas'),
+        octx = oc.getContext('2d');
+
+    oc.width = canvas.height * 4;
+    oc.height = canvas.height * 4;
+    octx.drawImage(img, 0, 0, oc.width, oc.height);
+
+    /// step 2
+    octx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5);
+
+    ctx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5,
+    0, 0, canvas.width, canvas.height);
+    
+    var output = canvas.toDataURL();
+    callback(output);
+}
+img.src = src;
 }
     
 var convert = function convert(file) {
@@ -182,8 +196,8 @@ var reader  = new FileReader();
 
 reader.onloadend = function () {
 convertImgToBase64(reader.result, function (base64Img) {
-preview.src = reader.result;        
-session.image = base64Img;
+
+socket.emit("upload",base64Img);
 
 });
   
@@ -197,6 +211,14 @@ reader.readAsDataURL(file);
     preview.src = "";
   }
 }
+
+//Get image
+
+socket.on("uploaded",function(url){
+    
+document.querySelector("#preview").src = "images/"+url+".jpg";
+session.image = "images/"+url+".jpg";
+});
 
 //Select converted image
 
@@ -281,3 +303,17 @@ socket.on("signedup",function(){
 signin();
 
 });
+
+//Click all squares (for testing)
+
+var fill = function(){
+
+var squares = document.querySelectorAll("#squarefield .square");
+    
+for(i=0; i<squares.length; i++){
+    
+squareclick(squares[i]);
+    
+};
+       
+};

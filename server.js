@@ -1,28 +1,29 @@
 //Settings file
 
 var settings = require('./settings.secret');
+var fs = require("fs");
   
 //Connect to database and trigger ready event when done;
 
 require('mongodb').MongoClient.connect(settings.mongo, function(err, db) {
     if(err) throw err;
     
-////TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
-//    
-//db.collection('squarefields').remove(function(){
-//    
-//console.log("squarefields empty");
-//
-//db.collection('users').remove(function(){
-//
-//console.log("users empty");
-//db_ready(db);
-//    
-//});
-//
-//});
+//TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
     
+db.collection('squarefields').remove(function(){
+    
+console.log("squarefields empty");
+
+db.collection('users').remove(function(){
+
+console.log("users empty");
 db_ready(db);
+    
+});
+
+});
+    
+//db_ready(db);
 
 })
 
@@ -588,6 +589,29 @@ socket.on("checkuser", function(){
 socket.emit("currentuser",socket.user);
 
 });
+
+socket.on("upload",function(data){
+
+  var matches = data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+    response = {};
+
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], 'base64');
+    
+var url = new Date().getTime();
+    
+console.log(url);
+
+  fs.writeFile("images/"+url+".jpg", response.data, function(err) {
+
+socket.emit("uploaded",url);
+
+});
+})
 
 //Socket conection function ends    
 });
