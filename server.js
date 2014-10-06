@@ -295,9 +295,6 @@ callback = function(){};
 cs.squarefieldexists(name,function(exists){
     
 if(!exists){
-    
-cs.userexists(owner,function(exists){
-if(exists){
 
 var i,squares = [];
 for(i=0; i< 256; i+=1){
@@ -316,15 +313,7 @@ callback(document);
     
 });
 
-}else{
-    
-console.log("user doesn't exist");
-return false;   
-
-}
-})
-
-}else{
+} else{
     
 console.log("Already exists");
 return false;
@@ -532,7 +521,7 @@ if(!result){
     
 cs.users.count(function(error, total) {
 
-var username = total;
+var username = total.toString();
     
 cs.createUser(username,data.email,data.password,function(){
     
@@ -628,19 +617,24 @@ if(data.user == socket.user._id){
     
 cs.updateUser(socket.user.name,socket.user.email,data.newusername,socket.user.password,socket.user.email, socket.user.friends, socket.user.bookmarks,function(user){
 
-
+cs.createSquarefield(socket.user.name,socket.user._id,"",function(){
+    
 cs.fetchUserbyID(data.user,function(user){
+
+cs.fields.update({owner:socket.user._id},{$set:{name:data.newusername}},function(){
 
 socket.user = user;
 socket.emit("signedin",{name:socket.user.name,id:socket.user._id});
-      
-})    
-    
-})
-    
-};
+
+
+});    
     
 });
+    
+});
+    
+});
+}});
 
 //Socket conection function ends    
 });

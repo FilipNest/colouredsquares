@@ -308,12 +308,13 @@ session.userid = user.id;
 //Returning user
     
 if(!user.first){    
-document.querySelector("#personal").innerHTML = "<h2>Hello " + user.name + "</h2>";
+document.querySelector("#personal").innerHTML = "<h2>"+user.name+"</h2>";
+document.querySelector("#personal").innerHTML += "<br /><button>Edit name, password and email</button><br /><a href='"+user.name+"'>Visit your home squarefield</a>";
 }else{
  
 //New user
     
-document.querySelector("#personal").innerHTML = "<h2>Welcome to your own little part of Coloured Squares</h2><p>Your username is currently &ldquo;"+user.name+"&rdquo;. Change it to something more memorable below. One word, under 15 charcaters.</p><input id='newusername'/><br /><button onclick=changeusername(this)>Change username</button><button>Skip</button>";
+document.querySelector("#personal").innerHTML = "<h2>Welcome to your own little part of Coloured Squares</h2><p>Your username is currently &ldquo;"+user.name+"&rdquo;. Change it to something more memorable below. One word, under 15 charcaters.</p><input id='newusername'/><br /><button onclick=changeusername(this)>Change username</button>";
     
 };
     

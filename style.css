@@ -9,6 +9,7 @@ header {width:100%; position:fixed; top:0; z-index:1; background-color: white; b
 -ms-user-select: none;
 user-select: none;
 }
+a:link, a:visited {color:inherit;}
 
 h1#title {width:100%; text-align: center; position:relative; margin:0; text-transform:capitalize; z-index:0; top:-36px;}
 h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: normal; position: relative; top:-55px;}
@@ -21,7 +22,7 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 #palette .green {background-color:green;}
 #palette .blue {background-color:blue;}
 #palette .result {background-color:white;}
-#panel {background-color:#333333; height:100%; position:fixed; top:92px; z-index:1; color:white; border-style:solid; border-color:#333333; border-width:0 2px 0 0; opacity:1; transition: left 200ms; left:0; bottom:0;}
+#panel {background-color:#333333; height:380px; position:fixed; top:92px; z-index:1; color:white; border-style:solid; border-color:#333333; border-width:0 2px 0 0; opacity:1; transition: left 200ms; left:0; bottom:0;}
 #panel.off {left:-1000px;}
 #panel nav {border-style:solid; border-width:0 0 2px 0;}
 #panel nav button {background-color:transparent; color:white; border-style:none; padding:5px; font-weight: bold; display: inline-block; cursor: pointer; margin:0px; outline:none;}
@@ -57,7 +58,8 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 #passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
 
 .scrollbox {width:100%; margin:20px auto; height:200px;}
-.scrollbox .inner {width:200px; height:200px; border-width:2px; margin:auto; border-style:solid; border-color:white;} 
+.scrollbox .inner {width:200px; height:200px; border-width:2px; margin:auto; border-style:solid; border-color:white;}
+polygon {fill:white;}
 .rightarrow {position:absolute; left:265px; cursor:pointer; width:25px; height:200px;}
 .leftarrow {cursor:pointer; position:absolute; width:30px; height:200px; left:15px;}
 
