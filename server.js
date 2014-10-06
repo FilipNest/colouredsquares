@@ -565,7 +565,7 @@ cs.fetchUserbyEmail(data.email,function(user){
   
 if(user.password === data.password){
  
-socket.user = user._id;
+socket.user = user;
 console.log("signed in");
 socket.emit("signedin",{name:user.name,id:user._id,first:socket.firsttime});
     
@@ -591,7 +591,7 @@ console.log("email not associated with an account");
 
 socket.on("checkuser", function(){
 
-socket.emit("currentuser",socket.user);
+socket.emit("currentuser",socket.user._id);
 
 });
 
@@ -617,6 +617,30 @@ socket.emit("uploaded",url);
 
 });
 })
+
+//Username change (first time visit)
+
+socket.on("changeusername", function(data){
+        
+//Check user is logged in
+    
+if(data.user == socket.user._id){
+    
+cs.updateUser(socket.user.name,socket.user.email,data.newusername,socket.user.password,socket.user.email, socket.user.friends, socket.user.bookmarks,function(user){
+
+
+cs.fetchUserbyID(data.user,function(user){
+
+socket.user = user;
+socket.emit("signedin",{name:socket.user.name,id:socket.user._id});
+      
+})    
+    
+})
+    
+};
+    
+});
 
 //Socket conection function ends    
 });

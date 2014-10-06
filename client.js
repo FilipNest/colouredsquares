@@ -321,8 +321,7 @@ document.querySelector("#personal").innerHTML = "<h2>Welcome to your own little 
 
 var changeusername = function(field){
     
-console.log(session.userid);
-console.log(document.querySelector("#newusername").value);
+socket.emit("changeusername", {user:session.userid, newusername: document.querySelector("#newusername").value});
     
 };
 
