@@ -56,6 +56,11 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 
 #passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
 
+.scrollbox {width:100%; margin:20px auto; height:200px;}
+.scrollbox .inner {width:200px; height:200px; border-width:2px; margin:auto; border-style:solid; border-color:white;} 
+.rightarrow {position:absolute; left:265px; cursor:pointer; width:25px; height:200px;}
+.leftarrow {cursor:pointer; position:absolute; width:30px; height:200px; left:15px;}
+
 
 @media (max-width: 400px) {
 header h1#title, header h2#description {text-align:right; right:10px;}
