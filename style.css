@@ -1,18 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 html {height: 100%; font-size:16px; font-family: Montserrat, sans-serif;}
 body {margin:0; padding:0;}
-header {width:100%; position:fixed; top:0; z-index:1; background-color: white; border-width: 0 0 2px 0; border-color:black; border-style: solid; height:90px;
--webkit-touch-callout: none;
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-}
 a:link, a:visited {color:inherit;}
 
-h1#title {width:100%; text-align: center; position:relative; margin:0; text-transform:capitalize; z-index:0; top:-36px;}
-h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: normal; position: relative; top:-55px;}
 #squarefield {width:1728px; height:1728px; position:relative; top:100px; z-index:0; margin:auto; padding:15px;}
 .square {float:left; width:100px; height:100px; margin:4px; cursor: pointer; transition: background 500ms; background-position:center center !important;}
 .square .author {font-size:80%; text-align:right; position:relative; top:70px; background-color:white; padding:2px; display:none;}
@@ -56,60 +46,3 @@ h2#description {width: 100%; text-align: center; font-size: 100%; font-weight: n
 #passwhite {background-color:white;}
 
 #passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
-
-.scrollbox {width:100%; margin:20px auto; height:200px;}
-.scrollbox .inner {width:200px; height:200px; border-width:2px; margin:auto; border-style:solid; border-color:white;}
-polygon {fill:white;}
-.rightarrow {position:absolute; left:265px; cursor:pointer; width:25px; height:200px;}
-.leftarrow {cursor:pointer; position:absolute; width:30px; height:200px; left:15px;}
-
-
-@media (max-width: 400px) {
-header h1#title, header h2#description {text-align:right; right:10px;}
-#panel {width:100%;}
-#panel {height:100%;}
-    
-};
-
-/* Animations for pallete/logo */
-
-@keyframes rotating {
-  from {
-    transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(315deg);
-    -ms-transform: rotate(315deg);
-    -moz-transform: rotate(315deg);
-    -webkit-transform: rotate(315deg);
-    -o-transform: rotate(315deg);
-  }
-}
-@-webkit-keyframes rotating /* Safari and Chrome */ {
-  from {
-    transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(315deg);
-    -ms-transform: rotate(315deg);
-    -moz-transform: rotate(315deg);
-    -webkit-transform: rotate(315deg);
-    -o-transform: rotate(315deg);
-  }
-}
-#palette {
-  -webkit-animation: rotating 1s linear;
-  -moz-animation: rotating 1s linear;
-  -ms-animation: rotating 1s linear;
-  -o-animation: rotating 1s linear;
-  animation: rotating 1s linear;
-    transform: rotate(315deg);
-}

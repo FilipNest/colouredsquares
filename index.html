@@ -7,24 +7,7 @@
 <script src="https://cdn.socket.io/socket.io-1.1.0.js"></script>
 </head>
 <body>
-<header>
-<div id="palette" class="off">
-<div class="green square"></div>
-<div class="red square"></div>
-<div class="blue square"></div>
-<img class="result square" />
-</div>
-<h1 id="title"></h1>
-<h2 id="description"></h2>
-</header>
 <section id="panel" class="off">
-<nav>
-<button onclick="menu(this,'colourpicker')" class="active">Colour</button>
-<button onclick="menu(this,'imagepicker')">Image</button>
-<button onclick="menu(this,'personal')">You</button>
-<button onclick="menu(this,'this')">This</button>
-<button onclick="menu(this,'explore')">Explore</button>
-</nav>
 <div id="colourpicker" class="content">
 <h2>Colours</h2>
 <p>Make a colour by mixing red, green and blue. Then touch the output to select it and touch a square on the field.</p>
@@ -52,8 +35,6 @@
 <br />
 <label>Email</label><input id="email" type="email"/><br />
 <p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
-
-
 <div id="passwordpicker">
 <div class="square" id="passred" onclick=passinput("red")></div>
 <div class="square" id="passorange" onclick=passinput("orange")></div>
@@ -64,48 +45,23 @@
 <div class="square" id="passviolet" onclick=passinput("violet")></div>
 <div class="square" id="passwhite" onclick=passinput("white")></div>
 </div>
-    
-<div id="passwordpicked">
-
-</div>
+<div id="passwordpicked"></div>
     
 <button onclick=signin()>Sign In</button>
 <button onclick=signup()>New Account</button>
-</div>
-</div>
-    
-<div id="this" class="content">
-<h2>This Squarefield</h2>
-<p>This is a squarefield created by Filip</p>
-</div>
-<div id="explore" class="content">
-<h2>Explore</h2>
-<div class="scrollbox">
-
-<svg class="rightarrow">
-<polygon points="0,0,20,100,0,200"/>
-</svg>
-<svg class="leftarrow">
-<polygon points="20,0,20,200,0,100"/>
-</svg>
-<div class="inner">
-<ul>
-<li>List item one</li>
-<li>List item two</li>
-<li>List item three</li>
-<li>List item four</li>
-<li>List item five</li>
-<li>List item six</li>
-<li>List item seven</li>
-<li>List item eight</li>
-</ul>
-</div>
 </div>
 </div>
 </section>
 <section id="squarefield">
 
 </section>
+<footer>
+<img src="icons/colour.png"/>
+<img src="icons/picture.png"/>
+<img src="icons/me.png"/>
+<img src="icons/favourite.png"/>
+<img src="icons/lock.png"/>
+</footer>
 <script src="client.js"></script>
 </body>
 </html>
