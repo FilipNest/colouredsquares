@@ -9,8 +9,8 @@
 </head>
 
 <body>
-  <section id="panel" class="on">
-    <div id="colourpicker" class="content">
+  <section id="panel">
+    <div id="colour" class="content">
       <h2>Colours</h2>
       <p>Make a colour by mixing red, green and blue. Touch the created colour to select it. Touch a square on the field to light it that colour.</p>
       <div class="slider">
@@ -27,14 +27,14 @@
       </div>
       <div id="mixed"></div>
     </div>
-    <div id="imagepicker" class="content">
+    <div id="picture" class="content">
       <h2>Images</h2>
       <p>Upload a picture.</p>
       <input type="file" onchange="convert(this)" />
       <p id="image-preview">The image will appear in the frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
       <img id="preview" />
     </div>
-    <div id="personal" class="content">
+    <div id="me" class="content">
       <h2>Sign in</h2>
       <div id="signinform">
         <br />
@@ -43,14 +43,14 @@
         <br />
         <p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
         <div id="passwordpicker">
-          <div class="square" id="passred" onclick=passinput( "red")></div>
-          <div class="square" id="passorange" onclick=passinput( "orange")></div>
-          <div class="square" id="passyellow" onclick=passinput( "yellow")></div>
-          <div class="square" id="passgreen" onclick=passinput( "green")></div>
-          <div class="square" id="passblue" onclick=passinput( "blue")></div>
-          <div class="square" id="passindigo" onclick=passinput( "indigo")></div>
-          <div class="square" id="passviolet" onclick=passinput( "violet")></div>
-          <div class="square" id="passwhite" onclick=passinput( "white")></div>
+          <div class="square" id="passred" onclick=passinput("red")></div>
+          <div class="square" id="passorange" onclick=passinput("orange")></div>
+          <div class="square" id="passyellow" onclick=passinput("yellow")></div>
+          <div class="square" id="passgreen" onclick=passinput("green")></div>
+          <div class="square" id="passblue" onclick=passinput("blue")></div>
+          <div class="square" id="passindigo" onclick=passinput("indigo")></div>
+          <div class="square" id="passviolet" onclick=passinput("violet")></div>
+          <div class="square" id="passwhite" onclick=passinput("white")></div>
         </div>
         <div id="passwordpicked"></div>
 
@@ -63,11 +63,17 @@
 
   </section>
   <footer>
+    <div id="infobar">
+    <h1 id="name">Name</h1>
+      <div id="favourites">
+    <img id="favourite" src="icons/favourite.png" /> <span id="favouritecount">500</span>
+        </div>
+    </div>
     <menu>
-      <img src="icons/colour.png" />
-      <img src="icons/picture.png" />
-      <img src="icons/me.png" />
-      <img src="icons/favourite.png" />
+      <img onclick="menu('colour')" src="icons/colour.png" />
+      <img onclick="menu('picture')" src="icons/picture.png" />
+      <img onclick="menu('me')" src="icons/me.png" />
+      <img onclick="menu('explore')" src="icons/explore.png" />
       <!--<img src="icons/lock.png"/>-->
     </menu>
   </footer>

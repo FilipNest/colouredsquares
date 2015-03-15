@@ -5,21 +5,22 @@ a:link, a:visited {color:inherit;}
 ul {margin:0px; padding-left:22px;}
 ul li {padding:5px;}
 
-#squarefield {width:1728px; height:1728px; position:relative; z-index:0; margin:auto; padding:15px;}
+#name {font-size:100%; margin-bottom:5px; position:relative; display: inline; top:-4px;}
+#favourites {display: inline;}
+img#favourite {width:20px;}
+#favouritecount {vertical-align: middle; top:-5px; position:relative;}
+#infobar {margin-left:10px;}
+
+#squarefield {width:1728px; height:1728px; position:relative; z-index:0; padding:15px; transition: all 200ms; margin-left:0px;}
+#squarefield.menu {margin-left:300px;}
 .square {float:left; width:100px; height:100px; margin:4px; cursor: pointer; transition: background 500ms; background-position:center center !important;}
 .square .author {font-size:80%; text-align:right; position:relative; top:70px; background-color:white; padding:2px; display:none;}
-#palette {z-index:1; width:54px; height:54px; position:relative; border-style:solid; border-color:#333333; left:15px; top:15px;}
-#palette .square {width:25px; height:25px; margin:1px;}
-#palette .red {background-color:red;}
-#palette .green {background-color:green;}
-#palette .blue {background-color:blue;}
-#palette .result {background-color:white;}
-#panel {background-color:white; border-style:solid; border-width:0 2px 0 0; display:block; height:100%; position:fixed; z-index:1; color:black; top:0px; left:0px;}
-#panel.off {display: none;}
+
+#panel .content {background-color:white; border-style:solid; border-width:0 2px 2px 0; display:block; height:100%; position:fixed; z-index:1; color:black; left:-302px; width:280px; padding:10px; transition: all 200ms}
+#panel .on {left:0px;}
 #panel button {font-weight:bold; cursor:pointer; border-style:none; padding:5px; color:#333333; background-color:white;}
 #panel p {font-size:80%;}
 #panel h2 {margin:0px;}
-#panel .content {padding:10px; width:280px; display: none;}
 #panel .content#colourpicker {display: block;}
 #panel input[type="range"] {width:200px; vertical-align: middle; margin:0; padding:0; margin-left:10px;}
 #panel label {display: inline-block; vertical-align: middle; margin:0; padding:0; width:50px;}
@@ -46,6 +47,6 @@ ul li {padding:5px;}
 
 #passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
 
-footer {position: fixed; z-index:2; background-color:white; padding-top:5px; bottom: 0px; width:300px; border-style:solid; border-width:2px 0 0 0;}
-menu img {width:50px; height:50px; margin:8px; cursor:pointer;}
-menu {margin:auto; padding:0px; width:280px;} 
+footer {position: fixed; z-index:2; background-color:white; padding-top:5px; bottom: 0px; width:300px; border-style:solid; border-width:2px 2px 0 0;}
+menu img {width:50px; height:50px; margin:10px; cursor:pointer;}
+menu {margin:0px; padding:0px;} 

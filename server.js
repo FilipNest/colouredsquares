@@ -284,7 +284,7 @@ callback(false);
 
 //Create new squarefield
 
-cs.createSquarefield = function(name,owner,description,callback){
+cs.createSquarefield = function(name,owner,callback){
 
 if(!callback){
  
@@ -303,7 +303,7 @@ squares.push({number:i,colour:"transparent",image:null,access:{public:2,friends:
     
 }
     
-var field = {name:name, owner:owner, description:description, friends:[], squares:squares,updated:null};
+var field = {name:name, owner:owner, friends:[], squares:squares,updated:null};
    
 cs.fields.insert(field,function(err,document){
    
@@ -326,7 +326,7 @@ return false;
     
 //Update squarefield
     
-cs.updateSquarefield = function(currentname,currentowner,name,owner,description,friends,callback){
+cs.updateSquarefield = function(currentname,currentowner,name,owner,friends,callback){
 
 if(!callback){
  
@@ -342,7 +342,7 @@ cs.userexists(owner,function(exists){
    
 if(exists){
     
-cs.fields.update({name:currentname},{$set:{name:name,description:description,owner:owner,friends:friends}},function(err,document){
+cs.fields.update({name:currentname},{$set:{name:name,owner:owner,friends:friends}},function(err,document){
     
 console.log("updated squarefield");
 callback(document);    
@@ -443,7 +443,7 @@ callback(document);
 cs.createUser("root","filip@bluejumpers.com","rgbw",function(result){
     
 if(result){
-cs.createSquarefield("home","root","The home squarefield"); 
+cs.createSquarefield("Coloured Squares","root"); 
     
 }
 });
@@ -471,7 +471,7 @@ var squarefield = url.parse(data).pathname.replace("/","");
       
     if(!squarefield){
         
-    squarefield = "home";
+    squarefield = "Coloured Squares";
         
     }
 
