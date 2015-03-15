@@ -106,98 +106,48 @@ var setcolour = function () {
 document.querySelector("#mixed").onclick = function (e) {
 
   session.colour = e.target.style.background;
-  document.querySelector(".result").src = "";
-  document.querySelector(".result").style.background = session.colour;
 
 };
 
-//Convert image
-
-function convertImgToBase64(src, callback, outputFormat) {
-  var canvas = document.createElement("canvas");
-  var ctx = canvas.getContext("2d");
-
-  img = new Image();
-  img.onload = function () {
-
-    //Portrait
-
-    if (img.height > img.width) {
-
-      canvas.width = 100;
-      canvas.height = canvas.width * (img.height / img.width);
-
-    }
-
-    //Landscape
-
-    if (img.width > img.height) {
-
-      canvas.height = 100;
-      canvas.width = canvas.height * (img.width / img.height);
-
-    }
-
-    /// step 1
-    var oc = document.createElement('canvas'),
-      octx = oc.getContext('2d');
-
-    oc.width = canvas.height * 4;
-    oc.height = canvas.height * 4;
-    octx.drawImage(img, 0, 0, oc.width, oc.height);
-
-    /// step 2
-    octx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5);
-
-    ctx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5,
-      0, 0, canvas.width, canvas.height);
-
-    var output = canvas.toDataURL();
-    callback(output);
-  }
-  img.src = src;
-}
 
 var convert = function convert(file) {
 
   var file = file.files[0];
-  var preview = document.querySelector("#preview");
 
   var reader = new FileReader();
 
   reader.onloadend = function () {
-    convertImgToBase64(reader.result, function (base64Img) {
-
-      socket.emit("upload", base64Img);
-
-    });
+    
+      document.querySelector("#preview").style.backgroundImage = "url('icons/waiting.png')";
+      
+      socket.emit("upload", reader.result);
 
   }
 
   if (file) {
 
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(file);
 
-  } else {
-    preview.src = "";
   }
+
 }
 
 //Get image
 
 socket.on("uploaded", function (url) {
 
-  document.querySelector("#preview").src = "images/" + url + ".jpg";
+document.querySelector("#preview").style.backgroundImage = "url('images/"+url+".jpg')";
+  
   session.image = "images/" + url + ".jpg";
+  
 });
 
 //Select converted image
 
 document.querySelector("#preview").onclick = function (what) {
   if (session.image) {
-    session.colour = "black url(" + session.image + ")";
-    document.querySelector(".result").src = session.image;
-    document.querySelector(".result").style.background = "black";
+    session.colour = "url(" + session.image + ")";
+  
   }
 };
 
