@@ -1,67 +1,77 @@
 <!doctype HTML>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <html>
-<head>
-<title>Coloured Squares</title>
-<link rel="stylesheet" href="style.css" />
-<script src="https://cdn.socket.io/socket.io-1.1.0.js"></script>
-</head>
-<body>
-<section id="panel" class="off">
-<div id="colourpicker" class="content">
-<h2>Colours</h2>
-<p>Make a colour by mixing red, green and blue. Then touch the output to select it and touch a square on the field.</p>
-<div class="slider">
-<label for="red">Red</label><input name="red" class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
-</div>
-<div class="slider">
-<label for="green">Green</label><input name="green" class="green" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
-</div>
-<div class="slider">
-<label for="blue">Blue</label><input name="blue" class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()"/>
-</div>
-<div id="mixed"></div>
-</div>
-<div id="imagepicker" class="content">
-<h2>Images</h2>
-<p>Upload a picture.</p>
-<input type="file" onchange="convert(this)"/>
-<p id="image-preview">The image will appear in the frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
-<img id="preview" />
-</div>
-<div id="personal" class="content">
-<h2>Sign in</h2>
-<div id="signinform">
-<br />
-<label>Email</label><input id="email" type="email"/><br />
-<p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
-<div id="passwordpicker">
-<div class="square" id="passred" onclick=passinput("red")></div>
-<div class="square" id="passorange" onclick=passinput("orange")></div>
-<div class="square" id="passyellow" onclick=passinput("yellow")></div>
-<div class="square" id="passgreen" onclick=passinput("green")></div>
-<div class="square" id="passblue" onclick=passinput("blue")></div>
-<div class="square" id="passindigo" onclick=passinput("indigo")></div>
-<div class="square" id="passviolet" onclick=passinput("violet")></div>
-<div class="square" id="passwhite" onclick=passinput("white")></div>
-</div>
-<div id="passwordpicked"></div>
-    
-<button onclick=signin()>Sign In</button>
-<button onclick=signup()>New Account</button>
-</div>
-</div>
-</section>
-<section id="squarefield">
 
-</section>
-<footer>
-<img src="icons/colour.png"/>
-<img src="icons/picture.png"/>
-<img src="icons/me.png"/>
-<img src="icons/favourite.png"/>
-<img src="icons/lock.png"/>
-</footer>
-<script src="client.js"></script>
+<head>
+  <title>Coloured Squares</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.socket.io/socket.io-1.1.0.js"></script>
+</head>
+
+<body>
+  <section id="panel" class="on">
+    <div id="colourpicker" class="content">
+      <h2>Colours</h2>
+      <p>Make a colour by mixing red, green and blue. Touch the created colour to select it. Touch a square on the field to light it that colour.</p>
+      <div class="slider">
+        <label for="red">Red</label>
+        <input name="red" class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
+      </div>
+      <div class="slider">
+        <label for="green">Green</label>
+        <input name="green" class="green" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
+      </div>
+      <div class="slider">
+        <label for="blue">Blue</label>
+        <input name="blue" class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
+      </div>
+      <div id="mixed"></div>
+    </div>
+    <div id="imagepicker" class="content">
+      <h2>Images</h2>
+      <p>Upload a picture.</p>
+      <input type="file" onchange="convert(this)" />
+      <p id="image-preview">The image will appear in the frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
+      <img id="preview" />
+    </div>
+    <div id="personal" class="content">
+      <h2>Sign in</h2>
+      <div id="signinform">
+        <br />
+        <label>Email</label>
+        <input id="email" type="email" />
+        <br />
+        <p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
+        <div id="passwordpicker">
+          <div class="square" id="passred" onclick=passinput( "red")></div>
+          <div class="square" id="passorange" onclick=passinput( "orange")></div>
+          <div class="square" id="passyellow" onclick=passinput( "yellow")></div>
+          <div class="square" id="passgreen" onclick=passinput( "green")></div>
+          <div class="square" id="passblue" onclick=passinput( "blue")></div>
+          <div class="square" id="passindigo" onclick=passinput( "indigo")></div>
+          <div class="square" id="passviolet" onclick=passinput( "violet")></div>
+          <div class="square" id="passwhite" onclick=passinput( "white")></div>
+        </div>
+        <div id="passwordpicked"></div>
+
+        <button onclick=signin()>Sign In</button>
+        <button onclick=signup()>New Account</button>
+      </div>
+    </div>
+  </section>
+  <section id="squarefield">
+
+  </section>
+  <footer>
+    <menu>
+      <img src="icons/colour.png" />
+      <img src="icons/picture.png" />
+      <img src="icons/me.png" />
+      <img src="icons/favourite.png" />
+      <!--<img src="icons/lock.png"/>-->
+    </menu>
+  </footer>
+  <script src="client.js"></script>
 </body>
+
 </html>

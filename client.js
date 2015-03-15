@@ -5,7 +5,6 @@ var socket = io();
 //Send url once connected
 
 socket.on('hello', function (data) {
-    console.log(data);
     socket.emit('fetch', window.location.href);
 });
 
@@ -25,8 +24,8 @@ if(data){
 
 session.squarefield = data.name;
 document.title = "Coloured Squares:"+" "+data.name;
-document.querySelector("#title").innerHTML = data.name;
-document.querySelector("#description").innerHTML = data.description;
+//document.querySelector("#title").innerHTML = data.name;
+//document.querySelector("#description").innerHTML = data.description;
 
     
 data.squares.forEach(function(element,index){
@@ -55,12 +54,6 @@ document.querySelector("#squarefield").appendChild(square);
     
 });
     
-}else{
-
-document.title = "Coloured Squares";
-document.querySelector("#title").innerHTML = "";
-document.querySelector("#description").innerHTML = "";
- 
 }
     
 });
@@ -91,47 +84,6 @@ square.innerhtml = "<span class='author'>"+data.user+"</span>";
     
     
 });
-
-//Navigation
-
-var menu = function(what,where){
-    
-var buttons = document.querySelectorAll('nav button'), content = document.querySelectorAll('.content'), i;
-
-for (i = 0; i < buttons.length; ++i) {
-  buttons[i].setAttribute("class","");
-}
-    
-for (i = 0; i < content.length; ++i) {
-  content[i].style.display = "none";
-}
-
-what.setAttribute("class","active");
-
-document.querySelector("#"+where).style.display = "block";
-    
-};
-
-//Hide
-
-document.querySelector("#palette").onclick = function(e){
-
-var button = document.querySelector("#palette");
-var panel = document.querySelector("#panel");
-    
-if(button.getAttribute("class") === "on"){
-    
-button.setAttribute("class","off");
-panel.setAttribute("class","off");
-    
-}else{
- 
-button.setAttribute("class","on");
-panel.setAttribute("class","on");
-    
-}
-    
-};
 
 //Colour sliders
 
@@ -181,7 +133,6 @@ canvas.height = 100;
 canvas.width = canvas.height * (img.width / img.height);
     
 }
-
 
     /// step 1
     var oc = document.createElement('canvas'),
@@ -331,17 +282,3 @@ socket.on("signedup",function(){
 signin();
 
 });
-
-//Click all squares (for testing)
-
-var fill = function(){
-
-var squares = document.querySelectorAll("#squarefield .square");
-    
-for(i=0; i<squares.length; i++){
-    
-squareclick(squares[i]);
-    
-};
-       
-};
