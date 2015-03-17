@@ -5,7 +5,6 @@
 <head>
   <title>Coloured Squares</title>
   <link rel="stylesheet" href="style.css" />
-<script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
@@ -34,9 +33,9 @@
       <p id="image-preview">The image will appear in the frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
       <span id="preview"></span>
     </div>
-    <div id="me" class="content">
-      <h2>Sign in</h2>
+    <div id="userpanel" class="content">
       <div id="signinform">
+                <h2>Sign in</h2>
         <br />
         <label>Email</label>
         <input id="email" type="email" />
@@ -57,6 +56,9 @@
         <button onclick=signin()>Sign In</button>
         <button onclick=signup()>New Account</button>
       </div>
+        <div id="me" style="display:none">
+        Hello <span class="me"></span>
+        </div>
     </div>
   </section>
   <section id="squarefield">
@@ -72,11 +74,12 @@
     <menu>
       <img onclick="menu('colour')" src="icons/colour.png" />
       <img onclick="menu('picture')" src="icons/picture.png" />
-      <img onclick="menu('me')" src="icons/me.png" />
+      <img onclick="menu('userpanel')" src="icons/me.png" />
       <img onclick="menu('explore')" src="icons/explore.png" />
       <!--<img src="icons/lock.png"/>-->
     </menu>
   </footer>
+<script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
 </body>
 
