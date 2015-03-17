@@ -24,8 +24,6 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
   });
 
-  //db_ready(db);
-
 })
 
 var db_ready = function (db) {
@@ -657,9 +655,7 @@ var db_ready = function (db) {
     });
 
     socket.on("upload", function (data) {
-      
-      console.log(data);
-    
+          
       var url = new Date().getTime();
 
       fs.writeFile("images/" + url + ".jpg", data, function (err) {
