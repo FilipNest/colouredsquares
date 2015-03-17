@@ -1,8 +1,8 @@
-//Settings file
-
 var settings = require('./settings.secret');
 var fs = require("fs");
 var gm = require('gm');
+var crypto = require('crypto');
+
 
 //Connect to database and trigger ready event when done;
 
@@ -13,11 +13,8 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
     db.collection('squarefields').remove(function () {
 
-        console.log("squarefields empty");
-
         db.collection('users').remove(function () {
 
-            console.log("users empty");
             db_ready(db);
 
         });
@@ -27,6 +24,8 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 })
 
 var db_ready = function (db) {
+
+    console.log("Ready...");
 
     //Required modules
 
@@ -143,6 +142,36 @@ var db_ready = function (db) {
     //Wrapper object
 
     cs = {};
+
+    //Currently logged in users object
+
+    var activeusers = {};
+
+    //Make secure token
+
+    cs.makekey = function (userid, callback) {
+
+        crypto.randomBytes(48, function (ex, buf) {
+            activeusers[userid] = buf.toString('hex');
+            callback(activeusers[userid]);
+
+        });
+
+    };
+
+    cs.authcheck = function (id, key) {
+
+        if (activeusers[id] && activeusers[id] === key) {
+
+            return true;
+
+        } else {
+
+            return false;
+
+        }
+
+    }
 
     cs.users = db.collection('users');
     cs.fields = db.collection('squarefields');
@@ -367,14 +396,14 @@ var db_ready = function (db) {
                             }
                         }, function (err, document) {
 
-                            console.log("updated squarefield");
+                            //Updated squarefield
                             callback(document);
                         })
 
 
                     } else {
 
-                        console.log("Owner doesn't exist");
+                        // Owner doesn't exist
                         return false;
                     }
 
@@ -382,7 +411,7 @@ var db_ready = function (db) {
 
             } else {
 
-                console.log("Squarefield doesn't exist");
+                // Squarefield doesn't exist
                 return false;
 
             };
@@ -499,25 +528,21 @@ var db_ready = function (db) {
 
     io.on('connection', function (socket) {
 
-        //Send hello event when client connects
-
-        socket.emit('hello', "hello");
-
         //When user fetches squarefield, parse the url they send and send the relevant squarefield data
 
-        socket.on('fetch', function (data) {
+        socket.on('hello', function (data) {
 
-            var squarefield = url.parse(data).pathname.replace("/", "");
+            cs.checkin(data);
 
             //Load home if no squarefield
 
-            if (!squarefield) {
+            if (!data.squarefield) {
 
-                squarefield = "Coloured Squares";
+                data.squarefield = "Coloured Squares";
 
             }
 
-            cs.fetchSquarefield(squarefield, function (document) {
+            cs.fetchSquarefield(data.squarefield, function (document) {
 
                 if (document) {
                     socket.emit("load", document);
@@ -572,10 +597,7 @@ var db_ready = function (db) {
 
                         cs.createUser(username, data.email, data.password, function () {
 
-                            socket.firsttime = true;
-
                             socket.emit("signedup");
-
 
                         });
 
@@ -591,42 +613,69 @@ var db_ready = function (db) {
 
         });
 
+        cs.checkin = function (data) {
+
+            //email,password,id,key
+
+            if (data.password && data.email) {
+
+                cs.fetchUserbyEmail(data.email, function (user) {
+
+                    if (!user) {
+
+                        console.log("user doesn't exist");
+
+                    } else if (user.password === data.password) {
+
+                        //Sign in through form
+
+                        cs.makekey(user._id, function (key) {
+
+                            socket.emit("signedin", {
+                                name: user.name,
+                                id: user._id,
+                                key: key,
+                                friends: user.friends
+                            });
+
+                        });
+
+                    } else {
+
+                        console.log("Wrong password");
+
+                    }
+
+                });
+
+            } else if (cs.authcheck(data.userid, data.userkey)) {
+
+                cs.fetchUserbyID(data.userid, function (user) {
+                    
+                    if(user){
+                      
+                        socket.emit("signedin", {
+                                name: user.name,
+                                id: user._id,
+                                key: data.userkey,
+                                friends: user.friends
+                            });  
+                        
+                    };
+
+                });
+
+            }
+
+        };
+
+
         socket.on("signin", function (data) {
 
-            cs.fetchUserbyEmail(data.email, function (user) {
-                
-                if(!user){
-                 
-                    console.log("user doesn't exist");
-                    
-                } else if (user.password === data.password){
-                    
-                    console.log("signed in");
-                    
-                    socket.user = user;
-                    socket.emit("signedin", {
-                        name: user.name,
-                        id: user._id,
-                        first: socket.firsttime
-                    });
-                    
-                } else {
-                 
-                    console.log("Wrong password");
-                    
-                }
-
-            });
-        });
-
-
-        //Check logged in user
-
-        socket.on("checkuser", function () {
-
-            socket.emit("currentuser", socket.user._id);
+            cs.checkin(data);
 
         });
+
 
         socket.on("upload", function (data) {
 
@@ -650,45 +699,7 @@ var db_ready = function (db) {
             });
         })
 
-        //Username change (first time visit)
+        //Socket conection function ends
 
-        socket.on("changeusername", function (data) {
-
-            //Check user is logged in
-
-            if (data.user == socket.user._id) {
-
-                cs.updateUser(socket.user.name, socket.user.email, data.newusername, socket.user.password, socket.user.email, socket.user.friends, function (user) {
-
-                    cs.createSquarefield(socket.user.name, socket.user._id, "", function () {
-
-                        cs.fetchUserbyID(data.user, function (user) {
-
-                            cs.fields.update({
-                                owner: socket.user._id
-                            }, {
-                                $set: {
-                                    name: data.newusername
-                                }
-                            }, function () {
-
-                                socket.user = user;
-                                socket.emit("signedin", {
-                                    name: socket.user.name,
-                                    id: socket.user._id
-                                });
-
-
-                            });
-
-                        });
-
-                    });
-
-                });
-            }
-        });
-
-        //Socket conection function ends    
     });
 };
