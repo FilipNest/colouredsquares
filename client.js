@@ -40,8 +40,6 @@ socket.on('load', function (data) {
 
     if (data) {
         
-        console.log(data);
-
         session.squarefield = data.name;
         document.title = "Coloured Squares:" + " " + data.name;
         document.querySelector("#name").innerHTML = data.name;
@@ -74,7 +72,7 @@ socket.on('load', function (data) {
 
     } else {
      
-        console.log(data);
+        document.write("404");
         
     }
 
