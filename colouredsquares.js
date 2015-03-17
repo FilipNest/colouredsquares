@@ -470,8 +470,7 @@ var db_ready = function (db) {
             callback(document);
 
         });
-
-        callback(false);
+        
     };
 
     //Light up square
@@ -541,9 +540,8 @@ var db_ready = function (db) {
                 data.squarefield = "Coloured Squares";
 
             }
-
-            cs.fetchSquarefield(data.squarefield, function (document) {
-
+                        cs.fetchSquarefield(data.squarefield, function (document) {
+                
                 if (document) {
                     socket.emit("load", document);
                 } else {
