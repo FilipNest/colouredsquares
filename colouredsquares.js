@@ -330,8 +330,8 @@ var db_ready = function (db) {
     setTimeout(function () {
 
         cs.light(null, null, "Coloured Squares", 5, "red", function (square) {
-            
-            
+
+
 
         });
     }, 500);
@@ -345,45 +345,38 @@ var db_ready = function (db) {
 
     io.on('connection', function (socket) {
 
-        //When user fetches squarefield, parse the url they send and send the relevant squarefield data
+        //When user loads page, check if they are signed in
 
         socket.on('hello', function (data) {
-                        
-            cs.checkin(data, function (user) {
-                                
-                socket.emit("signedin",user);
 
-            });
+            if (cs.authcheck(data.userid,data.userkey)) {
+
+                cs.checkin(data, function (user) {
+                    
+                    socket.emit("signedin", user);
+
+                });
+
+            } else {
+                
+                socket.emit("guest");
+                
+            }
 
         });
 
-        socket.on("signup", function (data) {
 
-            cs.fetchUserbyEmail(data.email, function (result) {
-
-                if (!result) {
-
-                    //Set username as total user count
-
-                    cs.users.count(function (error, total) {
-
-                        var username = total.toString();
-
-                        cs.createUser(username, data.email, data.password, function () {
-
-                            socket.emit("signedup");
-
-                        });
-
-                    })
-
-                } else {
-
-                    console.log("email already in use");
-
-                }
-
-            })
+        socket.on("load", function (data) {
+            
+            if(cs.authcheck(data.userid, data.userkey)){
+             
+                console.log("not guest");
+                
+            } else {
+                
+                console.log("guest");
+                
+            }
 
         });
 
@@ -433,9 +426,11 @@ var db_ready = function (db) {
                 });
 
             } else if (cs.authcheck(data.userid, data.userkey)) {
-                
-                cs.fields.findOne({_id:ObjectID(data.userid)}, function (err, user) {
-                    
+
+                cs.fields.findOne({
+                    _id: ObjectID(data.userid)
+                }, function (err, user) {
+
 
                     if (user) {
 
@@ -461,10 +456,10 @@ var db_ready = function (db) {
 
         socket.on("signin", function (data) {
 
-            cs.checkin(data, function(user){
-                
-              socket.emit("signedin", user);  
-                
+            cs.checkin(data, function (user) {
+
+                socket.emit("signedin", user);
+
             });
 
         });

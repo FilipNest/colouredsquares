@@ -31,7 +31,11 @@ session = {
 var user
 
 socket.on('connect', function (data) {
-    socket.emit('hello', {userid:session.userid,userkey:session.userkey, squarefield:document.location.pathname.substring(1)});
+    socket.emit('hello', {
+        userid: session.userid,
+        userkey: session.userkey,
+        squarefield: document.location.pathname.substring(1)
+    });
 });
 
 //Load requested squarefield
@@ -39,7 +43,7 @@ socket.on('connect', function (data) {
 socket.on('load', function (data) {
 
     if (data) {
-        
+
         session.squarefield = data.name;
         document.title = "Coloured Squares:" + " " + data.name;
         document.querySelector("#name").innerHTML = data.name;
@@ -71,10 +75,20 @@ socket.on('load', function (data) {
         });
 
     } else {
-     
+
         document.write("404");
-        
+
     }
+
+});
+
+socket.on("guest", function () {
+
+    socket.emit("load", {
+        userid: null,
+        userkey: null,
+        squarefield: document.location.pathname.substring(1)
+    });
 
 });
 
@@ -222,11 +236,17 @@ socket.on("signedin", function (user) {
     session.key = user.key;
     document.cookie = "cskey=" + user.key;
     document.cookie = "csid=" + user.id;
-    
+
     document.getElementById("signinform").style.display = "none";
     document.getElementById("me").style.display = "block";
-    
+
     document.querySelector(".me").innerHTML = session.username;
+
+    socket.emit("load", {
+        userid: user.id,
+        userkey: user.key,
+        squarefield: document.location.pathname.substring(1)
+    });
 
 });
 
