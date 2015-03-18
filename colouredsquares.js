@@ -219,12 +219,16 @@ var db_ready = function (db) {
                             number: i,
                             colour: "transparent",
                             author: null,
-                            access: 0,
+                            access: 3,
                             updated: Date.now()
 
                         });
 
                     }
+                    
+                    //Add friends list
+                    
+                    options.friends = [];
 
                     cs.fields.insert(options, function (err, document) {
 
@@ -349,58 +353,75 @@ var db_ready = function (db) {
 
         socket.on('hello', function (data) {
 
-            if (cs.authcheck(data.userid,data.userkey)) {
+            if (cs.authcheck(data.userid, data.userkey)) {
 
                 cs.checkin(data, function (user) {
-                    
+
                     socket.emit("signedin", user);
 
                 });
 
             } else {
-                
+
                 socket.emit("guest");
-                
+
             }
 
         });
 
 
         socket.on("load", function (data) {
-            
+
             var auth;
-            
+
             //Check authentication status of user
-            
-            if(cs.authcheck(data.userid, data.userkey)){
-             
+
+            if (cs.authcheck(data.userid, data.userkey)) {
+
                 auth = true;
-                
+
             } else {
-                
+
                 auth = false;
-                
+
             }
-                        
-            if(!data.squarefield){
-             
-                data.squarefield = "Coloured Squares";
-                
-            }
-                                    
-            //Load squarefield
             
-            cs.fields.findOne({name:data.squarefield}, function(err, squarefield){
-                if(squarefield){
+            
+            if (!data.squarefield) {
+
+                data.squarefield = "Coloured Squares";
+
+            }
+
+            //Load squarefield
+
+            cs.fields.findOne({
+                name: data.squarefield
+            }, function (err, squarefield) {
+                if (squarefield) {
+
+                    //Want to return name, friends, squares
+
+                    squarefield.squares.forEach(function (square, index) {
+                        
+                        //Check if square can be viewed
+                        
+                        if(square.access === 3 && (!auth || squarefield.friends.indexOf(data.userid) === -1)){
+                            
+                            squarefield.squares[index].colour = "black";
+                            
+                        }
+
+                    })
                     
-                    console.log(squarefield.name);
-                
+                    socket.emit("load", squarefield);
+
                 } else {
-                    
-                    socket.emit("404", data.squarefield);   
-                    
+
+                    socket.emit("404", data.squarefield);
+
                 }
-                
+
             });
 
         });
