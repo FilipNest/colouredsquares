@@ -13,7 +13,7 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
     db.collection('squarefields').remove(function () {
 
-            db_ready(db);
+        db_ready(db);
 
     });
 
@@ -170,104 +170,114 @@ var db_ready = function (db) {
     }
 
     cs.fields = db.collection('squarefields');
-    
-        
+
+
     //Create field : Options: email, password, name
 
     cs.CreateField = function (options, success, fail) {
 
-    var query = {};
-        
-        if(options.name){
-            
-            query.name = options.name;
-            
-        }
-        if(options.email){
-         
-            query.email = options.email;
-            
-        }
-        
-       cs.fields.findOne(query, function(err,document){
-           
-         if(document){
-             
-             fail(document);
-             
-         } else {
-             
-        //Get count of users
-  
-        cs.fields.count(function(err,count){
-             
-            if(!options.name){
-             
-                options.name = count;
-                
-            }
-           
-            //Generate squares
-             
-               var i;
-             
-             options.squares = [];
-             
-                for (i = 0; i < 256; i += 1) {
+        var query = {};
 
-                    options.squares.push({
-                        number: i,
-                        colour: "transparent",
-                        image: null,
-                        access: {
-                            public: 2,
-                            friends: 2
-                        },
-                        author: "server"
+        if (options.name) {
+
+            query.name = options.name;
+
+        }
+        if (options.email) {
+
+            query.email = options.email;
+
+        }
+
+        cs.fields.findOne(query, function (err, document) {
+
+            if (document) {
+
+                fail(document);
+
+            } else {
+
+                //Get count of users
+
+                cs.fields.count(function (err, count) {
+
+                    if (!options.name) {
+
+                        options.name = count;
+
+                    }
+
+                    //Generate squares
+
+                    var i;
+
+                    options.squares = [];
+
+                    for (i = 0; i < 256; i += 1) {
+
+                        options.squares.push({
+                            number: i,
+                            colour: "transparent",
+                            author: null,
+                            access: 0,
+                            updated: Date.now()
+
+                        });
+
+                    }
+
+                    cs.fields.insert(options, function (err, document) {
+
+                        success(document);
+
                     });
 
-                }
 
-          cs.fields.insert(options, function(err,document){
-              
-             success(document); 
-              
-          });
-            
-            
-        });
-             
-        
-             
-         }
-           
-       })
-        
+                });
+
+
+
+            }
+
+        })
+
     }
-    
-    cs.CreateField({name:"root", email:"filip@bluejumpers.com", password:"RGBW"},function(document){
-        
-        console.log(document[0]._id);
-        
-    },function(){
-    
-        console.log("already exists");
-        
+
+    //Create root user
+
+    cs.CreateField({
+        name: "Coloured Squares",
+        email: "filip@bluejumpers.com",
+        password: "rgbw"
+    }, function (document) {
+
+        console.log("Home field created");
+
+    }, function () {
+
+        console.log("Home field exists");
+
     });
-               
+
+
     //Light up square
 
-    cs.light = function (squarefield, square, colour, userid, callback) {
+    cs.light = function (userid, key, squarefield, square, colour, callback) {
 
-        if (!callback) {
+        var auth,
+            friend;
 
-            callback = function () {};
+        if (cs.authcheck(userid, key)) {
+
+            auth = true;
 
         }
 
-        cs.fetchSquarefield(squarefield, function (result) {
+        cs.fields.findOne({
+            name: squarefield
+        }, function (err, field) {
 
-            if (result) {
+            var light = function () {
 
                 cs.fields.update({
                     name: squarefield,
@@ -277,19 +287,54 @@ var db_ready = function (db) {
                         "squares.$.colour": colour,
                         "squares.$.author": userid
                     }
+
                 }, function (err, document) {
 
-                    callback(document);
+                    if (document) {
 
+                        cs.fields.findOne({
+                            name: squarefield
+                        }, function (err, field) {
+
+                            callback(field.squares[5]);
+
+                        });
+
+                    }
                 })
-            } else {
 
-            }
+            };
 
-        });
+            if (field) {
+
+                //Check auth of square
+
+                if (auth && field.friends.indexOf(userid) !== -1) {
+
+                    friend = true;
+
+
+                }
+
+                var access = field.squares[square].access;
+
+                light();
+
+            };
+
+        })
 
     };
 
+
+    setTimeout(function () {
+
+        cs.light(null, null, "Coloured Squares", 5, "red", function (square) {
+            
+            
+
+        });
+    }, 500);
 
     /*
 
@@ -303,56 +348,14 @@ var db_ready = function (db) {
         //When user fetches squarefield, parse the url they send and send the relevant squarefield data
 
         socket.on('hello', function (data) {
+                        
+            cs.checkin(data, function (user) {
+                                
+                socket.emit("signedin",user);
 
-            cs.checkin(data);
-
-            //Load home if no squarefield
-
-            if (!data.squarefield) {
-
-                data.squarefield = "Coloured Squares";
-
-            }
-                        cs.fetchSquarefield(data.squarefield, function (document) {
-                
-                if (document) {
-                    socket.emit("load", document);
-                } else {
-                    socket.emit("load", null);
-                }
             });
 
         });
-
-        //Change squarefield in database when clicked
-
-        socket.on("squarechange", function (data) {
-
-            data.square = parseInt(data.square);
-
-            //Get user from ID for proper attribution of square
-
-            cs.fetchUserbyID(data.user, function (user) {
-
-                if (!user) {
-                    var user = {
-                        name: "guest"
-                    };
-                }
-
-                cs.light(data.squarefield, data.square, data.colour, socket.user, function (result) {
-                    if (result) {
-                        socket.broadcast.emit("changed", {
-                            square: data,
-                            user: user.name
-                        });
-                    }
-                });
-
-            })
-
-        })
-
 
         socket.on("signup", function (data) {
 
@@ -384,13 +387,17 @@ var db_ready = function (db) {
 
         });
 
-        cs.checkin = function (data) {
+        cs.checkin = function (data, callback) {
 
             //email,password,id,key
 
             if (data.password && data.email) {
 
-                cs.fetchUserbyEmail(data.email, function (user) {
+                cs.fields.findOne({
+                    email: data.email
+                }, function (err, user) {
+
+                    var currentuser;
 
                     if (!user) {
 
@@ -402,12 +409,18 @@ var db_ready = function (db) {
 
                         cs.makekey(user._id, function (key) {
 
-                            socket.emit("signedin", {
+                            currentuser = {
+
                                 name: user.name,
                                 id: user._id,
                                 key: key,
                                 friends: user.friends
-                            });
+
+                            }
+
+                            if (callback) {
+                                callback(currentuser);
+                            }
 
                         });
 
@@ -420,18 +433,23 @@ var db_ready = function (db) {
                 });
 
             } else if (cs.authcheck(data.userid, data.userkey)) {
-
-                cs.fetchUserbyID(data.userid, function (user) {
+                
+                cs.fields.findOne({_id:ObjectID(data.userid)}, function (err, user) {
                     
-                    if(user){
-                      
-                        socket.emit("signedin", {
-                                name: user.name,
-                                id: user._id,
-                                key: data.userkey,
-                                friends: user.friends
-                            });  
-                        
+
+                    if (user) {
+
+                        currentuser = {
+                            name: user.name,
+                            id: user._id,
+                            key: data.userkey,
+                            friends: user.friends
+                        };
+
+                        if (callback) {
+                            callback(currentuser);
+                        }
+
                     };
 
                 });
@@ -443,7 +461,11 @@ var db_ready = function (db) {
 
         socket.on("signin", function (data) {
 
-            cs.checkin(data);
+            cs.checkin(data, function(user){
+                
+              socket.emit("signedin", user);  
+                
+            });
 
         });
 
