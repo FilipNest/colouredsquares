@@ -368,15 +368,40 @@ var db_ready = function (db) {
 
         socket.on("load", function (data) {
             
+            var auth;
+            
+            //Check authentication status of user
+            
             if(cs.authcheck(data.userid, data.userkey)){
              
-                console.log("not guest");
+                auth = true;
                 
             } else {
                 
-                console.log("guest");
+                auth = false;
                 
             }
+                        
+            if(!data.squarefield){
+             
+                data.squarefield = "Coloured Squares";
+                
+            }
+                                    
+            //Load squarefield
+            
+            cs.fields.findOne({name:data.squarefield}, function(err, squarefield){
+                if(squarefield){
+                    
+                    console.log(squarefield.name);
+                
+                } else {
+                    
+                    socket.emit("404", data.squarefield);   
+                    
+                }
+                
+            });
 
         });
 

@@ -92,6 +92,12 @@ socket.on("guest", function () {
 
 });
 
+socket.on("404", function(name){
+   
+    document.write(name + " is not a valid squarefield");
+    
+});
+
 var squareclick = function (square) {
 
     var id = square.getAttribute("id").replace("s", "");
