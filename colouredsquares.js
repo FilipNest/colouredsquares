@@ -225,9 +225,9 @@ var db_ready = function (db) {
                         });
 
                     }
-                    
+
                     //Add friends list
-                    
+
                     options.friends = [];
 
                     cs.fields.insert(options, function (err, document) {
@@ -385,8 +385,8 @@ var db_ready = function (db) {
                 auth = false;
 
             }
-            
-            
+
+
             if (!data.squarefield) {
 
                 data.squarefield = "Coloured Squares";
@@ -403,17 +403,19 @@ var db_ready = function (db) {
                     //Want to return name, friends, squares
 
                     squarefield.squares.forEach(function (square, index) {
-                        
+
                         //Check if square can be viewed
-                        
-                        if(square.access === 3 && (!auth || squarefield.friends.indexOf(data.userid) === -1)){
-                            
+
+                        if (square.access === 3 && (!auth || data.userid != squarefield._id && squarefield.friends.indexOf(data.userid) === -1)) {
+
+
                             squarefield.squares[index].colour = "black";
-                            
+
+
                         }
 
                     })
-                    
+
                     socket.emit("load", squarefield);
 
                 } else {
