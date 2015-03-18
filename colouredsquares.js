@@ -219,7 +219,7 @@ var db_ready = function (db) {
                             number: i,
                             colour: "transparent",
                             author: null,
-                            edit: 3,
+                            edit: 0,
                             view: 1,
                             updated: Date.now()
 
@@ -276,6 +276,10 @@ var db_ready = function (db) {
 
             auth = true;
 
+        } else {
+
+            auth = false;
+
         }
 
         cs.fields.findOne({
@@ -318,12 +322,32 @@ var db_ready = function (db) {
 
                     friend = true;
 
-
                 }
 
-                var access = field.squares[square].access;
+                var edit = field.squares[square].edit;
 
-                light();
+                if (edit === 0) {
+
+                    light();
+
+                } else if (edit === 1 && auth) {
+
+                    light();
+
+                } else if (edit === 2 && friend) {
+
+                    light();
+
+                } else if (edit === 3 && field._id == userid) {
+
+                    light();
+
+                } else {
+                    
+                 
+                    console.log("Can't light");
+                    
+                }
 
             };
 
