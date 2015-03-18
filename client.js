@@ -48,6 +48,10 @@ socket.on('load', function (data) {
         document.title = "Coloured Squares:" + " " + data.name;
         document.querySelector("#name").innerHTML = data.name;
 
+        //Clear field if already exists
+        
+        document.querySelector("#squarefield").innerHTML = "";
+        
         data.squares.forEach(function (element, index) {
 
             //Set guest author
