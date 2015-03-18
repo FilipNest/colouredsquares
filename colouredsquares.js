@@ -13,11 +13,7 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
     db.collection('squarefields').remove(function () {
 
-        db.collection('users').remove(function () {
-
             db_ready(db);
-
-        });
 
     });
 
@@ -173,162 +169,53 @@ var db_ready = function (db) {
 
     }
 
-    cs.users = db.collection('users');
     cs.fields = db.collection('squarefields');
+    
+        
+    //Create field : Options: email, password, name
 
-    //Check if username exists
+    cs.CreateField = function (options, success, fail) {
 
-    cs.userexists = function (name, callback) {
-
-        cs.users.findOne({
-            name: name
-        }, function (err, document) {
-
-            if (document) {
-
-                callback(true);
-
-            } else {
-
-                callback(false);
-
-            }
-
-        });
-    }
-
-    //Create user
-
-    cs.createUser = function (name, email, password, callback) {
-
-        if (!callback) {
-
-            callback = function () {};
-
+    var query = {};
+        
+        if(options.name){
+            
+            query.name = options.name;
+            
         }
-
-        cs.userexists(name, function (exists) {
-
-            if (!exists) {
-
-                cs.fetchUserbyEmail(email, function (exists) {
-
-                    if (!exists) {
-
-                        //Database check passed. Still need content validation.
-
-                        cs.users.insert({
-                            name: name,
-                            password: password,
-                            email: email,
-                            friends: []
-                        }, function (err, document) {
-
-                            console.log("User " + name + " created");
-                            callback(document);
-
-                        });
-
-                    } else {
-
-                        console.log("email already in use");
-                        callback(false)
-
-                    }
-                });
-
-
-            } else {
-
-                console.log("User already exists");
-                callback(false);
-            }
-
-        })
-
-    };
-
-    cs.updateUser = function (currentname, currentemail, name, password, email, friends, callback) {
-
-        if (!callback) {
-
-            callback = function () {};
-
+        if(options.email){
+         
+            query.email = options.email;
+            
         }
-
-        cs.userexists(name, function (exists) {
-
-            if (!exists || name === currentname) {
-
-                cs.fetchUserbyEmail(email, function (exists) {
-
-                    if (!exists || email === currentemail) {
-                        cs.users.update({
-                            name: currentname
-                        }, {
-                            name: name,
-                            email: email,
-                            password: password,
-                            friends: friends,
-                        }, function (err, document) {
-
-                            console.log("updated");
-                            callback(document);
-
-                        })
-                    } else {
-
-                        console.log("email in use");
-                        callback(false);
-                    }
-                });
-            } else {
-
-                console.log("Name already in use");
-                callback(false);
+        
+       cs.fields.findOne(query, function(err,document){
+           
+         if(document){
+             
+             fail(document);
+             
+         } else {
+             
+        //Get count of users
+  
+        cs.fields.count(function(err,count){
+             
+            if(!options.name){
+             
+                options.name = count;
+                
             }
-        })
-    };
-
-    //Check if squarefield exists
-
-    cs.squarefieldexists = function (name, callback) {
-
-        cs.fields.findOne({
-            name: name
-        }, function (err, document) {
-
-            if (document) {
-
-                callback(true);
-
-            } else {
-
-                callback(false);
-
-            }
-
-        });
-    }
-
-    //Create new squarefield
-
-    cs.createSquarefield = function (name, owner, callback) {
-
-        if (!callback) {
-
-            callback = function () {};
-
-        }
-
-        cs.squarefieldexists(name, function (exists) {
-
-            if (!exists) {
-
-                var i, squares = [];
+           
+            //Generate squares
+             
+               var i;
+             
+             options.squares = [];
+             
                 for (i = 0; i < 256; i += 1) {
 
-                    squares.push({
+                    options.squares.push({
                         number: i,
                         colour: "transparent",
                         image: null,
@@ -336,143 +223,38 @@ var db_ready = function (db) {
                             public: 2,
                             friends: 2
                         },
-                        author: "Server"
+                        author: "server"
                     });
 
                 }
 
-                var field = {
-                    name: name,
-                    owner: owner,
-                    friends: [],
-                    squares: squares,
-                    updated: null
-                };
-
-                cs.fields.insert(field, function (err, document) {
-
-                    console.log("Created squarefield");
-
-                    callback(document);
-
-                });
-
-            } else {
-
-                console.log("Already exists");
-                return false;
-
-            };
-
+          cs.fields.insert(options, function(err,document){
+              
+             success(document); 
+              
+          });
+            
+            
         });
-
-    };
-
-    //Update squarefield
-
-    cs.updateSquarefield = function (currentname, currentowner, name, owner, friends, callback) {
-
-        if (!callback) {
-
-            callback = function () {};
-
-        }
-
-        cs.squarefieldexists(name, function (exists) {
-
-            if (name === currentname || !exists) {
-
-                cs.userexists(owner, function (exists) {
-
-                    if (exists) {
-
-                        cs.fields.update({
-                            name: currentname
-                        }, {
-                            $set: {
-                                name: name,
-                                owner: owner,
-                                friends: friends
-                            }
-                        }, function (err, document) {
-
-                            //Updated squarefield
-                            callback(document);
-                        })
-
-
-                    } else {
-
-                        // Owner doesn't exist
-                        return false;
-                    }
-
-                });
-
-            } else {
-
-                // Squarefield doesn't exist
-                return false;
-
-            };
-
-        });
-
-    };
-
-    //Fetch user by email
-
-    cs.fetchUserbyEmail = function (email, callback) {
-
-        cs.users.findOne({
-            email: email
-        }, function (err, document) {
-
-            if (document) {
-                callback(document);
-            } else {
-
-                callback(false);
-
-            }
-
-        });
-
-    };
-
-    //Fetch user by id
-
-    cs.fetchUserbyID = function (id, callback) {
-
-        if (id) {
-            id = ObjectID.createFromHexString(id);
-        } else {
-            callback(false);
-        }
-
-        cs.users.findOne({
-            _id: id
-        }, function (err, document) {
-            callback(document);
-        });
-
-        return true;
-    };
-
-    //Fetch squarefield
-
-    cs.fetchSquarefield = function (name, callback) {
-
-        cs.fields.findOne({
-            name: name
-        }, function (err, document) {
-
-            callback(document);
-
-        });
+             
         
-    };
-
+             
+         }
+           
+       })
+        
+    }
+    
+    cs.CreateField({name:"root", email:"filip@bluejumpers.com", password:"RGBW"},function(document){
+        
+        console.log(document[0]._id);
+        
+    },function(){
+    
+        console.log("already exists");
+        
+    });
+               
     //Light up square
 
     cs.light = function (squarefield, square, colour, userid, callback) {
@@ -508,15 +290,6 @@ var db_ready = function (db) {
 
     };
 
-
-    //Create root user and home squarefield if they don't already exist
-
-    cs.createUser("root", "filip@bluejumpers.com", "rgbw", function (result) {
-
-        if (result) {
-            cs.createSquarefield("Coloured Squares", "root");
-        }
-    });
 
     /*
 
