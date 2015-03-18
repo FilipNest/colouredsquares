@@ -219,7 +219,8 @@ var db_ready = function (db) {
                             number: i,
                             colour: "transparent",
                             author: null,
-                            access: 3,
+                            edit: 3,
+                            view: 1,
                             updated: Date.now()
 
                         });
@@ -406,7 +407,7 @@ var db_ready = function (db) {
 
                         //Check if square can be viewed
 
-                        if (square.access === 3 && (!auth || data.userid != squarefield._id && squarefield.friends.indexOf(data.userid) === -1)) {
+                        if (square.view === 1 && (!auth || data.userid != squarefield._id && squarefield.friends.indexOf(data.userid) === -1)) {
 
 
                             squarefield.squares[index].colour = "black";
