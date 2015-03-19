@@ -220,7 +220,7 @@ var db_ready = function (db) {
                             colour: "transparent",
                             author: null,
                             edit: 0,
-                            view: 1,
+                            view: 0,
                             updated: Date.now()
 
                         });
@@ -281,16 +281,16 @@ var db_ready = function (db) {
             auth = false;
 
         }
-
+        
         cs.fields.findOne({
-            name: squarefield
+            _id: ObjectID(squarefield)
         }, function (err, field) {
-
+            
             var light = function () {
-
+                                                                
                 cs.fields.update({
-                    name: squarefield,
-                    "squares.number": square
+                    _id: ObjectID(squarefield),
+                    "squares.number": parseInt(square)
                 }, {
                     $set: {
                         "squares.$.colour": colour,
@@ -298,14 +298,14 @@ var db_ready = function (db) {
                     }
 
                 }, function (err, document) {
-
+                                        
                     if (document) {
 
                         cs.fields.findOne({
-                            name: squarefield
-                        }, function (err, field) {
+                            _id: ObjectID(squarefield)
+                        }, function (err, updated) {
 
-                            callback(field.squares[5]);
+                            callback(updated.squares[square]);
 
                         });
 
@@ -343,10 +343,10 @@ var db_ready = function (db) {
                     light();
 
                 } else {
-                    
-                 
+
+
                     console.log("Can't light");
-                    
+
                 }
 
             };
@@ -354,16 +354,6 @@ var db_ready = function (db) {
         })
 
     };
-
-
-    setTimeout(function () {
-
-        cs.light(null, null, "Coloured Squares", 5, "red", function (square) {
-
-
-
-        });
-    }, 500);
 
     /*
 
@@ -532,6 +522,18 @@ var db_ready = function (db) {
             cs.checkin(data, function (user) {
 
                 socket.emit("signedin", user);
+
+            });
+
+        });
+
+        socket.on("light", function (data) {
+            
+            cs.light(data.userid, data.userkey, data.squarefield, data.square, data.colour, function (square) {
+
+                square.squarefield = data.squarefield;
+                
+                io.emit('light', square);
 
             });
 

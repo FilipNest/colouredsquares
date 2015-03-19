@@ -44,14 +44,14 @@ socket.on('load', function (data) {
 
     if (data) {
 
-        session.squarefield = data.name;
+        session.squarefield = data._id;
         document.title = "Coloured Squares:" + " " + data.name;
         document.querySelector("#name").innerHTML = data.name;
 
         //Clear field if already exists
-        
+
         document.querySelector("#squarefield").innerHTML = "";
-        
+
         data.squares.forEach(function (element, index) {
 
             //Set guest author
@@ -96,10 +96,10 @@ socket.on("guest", function () {
 
 });
 
-socket.on("404", function(name){
-   
+socket.on("404", function (name) {
+
     document.write(name + " is not a valid squarefield");
-    
+
 });
 
 var squareclick = function (square) {
@@ -108,29 +108,32 @@ var squareclick = function (square) {
 
     square.style.background = session.colour;
     square.setAttribute("data-author", session.username);
-    socket.emit("squarechange", {
+    socket.emit("light", {
         squarefield: session.squarefield,
         square: id,
         colour: session.colour,
-        user: session.userid
+        userid: session.userid,
+        userkey: session.userkey
     })
 
 };
 
 //Change square when changed on server
 
-socket.on("changed", function (data) {
+socket.on("light", function (data) {
+    
+    if (data.squarefield === session.squarefield) {
 
-    var square = document.querySelector("#s" + data.square.square);
+        var square = document.querySelector("#s" + data.number);
+        
+        square.style.background = data.colour;
+        
+        //Set authorship
 
-    square.style.background = data.square.colour;
+        square.setAttribute("data-author", data.author);
+        square.innerhtml = "<span class='author'>" + data.author + "</span>";
 
-    //Set authorship
-
-    square.setAttribute("data-author", data.user);
-    square.innerhtml = "<span class='author'>" + data.user + "</span>";
-
-
+    }
 
 });
 
