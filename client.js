@@ -25,10 +25,9 @@ session = {
     userkey: getCookie("cskey"),
     colour: "rgb(255,255,255)",
     squarefield: null,
+    home: false,
 
 };
-
-var user
 
 socket.on('connect', function (data) {
     socket.emit('hello', {
@@ -43,13 +42,19 @@ socket.on('connect', function (data) {
 socket.on('load', function (data) {
 
     if (data) {
-      
-      if(data._id === session.userid){
-      
-        session.home = true;
 
-      }
-      
+        if (data._id === session.userid) {
+
+            session.home = true;
+            document.getElementById("home").style.display = "block";
+
+        } else {
+            
+            session.home = true;
+            document.getElementById("home").style.display = "none";
+
+        }
+
         session.squarefield = data._id;
         document.title = "Coloured Squares:" + " " + data.name;
         document.querySelector("#name").innerHTML = data.name;
@@ -127,13 +132,13 @@ var squareclick = function (square) {
 //Change square when changed on server
 
 socket.on("light", function (data) {
-    
+
     if (data.squarefield === session.squarefield) {
 
         var square = document.querySelector("#s" + data.number);
-        
+
         square.style.background = data.colour;
-        
+
         //Set authorship
 
         square.setAttribute("data-author", data.author);
