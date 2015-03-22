@@ -9,7 +9,7 @@ ul li {padding:5px;}
 #favourite {cursor: pointer;width:20px; display: inline; position:relative; top:14px; stroke:black;}
 #favourite.on {fill:yellow;}
 #favouritecount {vertical-align: middle; top:-5px; position:relative;}
-#infobar {margin-left:10px;}
+#infobar {margin-left:10px; margin-top:-25px;}
 
 #squarefield {width:1728px; height:1728px; position:relative; z-index:0; padding:15px; transition: all 200ms; margin-left:0px;}
 #squarefield.menu {margin-left:300px;}
