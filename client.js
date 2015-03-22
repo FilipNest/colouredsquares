@@ -26,6 +26,7 @@ session = {
     colour: "rgb(255,255,255)",
     squarefield: null,
     home: false,
+    friends: null
 
 };
 
@@ -60,10 +61,10 @@ socket.on("favourite", function (data) {
 //Load requested squarefield
 
 socket.on('load', function (data) {
-
+    
     //Check if user has favourited the field
-        
-    if (session.id && data.friends.indexOf(session.id) !== -1) {
+    
+    if (session.id && session.friends.indexOf(data._id) !== -1) {
 
         document.getElementById("favourite").setAttribute("class", "on");
 
@@ -302,10 +303,11 @@ var signup = function () {
 };
 
 socket.on("signedin", function (user) {
-
+        
     session.username = user.name;
     session.id = user.id;
     session.key = user.key;
+    session.friends = user.friends;
     document.cookie = "cskey=" + user.key;
     document.cookie = "csid=" + user.id;
 

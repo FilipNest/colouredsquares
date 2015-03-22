@@ -11,11 +11,11 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
     //TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
 
-    //    db.collection('squarefields').remove(function () {
-    //
-    //        db_ready(db);
-    //
-    //    });
+//        db.collection('squarefields').remove(function () {
+//    
+//            db_ready(db);
+//    
+//        });
 
     db_ready(db);
 
@@ -560,21 +560,21 @@ var db_ready = function (db) {
         socket.on("favourite", function (data) {
 
             if (cs.authcheck(data.id, data.key)) {
-
+                
                 if (data.squarefield !== data.id) {
 
                     cs.fields.findOne({
-                        _id: ObjectID(data.squarefield),
-                        friends: data.id
+                        _id: ObjectID(data.id),
+                        friends: data.squarefield
                     }, function (err, field) {
 
                         if (field) {
                             
                             cs.fields.update({
-                                _id: ObjectID(data.squarefield)
+                                _id: ObjectID(data.id)
                             }, {
                                 $pull: {
-                                    friends: data.id
+                                    friends: data.squarefield
                                 }
 
                             }, function (err, update) {
@@ -583,8 +583,6 @@ var db_ready = function (db) {
 
                                     socket.emit("favourite", {status:false, id: data.squarefield});
 
-                                } else {
-
                                 }
 
                             });
@@ -592,10 +590,10 @@ var db_ready = function (db) {
                         } else {
 
                             cs.fields.update({
-                                _id: ObjectID(data.squarefield)
+                                _id: ObjectID(data.id)
                             }, {
                                 $push: {
-                                    friends: data.id
+                                    friends: data.squarefield
                                 }
 
                             }, function (err, update) {
@@ -603,8 +601,6 @@ var db_ready = function (db) {
                                 if (update) {
 
                                     socket.emit("favourite", {status:true, id: data.squarefield});
-
-                                } else {
 
                                 }
 
