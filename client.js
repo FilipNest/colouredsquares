@@ -37,26 +37,54 @@ socket.on('connect', function (data) {
     });
 });
 
+socket.on("favourite", function (data) {
+
+    if (data.id === session.squarefield) {
+
+        if (data.status) {
+
+            document.getElementById("favourite").setAttribute("class", "on");
+
+
+        } else {
+
+            document.getElementById("favourite").setAttribute("class", "");
+
+
+        };
+
+    };
+
+});
+
 //Load requested squarefield
 
 socket.on('load', function (data) {
-    
-    if(session.id){
-     
-        document.getElementById("favourite").onclick = function(){
-          
+
+    //Check if user has favourited the field
+        
+    if (session.id && data.friends.indexOf(session.id) !== -1) {
+
+        document.getElementById("favourite").setAttribute("class", "on");
+
+    };
+
+    if (session.id) {
+
+        document.getElementById("favourite").onclick = function () {
+
             socket.emit("favourite", session);
-            
+
         };
-        
+
     } else {
-        
-      document.getElementById("favourite").onclick = function(){
-          
+
+        document.getElementById("favourite").onclick = function () {
+
             alert("Please log in to favourite");
-            
-        }; 
-        
+
+        };
+
     };
 
     if (data) {
@@ -67,7 +95,7 @@ socket.on('load', function (data) {
             document.getElementById("home").style.display = "block";
 
         } else {
-            
+
             session.home = true;
             document.getElementById("home").style.display = "none";
 
@@ -116,6 +144,8 @@ socket.on('load', function (data) {
 });
 
 socket.on("guest", function () {
+
+    session.id = null;
 
     socket.emit("load", {
         id: null,
@@ -272,7 +302,7 @@ var signup = function () {
 };
 
 socket.on("signedin", function (user) {
-    
+
     session.username = user.name;
     session.id = user.id;
     session.key = user.key;

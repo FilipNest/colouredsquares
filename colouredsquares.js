@@ -467,7 +467,8 @@ var db_ready = function (db) {
                     squarefield = {
                         squares: squarefield.squares,
                         _id: squarefield._id,
-                        name: squarefield.name
+                        name: squarefield.name,
+                        friends: squarefield.friends
                     };
 
                     socket.emit("load", squarefield);
@@ -569,8 +570,6 @@ var db_ready = function (db) {
 
                         if (field) {
                             
-                            console.log(field.friends);
-
                             cs.fields.update({
                                 _id: ObjectID(data.squarefield)
                             }, {
@@ -578,11 +577,11 @@ var db_ready = function (db) {
                                     friends: data.id
                                 }
 
-                            }, function (err, data) {
+                            }, function (err, update) {
 
-                                if (data) {
+                                if (update) {
 
-                                    console.log("Unfriended");
+                                    socket.emit("favourite", {status:false, id: data.squarefield});
 
                                 } else {
 
@@ -599,11 +598,11 @@ var db_ready = function (db) {
                                     friends: data.id
                                 }
 
-                            }, function (err, data) {
+                            }, function (err, update) {
 
-                                if (data) {
+                                if (update) {
 
-                                    console.log("Friended");
+                                    socket.emit("favourite", {status:true, id: data.squarefield});
 
                                 } else {
 

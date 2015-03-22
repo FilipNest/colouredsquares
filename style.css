@@ -6,7 +6,8 @@ ul li {padding:5px;}
 
 #name {font-size:100%; margin-bottom:5px; position:relative; display: inline; top:-4px;}
 #favourites {display: inline;}
-img#favourite {width:20px;}
+#favourite {cursor: pointer;width:20px; display: inline; position:relative; top:14px; stroke:black;}
+#favourite.on {fill:yellow;}
 #favouritecount {vertical-align: middle; top:-5px; position:relative;}
 #infobar {margin-left:10px;}
 
