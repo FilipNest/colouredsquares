@@ -43,7 +43,13 @@ socket.on('connect', function (data) {
 socket.on('load', function (data) {
 
     if (data) {
+      
+      if(data._id === session.userid){
+      
+        session.home = true;
 
+      }
+      
         session.squarefield = data._id;
         document.title = "Coloured Squares:" + " " + data.name;
         document.querySelector("#name").innerHTML = data.name;

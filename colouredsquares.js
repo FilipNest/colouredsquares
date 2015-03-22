@@ -239,7 +239,7 @@ var db_ready = function (db) {
           cs.fields.insert(options, function (err, document) {
 
             success(document);
-
+            
           });
 
 
@@ -256,7 +256,7 @@ var db_ready = function (db) {
   //Create root user
 
   cs.CreateField({
-    name: "Coloured Squares",
+    name: "coloured_squares",
     email: "filip@bluejumpers.com",
     password: "rgbw"
   }, function (document) {
@@ -392,11 +392,11 @@ var db_ready = function (db) {
     socket.on("signup", function (data) {
 
       cs.CreateField({
-        name: Date.now(),
+        name: Date.now().toString(),
         email: data.email,
         password: data.password
       }, function (document) {
-
+        
         cs.checkin(data, function (user) {
 
           socket.emit("signedin", user);
@@ -427,11 +427,10 @@ var db_ready = function (db) {
         auth = false;
 
       }
-
-
+      
       if (!data.squarefield) {
 
-        data.squarefield = "Coloured Squares";
+        data.squarefield = "coloured_squares";
 
       }
 
@@ -457,6 +456,9 @@ var db_ready = function (db) {
             }
 
           })
+          
+          //Only send needed information about field 
+          squarefield = {squares:squarefield.squares, _id:squarefield._id, name:squarefield.name};
 
           socket.emit("load", squarefield);
 
