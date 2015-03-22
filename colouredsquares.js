@@ -7,591 +7,670 @@ var crypto = require('crypto');
 //Connect to database and trigger ready event when done;
 
 require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
-  if (err) throw err;
+    if (err) throw err;
 
-  //TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
+    //TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
 
-  db.collection('squarefields').remove(function () {
+    //    db.collection('squarefields').remove(function () {
+    //
+    //        db_ready(db);
+    //
+    //    });
 
     db_ready(db);
-
-  });
 
 })
 
 var db_ready = function (db) {
 
-  console.log("Ready...");
+    console.log("Ready...");
 
-  //Required modules
+    //Required modules
 
-  var app = require('http').createServer(handler)
-  var io = require('socket.io')(app);
-  var ObjectID = require('mongodb').ObjectID;
-  var fs = require('fs');
-  var url = require('url');
-  var format = require('util').format;
+    var app = require('http').createServer(handler)
+    var io = require('socket.io')(app);
+    var ObjectID = require('mongodb').ObjectID;
+    var fs = require('fs');
+    var url = require('url');
+    var format = require('util').format;
 
-  /*
+    /*
 
-  SERVER ROUTING
+    SERVER ROUTING
 
-  */
+    */
 
-  //Listen to port in settings file
+    //Listen to port in settings file
 
-  app.listen(settings.port);
+    app.listen(settings.port);
 
-  //HTTP request handling
+    //HTTP request handling
 
-  function handler(req, res) {
+    function handler(req, res) {
 
-    //Ignore favicon
+        //Ignore favicon
 
-    if (req.url !== "favicon.ico") {
+        if (req.url !== "favicon.ico") {
 
-      //Redirect document root to home page
+            //Redirect document root to home page
 
-      if (req.url === "/") {
+            if (req.url === "/") {
 
-        req.url = "/index.html";
+                req.url = "/index.html";
 
-      }
+            }
 
-      //Check if file exists, if so, load it. If not use routing. 
+            //Check if file exists, if so, load it. If not use routing. 
 
-      fs.exists(__dirname + req.url, function (exists) {
-        if (!exists) {
+            fs.exists(__dirname + req.url, function (exists) {
+                if (!exists) {
 
-          //Redirect to home
+                    //Redirect to home
 
-          req.url = "/index.html";
+                    req.url = "/index.html";
+
+                }
+
+                fs.readFile(__dirname + req.url,
+                    function (err, data) {
+                        if (err) {
+
+                            res.end("File didn't load but exists!?");
+
+                        } else {
+
+                            //Get extension of app files and send relevant file type 
+
+                            var extension = req.url.split(".")[1];
+
+                            //Set default type
+
+                            var type = "text";
+
+                            //Change type depending on extention
+
+                            switch (extension) {
+
+                            case "png":
+                                type = "image/png";
+                                break;
+                            case "js":
+                                type = "application/javascript";
+                                break;
+                            case "html":
+                                type = "text/html";
+                                break;
+                            case "css":
+                                type = "text/css";
+                                break
+                            }
+
+                            //Send file, unless it's a secret like the settings file
+
+                            if (extension !== "secret") {
+                                res.writeHead(200, {
+                                    'Content-Type': type,
+                                    'Content-Length': data.length
+                                });
+                                res.write(data);
+                                res.end();
+                            } else {
+
+                                // Access denied
+
+                                res.writeHead(403);
+                                res.end("Not like this.");
+
+                            }
+                        }
+                    });
+
+
+            });
+
+        }
+    }
+
+    /*
+
+    Coloured Squares functions
+
+    */
+
+    //Wrapper object
+
+    cs = {};
+
+    //Currently logged in users object
+
+    var activeusers = {};
+
+    //Make secure token
+
+    cs.makekey = function (id, callback) {
+
+        crypto.randomBytes(48, function (ex, buf) {
+            activeusers[id] = buf.toString('hex');
+            callback(activeusers[id]);
+
+        });
+
+    };
+
+    cs.authcheck = function (id, key) {
+
+        if (activeusers[id] && activeusers[id] === key) {
+
+            return true;
+
+        } else {
+
+            return false;
 
         }
 
-        fs.readFile(__dirname + req.url,
-          function (err, data) {
-            if (err) {
+    }
 
-              res.end("File didn't load but exists!?");
+    cs.fields = db.collection('squarefields');
+
+
+    //Create field : Options: email, password, name
+
+    cs.CreateField = function (options, success, fail) {
+
+        var query = [];
+
+        if (options.name) {
+
+            query.push({
+                name: options.name
+            });
+
+        }
+
+        if (options.email) {
+
+            query.push({
+                email: options.email
+            });
+
+        }
+
+        query = {
+            $or: query
+        };
+
+        cs.fields.findOne(query, function (err, document) {
+
+            if (document) {
+
+                fail(document);
 
             } else {
 
-              //Get extension of app files and send relevant file type 
+                //Get count of users
 
-              var extension = req.url.split(".")[1];
+                cs.fields.count(function (err, count) {
 
-              //Set default type
+                    if (!options.name) {
 
-              var type = "text";
+                        options.name = count;
 
-              //Change type depending on extention
+                    }
 
-              switch (extension) {
+                    //Generate squares
 
-              case "png":
-                type = "image/png";
-                break;
-              case "js":
-                type = "application/javascript";
-                break;
-              case "html":
-                type = "text/html";
-                break;
-              case "css":
-                type = "text/css";
-                break
-              }
+                    var i;
 
-              //Send file, unless it's a secret like the settings file
+                    options.squares = [];
 
-              if (extension !== "secret") {
-                res.writeHead(200, {
-                  'Content-Type': type,
-                  'Content-Length': data.length
+                    for (i = 0; i < 256; i += 1) {
+
+                        options.squares.push({
+                            number: i,
+                            colour: "transparent",
+                            author: null,
+                            edit: 0,
+                            view: 0,
+                            updated: Date.now()
+
+                        });
+
+                    }
+
+                    //Add friends list
+
+                    options.friends = [];
+
+                    cs.fields.insert(options, function (err, document) {
+
+                        success(document);
+
+                    });
+
+
                 });
-                res.write(data);
-                res.end();
-              } else {
 
-                // Access denied
 
-                res.writeHead(403);
-                res.end("Not like this.");
 
-              }
             }
-          });
 
-
-      });
-
-    }
-  }
-
-  /*
-
-  Coloured Squares functions
-
-  */
-
-  //Wrapper object
-
-  cs = {};
-
-  //Currently logged in users object
-
-  var activeusers = {};
-
-  //Make secure token
-
-  cs.makekey = function (userid, callback) {
-
-    crypto.randomBytes(48, function (ex, buf) {
-      activeusers[userid] = buf.toString('hex');
-      callback(activeusers[userid]);
-
-    });
-
-  };
-
-  cs.authcheck = function (id, key) {
-
-    if (activeusers[id] && activeusers[id] === key) {
-
-      return true;
-
-    } else {
-
-      return false;
-
-    }
-
-  }
-
-  cs.fields = db.collection('squarefields');
-
-
-  //Create field : Options: email, password, name
-
-  cs.CreateField = function (options, success, fail) {
-
-    var query = [];
-
-    if (options.name) {
-
-      query.push({name:options.name});
-
-    }
-    
-    if (options.email) {
-
-      query.push({email:options.email});
-
-    }
-
-    query = {
-      $or: query
-    };
-    
-    cs.fields.findOne(query, function (err, document) {
-
-      if (document) {
-
-        fail(document);
-
-      } else {
-
-        //Get count of users
-
-        cs.fields.count(function (err, count) {
-
-          if (!options.name) {
-
-            options.name = count;
-
-          }
-
-          //Generate squares
-
-          var i;
-
-          options.squares = [];
-
-          for (i = 0; i < 256; i += 1) {
-
-            options.squares.push({
-              number: i,
-              colour: "transparent",
-              author: null,
-              edit: 0,
-              view: 0,
-              updated: Date.now()
-
-            });
-
-          }
-
-          //Add friends list
-
-          options.friends = [];
-
-          cs.fields.insert(options, function (err, document) {
-
-            success(document);
-            
-          });
-
-
-        });
-
-
-
-      }
-
-    })
-
-  }
-
-  //Create root user
-
-  cs.CreateField({
-    name: "coloured_squares",
-    email: "filip@bluejumpers.com",
-    password: "rgbw"
-  }, function (document) {
-
-    console.log("Home field created");
-
-  }, function () {
-
-    console.log("Home field exists");
-
-  });
-
-
-  //Light up square
-
-  cs.light = function (userid, key, squarefield, square, colour, callback) {
-
-    var auth,
-      friend;
-
-    if (cs.authcheck(userid, key)) {
-
-      auth = true;
-
-    } else {
-
-      auth = false;
-
-    }
-
-    cs.fields.findOne({
-      _id: ObjectID(squarefield)
-    }, function (err, field) {
-
-      var light = function () {
-
-        cs.fields.update({
-          _id: ObjectID(squarefield),
-          "squares.number": parseInt(square)
-        }, {
-          $set: {
-            "squares.$.colour": colour,
-            "squares.$.author": userid
-          }
-
-        }, function (err, document) {
-
-          if (document) {
-
-            cs.fields.findOne({
-              _id: ObjectID(squarefield)
-            }, function (err, updated) {
-
-              callback(updated.squares[square]);
-
-            });
-
-          }
         })
 
-      };
+    }
 
-      if (field) {
+    //Create root user
 
-        //Check auth of square
+    cs.CreateField({
+        name: "coloured_squares",
+        email: "filip@bluejumpers.com",
+        password: "rgbw"
+    }, function (document) {
 
-        if (auth && field.friends.indexOf(userid) !== -1) {
+        console.log("Home field created");
 
-          friend = true;
+    }, function () {
 
-        }
+        console.log("Home field exists");
 
-        var edit = field.squares[square].edit;
+    });
 
-        if (edit === 0) {
 
-          light();
+    //Light up square
 
-        } else if (edit === 1 && auth) {
+    cs.light = function (id, key, squarefield, square, colour, callback) {
 
-          light();
+        var auth,
+            friend;
 
-        } else if (edit === 2 && friend) {
+        if (cs.authcheck(id, key)) {
 
-          light();
-
-        } else if (edit === 3 && field._id == userid) {
-
-          light();
+            auth = true;
 
         } else {
 
-
-          console.log("Can't light");
-
-        }
-
-      };
-
-    })
-
-  };
-
-  /*
-
-  WEBSOCKETS
-  Server, meet client.
-
-  */
-
-  io.on('connection', function (socket) {
-
-    //When user loads page, check if they are signed in
-
-    socket.on('hello', function (data) {
-
-      if (cs.authcheck(data.userid, data.userkey)) {
-
-        cs.checkin(data, function (user) {
-
-          socket.emit("signedin", user);
-
-        });
-
-      } else {
-
-        socket.emit("guest");
-
-      }
-
-    });
-
-    socket.on("signup", function (data) {
-
-      cs.CreateField({
-        name: Date.now().toString(),
-        email: data.email,
-        password: data.password
-      }, function (document) {
-        
-        cs.checkin(data, function (user) {
-
-          socket.emit("signedin", user);
-
-        });
-
-      }, function () {
-
-        console.log("Already exists");
-
-      });
-
-    });
-
-
-    socket.on("load", function (data) {
-
-      var auth;
-
-      //Check authentication status of user
-
-      if (cs.authcheck(data.userid, data.userkey)) {
-
-        auth = true;
-
-      } else {
-
-        auth = false;
-
-      }
-      
-      if (!data.squarefield) {
-
-        data.squarefield = "coloured_squares";
-
-      }
-
-      //Load squarefield
-
-      cs.fields.findOne({
-        name: data.squarefield
-      }, function (err, squarefield) {
-        if (squarefield) {
-
-          //Want to return name, friends, squares
-
-          squarefield.squares.forEach(function (square, index) {
-
-            //Check if square can be viewed
-
-            if (square.view === 1 && (!auth || data.userid != squarefield._id && squarefield.friends.indexOf(data.userid) === -1)) {
-
-
-              squarefield.squares[index].colour = "black";
-
-
-            }
-
-          })
-          
-          //Only send needed information about field 
-          squarefield = {squares:squarefield.squares, _id:squarefield._id, name:squarefield.name};
-
-          socket.emit("load", squarefield);
-
-        } else {
-
-          socket.emit("404", data.squarefield);
+            auth = false;
 
         }
 
-      });
-
-    });
-
-    cs.checkin = function (data, callback) {
-
-      //email,password,id,key
-
-      if (data.password && data.email) {
-
         cs.fields.findOne({
-          email: data.email
-        }, function (err, user) {
+            _id: ObjectID(squarefield)
+        }, function (err, field) {
 
-          var currentuser;
+            var light = function () {
 
-          if (!user) {
+                cs.fields.update({
+                    _id: ObjectID(squarefield),
+                    "squares.number": parseInt(square)
+                }, {
+                    $set: {
+                        "squares.$.colour": colour,
+                        "squares.$.author": id
+                    }
 
-            console.log("user doesn't exist");
+                }, function (err, document) {
 
-          } else if (user.password === data.password) {
+                    if (document) {
 
-            //Sign in through form
+                        cs.fields.findOne({
+                            _id: ObjectID(squarefield)
+                        }, function (err, updated) {
 
-            cs.makekey(user._id, function (key) {
+                            callback(updated.squares[square]);
 
-              currentuser = {
+                        });
 
-                name: user.name,
-                id: user._id,
-                key: key,
-                friends: user.friends
+                    }
+                })
 
-              }
-
-              if (callback) {
-                callback(currentuser);
-              }
-
-            });
-
-          } else {
-
-            console.log("Wrong password");
-
-          }
-
-        });
-
-      } else if (cs.authcheck(data.userid, data.userkey)) {
-
-        cs.fields.findOne({
-          _id: ObjectID(data.userid)
-        }, function (err, user) {
-
-
-          if (user) {
-
-            currentuser = {
-              name: user.name,
-              id: user._id,
-              key: data.userkey,
-              friends: user.friends
             };
 
-            if (callback) {
-              callback(currentuser);
-            }
+            if (field) {
 
-          };
+                //Check auth of square
 
-        });
+                if (auth && field.friends.indexOf(id) !== -1) {
 
-      }
+                    friend = true;
+
+                }
+
+                var edit = field.squares[square].edit;
+
+                if (edit === 0) {
+
+                    light();
+
+                } else if (edit === 1 && auth) {
+
+                    light();
+
+                } else if (edit === 2 && friend) {
+
+                    light();
+
+                } else if (edit === 3 && field._id == id) {
+
+                    light();
+
+                } else {
+
+
+                    console.log("Can't light");
+
+                }
+
+            };
+
+        })
 
     };
 
+    /*
 
-    socket.on("signin", function (data) {
+    WEBSOCKETS
+    Server, meet client.
 
-      cs.checkin(data, function (user) {
+    */
 
-        socket.emit("signedin", user);
+    io.on('connection', function (socket) {
 
-      });
+        //When user loads page, check if they are signed in
 
-    });
+        socket.on('hello', function (data) {
 
-    socket.on("light", function (data) {
+            if (cs.authcheck(data.id, data.key)) {
 
-      cs.light(data.userid, data.userkey, data.squarefield, data.square, data.colour, function (square) {
+                cs.checkin(data, function (user) {
 
-        square.squarefield = data.squarefield;
+                    socket.emit("signedin", user);
 
-        io.emit('light', square);
+                });
 
-      });
+            } else {
 
-    });
-
-
-    socket.on("upload", function (data) {
-
-      var url = new Date().getTime();
-
-      fs.writeFile("images/" + url + ".jpg", data, function (err) {
-
-        gm("images/" + url + ".jpg")
-          .filter("Sinc")
-          .resize(500, 500)
-          .write("images/" + url + ".jpg", function (err) {
-
-            if (!err) {
-
-              socket.emit("uploaded", url);
-
+                socket.emit("guest");
 
             }
-          });
 
-      });
-    })
+        });
 
-    //Socket conection function ends
+        socket.on("signup", function (data) {
 
-  });
+            cs.CreateField({
+                name: Date.now().toString(),
+                email: data.email,
+                password: data.password
+            }, function (document) {
+
+                cs.checkin(data, function (user) {
+
+                    socket.emit("signedin", user);
+
+                });
+
+            }, function () {
+
+                console.log("Already exists");
+
+            });
+
+        });
+
+
+        socket.on("load", function (data) {
+
+            var auth;
+
+            //Check authentication status of user
+
+            if (cs.authcheck(data.id, data.key)) {
+
+                auth = true;
+
+            } else {
+
+                auth = false;
+
+            }
+
+            if (!data.squarefield) {
+
+                data.squarefield = "coloured_squares";
+
+            }
+
+            //Load squarefield
+
+            cs.fields.findOne({
+                name: data.squarefield
+            }, function (err, squarefield) {
+                if (squarefield) {
+
+                    //Want to return name, friends, squares
+
+                    squarefield.squares.forEach(function (square, index) {
+
+                        //Check if square can be viewed
+
+                        if (square.view === 1 && (!auth || data.id != squarefield._id && squarefield.friends.indexOf(data.id) === -1)) {
+
+
+                            squarefield.squares[index].colour = "black";
+
+
+                        }
+
+                    })
+
+                    //Only send needed information about field 
+                    squarefield = {
+                        squares: squarefield.squares,
+                        _id: squarefield._id,
+                        name: squarefield.name
+                    };
+
+                    socket.emit("load", squarefield);
+
+                } else {
+
+                    socket.emit("404", data.squarefield);
+
+                }
+
+            });
+
+        });
+
+        cs.checkin = function (data, callback) {
+
+            //email,password,id,key
+
+            if (data.password && data.email) {
+
+                cs.fields.findOne({
+                    email: data.email
+                }, function (err, user) {
+
+                    var currentuser;
+
+                    if (!user) {
+
+                        console.log("user doesn't exist");
+
+                    } else if (user.password === data.password) {
+
+                        //Sign in through form
+
+                        cs.makekey(user._id, function (key) {
+
+                            currentuser = {
+
+                                name: user.name,
+                                id: user._id,
+                                key: key,
+                                friends: user.friends
+
+                            }
+
+                            if (callback) {
+                                callback(currentuser);
+                            }
+
+                        });
+
+                    } else {
+
+                        console.log("Wrong password");
+
+                    }
+
+                });
+
+            } else if (cs.authcheck(data.id, data.key)) {
+
+                cs.fields.findOne({
+                    _id: ObjectID(data.id)
+                }, function (err, user) {
+
+
+                    if (user) {
+
+                        currentuser = {
+                            name: user.name,
+                            id: user._id,
+                            key: data.key,
+                            friends: user.friends
+                        };
+
+                        if (callback) {
+                            callback(currentuser);
+                        }
+
+                    };
+
+                });
+
+            }
+
+        };
+
+
+        socket.on("favourite", function (data) {
+
+            if (cs.authcheck(data.id, data.key)) {
+
+                if (data.squarefield !== data.id) {
+
+                    cs.fields.findOne({
+                        _id: ObjectID(data.squarefield),
+                        friends: data.id
+                    }, function (err, field) {
+
+                        if (field) {
+                            
+                            console.log(field.friends);
+
+                            cs.fields.update({
+                                _id: ObjectID(data.squarefield)
+                            }, {
+                                $pull: {
+                                    friends: data.id
+                                }
+
+                            }, function (err, data) {
+
+                                if (data) {
+
+                                    console.log("Unfriended");
+
+                                } else {
+
+                                }
+
+                            });
+
+                        } else {
+
+                            cs.fields.update({
+                                _id: ObjectID(data.squarefield)
+                            }, {
+                                $push: {
+                                    friends: data.id
+                                }
+
+                            }, function (err, data) {
+
+                                if (data) {
+
+                                    console.log("Friended");
+
+                                } else {
+
+                                }
+
+                            });
+
+                        }
+
+                    });
+
+                } else {
+
+                    console.log("can't favourite your own field");
+
+                }
+
+            };
+
+        });
+
+        socket.on("signin", function (data) {
+
+            cs.checkin(data, function (user) {
+
+                socket.emit("signedin", user);
+
+            });
+
+        });
+
+        socket.on("light", function (data) {
+
+            cs.light(data.id, data.key, data.squarefield, data.square, data.colour, function (square) {
+
+                square.squarefield = data.squarefield;
+
+                io.emit('light', square);
+
+            });
+
+        });
+
+
+        socket.on("upload", function (data) {
+
+            var url = new Date().getTime();
+
+            fs.writeFile("images/" + url + ".jpg", data, function (err) {
+
+                gm("images/" + url + ".jpg")
+                    .filter("Sinc")
+                    .resize(500, 500)
+                    .write("images/" + url + ".jpg", function (err) {
+
+                        if (!err) {
+
+                            socket.emit("uploaded", url);
+
+
+                        }
+                    });
+
+            });
+        })
+
+        //Socket conection function ends
+
+    });
 };

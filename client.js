@@ -21,8 +21,8 @@ function getCookie(cookie) {
 
 session = {
 
-    userid: getCookie("csid"),
-    userkey: getCookie("cskey"),
+    id: getCookie("csid"),
+    key: getCookie("cskey"),
     colour: "rgb(255,255,255)",
     squarefield: null,
     home: false,
@@ -31,8 +31,8 @@ session = {
 
 socket.on('connect', function (data) {
     socket.emit('hello', {
-        userid: session.userid,
-        userkey: session.userkey,
+        id: session.id,
+        key: session.key,
         squarefield: document.location.pathname.substring(1)
     });
 });
@@ -40,10 +40,28 @@ socket.on('connect', function (data) {
 //Load requested squarefield
 
 socket.on('load', function (data) {
+    
+    if(session.id){
+     
+        document.getElementById("favourite").onclick = function(){
+          
+            socket.emit("favourite", session);
+            
+        };
+        
+    } else {
+        
+      document.getElementById("favourite").onclick = function(){
+          
+            alert("Please log in to favourite");
+            
+        }; 
+        
+    };
 
     if (data) {
 
-        if (data._id === session.userid) {
+        if (data._id === session.id) {
 
             session.home = true;
             document.getElementById("home").style.display = "block";
@@ -100,8 +118,8 @@ socket.on('load', function (data) {
 socket.on("guest", function () {
 
     socket.emit("load", {
-        userid: null,
-        userkey: null,
+        id: null,
+        key: null,
         squarefield: document.location.pathname.substring(1)
     });
 
@@ -123,8 +141,8 @@ var squareclick = function (square) {
         squarefield: session.squarefield,
         square: id,
         colour: session.colour,
-        userid: session.userid,
-        userkey: session.userkey
+        id: session.id,
+        key: session.key
     })
 
 };
@@ -254,9 +272,9 @@ var signup = function () {
 };
 
 socket.on("signedin", function (user) {
-
+    
     session.username = user.name;
-    session.userid = user.id;
+    session.id = user.id;
     session.key = user.key;
     document.cookie = "cskey=" + user.key;
     document.cookie = "csid=" + user.id;
@@ -267,8 +285,8 @@ socket.on("signedin", function (user) {
     document.querySelector(".me").innerHTML = session.username;
 
     socket.emit("load", {
-        userid: user.id,
-        userkey: user.key,
+        id: user.id,
+        key: user.key,
         squarefield: document.location.pathname.substring(1)
     });
 
