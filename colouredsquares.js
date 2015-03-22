@@ -476,10 +476,26 @@ var db_ready = function (db) {
                     cs.fields.count({
                         friends: squarefield._id.toString()
                     }, function (err, count) {
-                        
+
                         squarefield.friendcount = count;
 
                         socket.emit("load", squarefield);
+
+                        //Reset list of connected rooms
+                                                
+                        socket.rooms.forEach(function(room, index){
+                            
+                            if(room !== socket.id){
+                             
+                                socket.leave(room);
+                                
+                            }
+                            
+                        });
+                        
+                        //Join room for specific squarefield
+                        
+                        socket.join(squarefield._id);
 
                     });
 
@@ -652,7 +668,7 @@ var db_ready = function (db) {
 
                 square.squarefield = data.squarefield;
 
-                io.emit('light', square);
+                io.to(data.squarefield).emit('light', square);
 
             });
 

@@ -183,7 +183,7 @@ var squareclick = function (square) {
 //Change square when changed on server
 
 socket.on("light", function (data) {
-
+    
     if (data.squarefield === session.squarefield) {
 
         var square = document.querySelector("#s" + data.number);
