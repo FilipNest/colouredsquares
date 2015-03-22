@@ -482,19 +482,19 @@ var db_ready = function (db) {
                         socket.emit("load", squarefield);
 
                         //Reset list of connected rooms
-                                                
-                        socket.rooms.forEach(function(room, index){
-                            
-                            if(room !== socket.id){
-                             
+
+                        socket.rooms.forEach(function (room, index) {
+
+                            if (room !== socket.id) {
+
                                 socket.leave(room);
-                                
+
                             }
-                            
+
                         });
-                        
+
                         //Join room for specific squarefield
-                        
+
                         socket.join(squarefield._id);
 
                     });
@@ -591,53 +591,59 @@ var db_ready = function (db) {
 
                     cs.fields.findOne({
                         _id: ObjectID(data.id),
-                        friends: data.squarefield
                     }, function (err, field) {
 
                         if (field) {
+                            
+                            if (field.friends.indexOf(data.squarefield) !== -1) {
 
-                            cs.fields.update({
-                                _id: ObjectID(data.id)
-                            }, {
-                                $pull: {
-                                    friends: data.squarefield
-                                }
+                                cs.fields.update({
+                                    _id: ObjectID(data.id)
+                                }, {
+                                    $pull: {
+                                        friends: data.squarefield
+                                    }
 
-                            }, function (err, update) {
+                                }, function (err, update) {
 
-                                if (update) {
+                                    if (update) {
 
-                                    socket.emit("favourite", {
-                                        status: false,
-                                        id: data.squarefield
-                                    });
+                                        socket.emit("favourite", {
+                                            status: false,
+                                            id: data.squarefield
+                                        });
+                                    
+                                        io.to(data.squarefield).emit('favourited', field.friends.length - 1);
 
-                                }
+                                    }
 
-                            });
+                                });
 
-                        } else {
+                            } else {
 
-                            cs.fields.update({
-                                _id: ObjectID(data.id)
-                            }, {
-                                $push: {
-                                    friends: data.squarefield
-                                }
+                                cs.fields.update({
+                                    _id: ObjectID(data.id)
+                                }, {
+                                    $push: {
+                                        friends: data.squarefield
+                                    }
 
-                            }, function (err, update) {
+                                }, function (err, update) {
 
-                                if (update) {
+                                    if (update) {
 
-                                    socket.emit("favourite", {
-                                        status: true,
-                                        id: data.squarefield
-                                    });
+                                        socket.emit("favourite", {
+                                            status: true,
+                                            id: data.squarefield
+                                        });
+                                        
+                                        io.to(data.squarefield).emit('favourited', field.friends.length + 1);
 
-                                }
+                                    }
 
-                            });
+                                });
 
+                            }
                         }
 
                     });

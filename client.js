@@ -180,6 +180,12 @@ var squareclick = function (square) {
 
 };
 
+socket.on("favourited", function(count){
+   
+    document.getElementById("favouritecount").innerHTML = count;
+    
+});
+
 //Change square when changed on server
 
 socket.on("light", function (data) {
