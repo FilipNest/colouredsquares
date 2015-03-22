@@ -11,11 +11,11 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
     //TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
 
-//        db.collection('squarefields').remove(function () {
-//    
-//            db_ready(db);
-//    
-//        });
+    //        db.collection('squarefields').remove(function () {
+    //    
+    //            db_ready(db);
+    //    
+    //        });
 
     db_ready(db);
 
@@ -471,7 +471,17 @@ var db_ready = function (db) {
                         friends: squarefield.friends
                     };
 
-                    socket.emit("load", squarefield);
+                    //Find squarefield's friends
+
+                    cs.fields.count({
+                        friends: squarefield._id.toString()
+                    }, function (err, count) {
+                        
+                        squarefield.friendcount = count;
+
+                        socket.emit("load", squarefield);
+
+                    });
 
                 } else {
 
@@ -560,7 +570,7 @@ var db_ready = function (db) {
         socket.on("favourite", function (data) {
 
             if (cs.authcheck(data.id, data.key)) {
-                
+
                 if (data.squarefield !== data.id) {
 
                     cs.fields.findOne({
@@ -569,7 +579,7 @@ var db_ready = function (db) {
                     }, function (err, field) {
 
                         if (field) {
-                            
+
                             cs.fields.update({
                                 _id: ObjectID(data.id)
                             }, {
@@ -581,7 +591,10 @@ var db_ready = function (db) {
 
                                 if (update) {
 
-                                    socket.emit("favourite", {status:false, id: data.squarefield});
+                                    socket.emit("favourite", {
+                                        status: false,
+                                        id: data.squarefield
+                                    });
 
                                 }
 
@@ -600,7 +613,10 @@ var db_ready = function (db) {
 
                                 if (update) {
 
-                                    socket.emit("favourite", {status:true, id: data.squarefield});
+                                    socket.emit("favourite", {
+                                        status: true,
+                                        id: data.squarefield
+                                    });
 
                                 }
 

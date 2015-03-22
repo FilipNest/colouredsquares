@@ -62,6 +62,8 @@ socket.on("favourite", function (data) {
 
 socket.on('load', function (data) {
     
+    document.getElementById("favouritecount").innerHTML = data.friendcount;
+    
     //Check if user has favourited the field
     
     if (session.id && session.friends.indexOf(data._id) !== -1) {
