@@ -45,12 +45,12 @@ socket.on("favourite", function (data) {
         if (data.status) {
 
             document.getElementById("favourite").setAttribute("class", "on");
-
+            session.friends.push(data.id);
 
         } else {
 
             document.getElementById("favourite").setAttribute("class", "");
-
+            session.friends.splice(session.friends.indexOf(data.id),1);
 
         };
 
