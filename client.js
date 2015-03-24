@@ -44,12 +44,12 @@ socket.on("favourite", function (data) {
 
         if (data.status) {
 
-            document.getElementById("favourite").setAttribute("class", "on");
+            document.getElementById("favourite").style.backgroundColor = "orangered";
             session.friends.push(data.id);
 
         } else {
 
-            document.getElementById("favourite").setAttribute("class", "");
+            document.getElementById("favourite").style.backgroundColor = "white";
             session.friends.splice(session.friends.indexOf(data.id), 1);
 
         };
@@ -62,7 +62,17 @@ socket.on("favourite", function (data) {
 
 socket.on('load', function (data) {
 
-    document.getElementById("favouritecount").innerHTML = data.friendcount;
+    document.getElementById("favouritedcount").innerHTML = data.friendcount;
+    
+    document.getElementById("favouritecount").innerHTML = data.friends.length;
+    
+    //Check if user has been favourited by the field
+    
+    if (session.id && data.friends.indexOf(session.id) !== -1) {
+
+        document.getElementById("favourite").style.borderColor = "orangered";
+
+    };
 
     //Check if user has favourited the field
 
@@ -181,9 +191,7 @@ var squareclick = function (square) {
 };
 
 socket.on("favourited", function (count) {
-
-    document.getElementById("favouritecount").innerHTML = count;
-
+    document.getElementById("favouritedcount").innerHTML = count;
 });
 
 //Change square when changed on server
@@ -252,6 +260,8 @@ window.onload = function () {
 
     setcolour();
     
+    document.querySelector("#mixed").click();
+    
 };
 
 //Colour sliders
@@ -264,7 +274,20 @@ var setcolour = function () {
 
     document.querySelector("#mixed").style.background = "rgb(" + red + "," + green + "," + blue + ")";
 
-    var yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000;
+
+};
+
+//Select colour
+
+document.querySelector("#mixed").onclick = function (e) {
+
+    session.colour = e.target.style.background;
+    
+       var red = document.querySelector('input[type=range].red').value;
+    var green = document.querySelector('input[type=range].green').value;
+    var blue = document.querySelector('input[type=range].blue').value;
+    
+        var yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000;
 
     if (yiq >= 128) {
 
@@ -280,15 +303,6 @@ var setcolour = function () {
     document.querySelector("menu").style.background = "rgb(" + red + "," + green + "," + blue + ")";
 
     document.querySelector("menu").setAttribute("class", lightordark);
-
-};
-
-//Select colour
-
-document.querySelector("#mixed").onclick = function (e) {
-
-    session.colour = e.target.style.background;
-    
     document.querySelector("menu").style.backgroundImage = "none";
 
 };

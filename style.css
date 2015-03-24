@@ -1,64 +1,268 @@
 @import url(http://fonts.googleapis.com/css?family=Actor);
-html {height: 100%; font-size:16px; font-family:"actor";}
-body {margin:0; padding:0;}
-a:link, a:visited {color:inherit;}
-ul {margin:0px; padding-left:22px;}
-ul li {padding:5px;}
-
-#name {font-size:100%; font-weight: normal; margin-bottom:5px; position:relative; display: inline; top:-4px;}
-#favourites {display: inline;}
-#favourite {cursor: pointer;width:20px; display: inline; position:relative; top:14px; stroke:black;}
-#favourite.on {fill:yellow;}
-#favouritecount {vertical-align: middle; top:-5px; position:relative;}
-#infobar {margin-left:10px; margin-top:-25px;}
-
-#squarefield {width:1728px; height:1728px; position:relative; z-index:0; padding:15px; transition: all 200ms; margin-left:0px;}
-#squarefield.menu {margin-left:300px;}
-.square {float:left; width:100px; height:100px; margin:4px; cursor: pointer; transition: background 500ms; background-position:center center !important; background-size:cover !important;}
-.square .author {font-size:80%; text-align:right; position:relative; top:70px; background-color:white; padding:2px; display:none;}
-
-#panel .content {background-color:white; border-style:solid; border-width:0 2px 2px 0; display:block; height:100%; position:fixed; z-index:1; color:black; left:-400px; width:280px; padding:10px; transition: all 200ms}
-#panel .on {left:0px;}
-#panel button {font-weight:bold; cursor:pointer; border-style:none; padding:5px; color:#333333; background-color:white;}
-#panel p {font-size:80%;}
-#panel h2 {margin:0px;}
-#panel .content#colourpicker {display: block;}
-#panel input[type="range"] {width:200px; vertical-align: middle; margin:0; padding:0; margin-left:10px;}
-#panel label {display: inline-block; vertical-align: middle; margin:0; padding:0; width:50px;}
-.slider {height:35px;}
-#panel h3 {text-align: center; font-weight:normal; font-size:100%;}
-#panel #mixed {display: block; width:100%; height:50px; background-color:white; cursor:pointer;}
-#preview {width:100px; height:100px; margin-top:10px; display: block; cursor: pointer; border-style:solid; border-color:black; float:right; background-size:cover; background-position: center center !important;}
-#image-preview {width:160px; margin-right:10px; float:left;}
-
-#signinform input {margin-bottom:10px;}
-#signinform label {width:50px; margin-right:10px;}
-#signinform button {color:#333333; background-color:white; cursor:pointer; display:inline-block; width:123px; margin:10px auto;}
-
-#passwordpicker {width:220px; float:left;}
-#passwordpicker .square {width:50px; height:50px; margin:2px;}
-#passred {background-color:red;}
-#passorange {background-color:orange;}
-#passyellow {background-color:yellow;}
-#passgreen {background-color:green;}
-#passblue {background-color:blue;}
-#passindigo {background-color:indigo;}
-#passviolet {background-color:violet;}
-#passwhite {background-color:white;}
-
-#passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
-
-footer {position: fixed; z-index:2; background-color:white; padding-top:5px; bottom: 0px; width:300px; border-style:solid; border-width:2px 2px 0 0;}
-menu img {width:40px; height:40px; margin:5px; cursor:pointer;
+html {
+    height: 100%;
+    font-size: 16px;
+    font-family: "actor";
 }
 
-menu.light img {-webkit-filter: invert(100%); filter:invert(100%)}
+body {
+    margin: 0;
+    padding: 0;
+}
 
-menu {margin:0px; padding:0px; padding-top:10px; border-width:2px 0 0 0; border-style:solid;} 
+a:link,
+a:visited {
+    color: inherit;
+}
 
-@media(max-width:400px){
- 
-  #panel .content {width:100%;}
-  footer {width:100%;}
-  
+ul {
+    margin: 0px;
+    padding-left: 22px;
+}
+
+ul li {
+    padding: 5px;
+}
+
+#name {
+    font-size: 100%;
+    font-weight: normal;
+    margin-bottom: 5px;
+    position: relative;
+    display: inline-block;
+    top: -6px;
+    left:5px;
+    margin-right:10px;
+}
+
+#separator {top:-3px; position:relative;}
+
+#favourites {
+    display: inline-block;
+    position:relative;
+    top:-3px;
+}
+
+#favourite {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-color: white;
+    position: relative;
+    top:5px;
+    border-style:solid;
+    border-color: black;
+    margin-right:5px;
+}
+
+#favouritecount, #favouritedcount {
+    top: -3px;
+    position: relative;
+}
+
+#squarefield {
+    width: 1728px;
+    height: 1728px;
+    position: relative;
+    z-index: 0;
+    padding: 15px;
+    transition: all 200ms;
+    margin-left: 0px;
+}
+#squarefield.menu {
+    margin-left: 300px;
+}
+.square {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin: 4px;
+    cursor: pointer;
+    transition: background 500ms;
+    background-position: center center !important;
+    background-size: cover !important;
+}
+.square .author {
+    font-size: 80%;
+    text-align: right;
+    position: relative;
+    top: 70px;
+    background-color: white;
+    padding: 2px;
+    display: none;
+}
+#panel .content {
+    background-color: white;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    display: block;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    color: black;
+    left: -400px;
+    width: 280px;
+    padding: 10px;
+    transition: all 200ms
+}
+#panel .on {
+    left: 0px;
+}
+#panel button {
+    font-weight: bold;
+    cursor: pointer;
+    border-style: none;
+    padding: 5px;
+    color: #333333;
+    background-color: white;
+}
+#panel p {
+    font-size: 80%;
+}
+#panel h2 {
+    margin: 0px;
+}
+#panel .content#colourpicker {
+    display: block;
+}
+#panel input[type="range"] {
+    width: 200px;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+}
+#panel label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    width: 50px;
+}
+.slider {
+    height: 35px;
+}
+#panel h3 {
+    text-align: center;
+    font-weight: normal;
+    font-size: 100%;
+}
+#panel #mixed {
+    display: block;
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    cursor: pointer;
+}
+#preview {
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    display: block;
+    cursor: pointer;
+    border-style: solid;
+    border-color: black;
+    float: right;
+    background-size: cover;
+    background-position: center center !important;
+}
+#image-preview {
+    width: 160px;
+    margin-right: 10px;
+    float: left;
+}
+#signinform input {
+    margin-bottom: 10px;
+}
+#signinform label {
+    width: 50px;
+    margin-right: 10px;
+}
+#signinform button {
+    color: #333333;
+    background-color: white;
+    cursor: pointer;
+    display: inline-block;
+    width: 123px;
+    margin: 10px auto;
+}
+#passwordpicker {
+    width: 220px;
+    float: left;
+}
+#passwordpicker .square {
+    width: 50px;
+    height: 50px;
+    margin: 2px;
+}
+#passred {
+    background-color: red;
+}
+#passorange {
+    background-color: orange;
+}
+#passyellow {
+    background-color: yellow;
+}
+#passgreen {
+    background-color: green;
+}
+#passblue {
+    background-color: blue;
+}
+#passindigo {
+    background-color: indigo;
+}
+#passviolet {
+    background-color: violet;
+}
+#passwhite {
+    background-color: white;
+}
+#passwordpicked {
+    float: right;
+    width: 50px;
+    position: relative;
+    top: -5px;
+    margin-bottom: 5px;
+    text-transform: capitalize;
+    font-size: 80%;
+    line-height: 20px;
+}
+footer {
+    position: fixed;
+    z-index: 2;
+    background-color: white;
+    padding-top: 5px;
+    bottom: 0px;
+    width: 300px;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+}
+menu img {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    cursor: pointer;
+}
+menu.light img {
+    -webkit-filter: invert(100%);
+    filter: invert(100%)
+}
+menu {
+    margin: 0px;
+    padding: 0px;
+    padding-top: 10px;
+    border-width: 2px 0 0 0;
+    border-style: solid;
+}
+@media(max-width:400px) {
+    #panel .content {
+        width: 100%;
+    }
+    
+    footer {
+        width: 100%;
+    }
 }
