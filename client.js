@@ -80,6 +80,14 @@ socket.on("logout", function(){
     
 });
 
+var gohome = function(){
+        
+var url = document.location.protocol + "//" + document.location.host + "/" + session.username; 
+
+document.location.href = url;
+    
+};
+
 //Load requested squarefield
 
 socket.on('load', function (data) {
@@ -128,11 +136,15 @@ socket.on('load', function (data) {
 
             session.home = true;
             document.getElementById("home").style.display = "block";
+            document.getElementById("gohome").style.display = "none";
+            
+            
 
         } else {
 
-            session.home = true;
+            session.home = false;
             document.getElementById("home").style.display = "none";
+            document.getElementById("gohome").style.display = "inline";
 
         }
 

@@ -4,91 +4,92 @@
 <html>
 
 <head>
-  <title>Coloured Squares</title>
-  <link rel="stylesheet" href="style.css" />
+    <title>Coloured Squares</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <section id="panel">
-    <div id="colour" class="content">
-      <h2>Colours</h2>
-      <p>Make a colour by mixing red, green and blue. Touch the created colour to select it. Touch a square on the field to light it that colour.</p>
-      <div class="slider">
-        <label for="red">Red</label>
-        <input name="red" class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
-      </div>
-      <div class="slider">
-        <label for="green">Green</label>
-        <input name="green" class="green" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
-      </div>
-      <div class="slider">
-        <label for="blue">Blue</label>
-        <input name="blue" class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
-      </div>
-      <div id="mixed"></div>
-    </div>
-    <div id="picture" class="content">
-      <h2>Images</h2>
-      <p>Upload a picture.</p>
-      <input type="file" onchange="convert(this)" />
-      <p id="image-preview">The image will appear in the frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
-      <span id="preview"></span>
-    </div>
-    <div id="userpanel" class="content">
-      <div id="signinform">
+    <section id="panel">
+        <div id="colour" class="content">
+            <h2>Colours</h2>
+            <p>Make a colour by mixing red, green and blue. Touch the created colour to select it. Touch a square on the field to light it that colour.</p>
+            <div class="slider">
+                <label for="red">Red</label>
+                <input name="red" class="red" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
+            </div>
+            <div class="slider">
+                <label for="green">Green</label>
+                <input name="green" class="green" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
+            </div>
+            <div class="slider">
+                <label for="blue">Blue</label>
+                <input name="blue" class="blue" value="256" type="range" min="0" max="256" onclick="setcolour()" oninput="setcolour()" />
+            </div>
+            <div id="mixed"></div>
+        </div>
+        <div id="picture" class="content">
+            <h2>Images</h2>
+            <p>Upload a picture.</p>
+            <input type="file" onchange="convert(this)" />
+            <p id="image-preview">The image will appear in the frame. Touch it to select it and then touch a square on the field to light it up with the picture.</p>
+            <span id="preview"></span>
+        </div>
+        <div id="userpanel" class="content">
+            <div id="signinform">
                 <h2>Sign in</h2>
-        <br />
-        <label>Email</label>
-        <input id="email" type="email" />
-        <br />
-        <p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
-        <div id="passwordpicker">
-          <div class="square" id="passred" onclick=passinput("red")></div>
-          <div class="square" id="passorange" onclick=passinput("orange")></div>
-          <div class="square" id="passyellow" onclick=passinput("yellow")></div>
-          <div class="square" id="passgreen" onclick=passinput("green")></div>
-          <div class="square" id="passblue" onclick=passinput("blue")></div>
-          <div class="square" id="passindigo" onclick=passinput("indigo")></div>
-          <div class="square" id="passviolet" onclick=passinput("violet")></div>
-          <div class="square" id="passwhite" onclick=passinput("white")></div>
-        </div>
-        <div id="passwordpicked"></div>
+                <br />
+                <label>Email</label>
+                <input id="email" type="email" />
+                <br />
+                <p>Pick four coloured squares for your <b>password</b>. Squares can be used more than once.</p>
+                <div id="passwordpicker">
+                    <div class="square" id="passred" onclick=passinput("red")></div>
+                    <div class="square" id="passorange" onclick=passinput("orange")></div>
+                    <div class="square" id="passyellow" onclick=passinput("yellow")></div>
+                    <div class="square" id="passgreen" onclick=passinput("green")></div>
+                    <div class="square" id="passblue" onclick=passinput("blue")></div>
+                    <div class="square" id="passindigo" onclick=passinput("indigo")></div>
+                    <div class="square" id="passviolet" onclick=passinput("violet")></div>
+                    <div class="square" id="passwhite" onclick=passinput("white")></div>
+                </div>
+                <div id="passwordpicked"></div>
 
-        <button onclick=signin()>Sign In</button>
-        <button onclick=signup()>New Account</button>
-      </div>
-        <div id="me" style="display:none">
-        Hello <span class="me"></span>
-        <div id="home">
-        <p>This is your home squarefield</p>
-            <button onclick="logout()">Log out</button>
-        </div>
-        </div>
-    </div>
-  </section>
-  <section id="squarefield">
+                <button onclick=signin()>Sign In</button>
+                <button onclick=signup()>New Account</button>
+            </div>
+            <div id="me" style="display:none">
+                Hello <span class="me"></span>
+                <button onclick="logout()">Log out</button>                <button id="gohome" onclick="gohome()">Go home</button>
 
-  </section>
-  <footer>
-    <div id="infobar">
-    <h1 id="name">Name</h1>
-      <div id="favourites">
-    <span id="favourite"></span>
-<span id="favouritecount"></span>
-<span id="separator">/</span>
-<span id="favouritedcount"></span>
+                <div id="home">
+                    <p>This is your home squarefield</p>
+                </div>
+            </div>
         </div>
-    </div>
-    <menu>
-      <img onclick="menu('colour')" src="icons/colour.png" />
-      <img onclick="menu('picture')" src="icons/picture.png" />
-      <img onclick="menu('userpanel')" src="icons/me.png" />
-      <img onclick="menu('explore')" src="icons/explore.png" />
-      <!--<img src="icons/lock.png"/>-->
-    </menu>
-  </footer>
-<script src="/socket.io/socket.io.js"></script>
-  <script src="client.js"></script>
+    </section>
+    <section id="squarefield">
+
+    </section>
+    <footer>
+        <div id="infobar">
+            <h1 id="name">Name</h1>
+            <div id="favourites">
+                <span id="favourite"></span>
+                <span id="favouritecount"></span>
+                <span id="separator">/</span>
+                <span id="favouritedcount"></span>
+            </div>
+        </div>
+        <menu>
+            <img onclick="menu('colour')" src="icons/colour.png" />
+            <img onclick="menu('picture')" src="icons/picture.png" />
+            <img onclick="menu('userpanel')" src="icons/me.png" />
+            <img onclick="menu('explore')" src="icons/explore.png" />
+            <!--<img src="icons/lock.png"/>-->
+        </menu>
+    </footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
 </body>
 
 </html>
