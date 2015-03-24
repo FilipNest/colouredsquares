@@ -58,6 +58,28 @@ socket.on("favourite", function (data) {
 
 });
 
+var logout = function(){
+  
+    socket.emit("logout", session);
+    
+};
+
+socket.on("logout", function(){
+    
+    session.username = null;
+    session.id = null;
+    session.key = null;
+    session.friends = null;
+    document.cookie = "cskey=" + "";
+    document.cookie = "csid=" + "";
+
+    document.getElementById("signinform").style.display = "block";
+    document.getElementById("me").style.display = "none";
+
+    document.querySelector(".me").innerHTML = "";
+    
+});
+
 //Load requested squarefield
 
 socket.on('load', function (data) {

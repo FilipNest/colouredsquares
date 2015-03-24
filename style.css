@@ -112,11 +112,17 @@ ul li {
 #panel button {
     font-weight: bold;
     cursor: pointer;
-    border-style: none;
     padding: 5px;
-    color: #333333;
+    color: black;
     background-color: white;
+    border-style:solid;
+    border-color:black;
 }
+
+#panel button:hover {
+    text-decoration: underline;
+}
+
 #panel p {
     font-size: 80%;
 }

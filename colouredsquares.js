@@ -594,7 +594,7 @@ var db_ready = function (db) {
                     }, function (err, field) {
 
                         if (field) {
-                            
+
                             if (field.friends.indexOf(data.squarefield) !== -1) {
 
                                 cs.fields.update({
@@ -612,7 +612,7 @@ var db_ready = function (db) {
                                             status: false,
                                             id: data.squarefield
                                         });
-                                    
+
                                         io.to(data.squarefield).emit('favourited', field.friends.length - 1);
 
                                     }
@@ -636,7 +636,7 @@ var db_ready = function (db) {
                                             status: true,
                                             id: data.squarefield
                                         });
-                                        
+
                                         io.to(data.squarefield).emit('favourited', field.friends.length + 1);
 
                                     }
@@ -655,6 +655,26 @@ var db_ready = function (db) {
                 }
 
             };
+
+        });
+
+        socket.on("logout", function (session) {
+
+            if (cs.authcheck(session.id, session.key)) {
+
+                socket.rooms.forEach(function (room, index) {
+
+                    if (room !== socket.id) {
+
+                        socket.leave(room);
+
+                    }
+
+                });
+
+            };
+
+            socket.emit("logout");
 
         });
 
