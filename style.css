@@ -1,10 +1,11 @@
-html {height: 100%; font-size:16px; font-family: sans-serif;}
+@import url(http://fonts.googleapis.com/css?family=Actor);
+html {height: 100%; font-size:16px; font-family:"actor";}
 body {margin:0; padding:0;}
 a:link, a:visited {color:inherit;}
 ul {margin:0px; padding-left:22px;}
 ul li {padding:5px;}
 
-#name {font-size:100%; margin-bottom:5px; position:relative; display: inline; top:-4px;}
+#name {font-size:100%; font-weight: normal; margin-bottom:5px; position:relative; display: inline; top:-4px;}
 #favourites {display: inline;}
 #favourite {cursor: pointer;width:20px; display: inline; position:relative; top:14px; stroke:black;}
 #favourite.on {fill:yellow;}
@@ -48,8 +49,12 @@ ul li {padding:5px;}
 #passwordpicked {float:right; width:50px; position:relative; top:-5px; margin-bottom:5px; text-transform:capitalize; font-size:80%; line-height:20px;}
 
 footer {position: fixed; z-index:2; background-color:white; padding-top:5px; bottom: 0px; width:300px; border-style:solid; border-width:2px 2px 0 0;}
-menu img {width:50px; height:50px; margin:10px; cursor:pointer;}
-menu {margin:0px; padding:0px;} 
+menu img {width:40px; height:40px; margin:5px; cursor:pointer;
+}
+
+menu.light img {-webkit-filter: invert(100%);}
+
+menu {margin:0px; padding:0px; padding-top:10px; border-width:2px 0 0 0; border-style:solid;} 
 
 @media(max-width:400px){
  

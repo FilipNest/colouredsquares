@@ -50,7 +50,7 @@ socket.on("favourite", function (data) {
         } else {
 
             document.getElementById("favourite").setAttribute("class", "");
-            session.friends.splice(session.friends.indexOf(data.id),1);
+            session.friends.splice(session.friends.indexOf(data.id), 1);
 
         };
 
@@ -61,11 +61,11 @@ socket.on("favourite", function (data) {
 //Load requested squarefield
 
 socket.on('load', function (data) {
-    
+
     document.getElementById("favouritecount").innerHTML = data.friendcount;
-    
+
     //Check if user has favourited the field
-    
+
     if (session.id && session.friends.indexOf(data._id) !== -1) {
 
         document.getElementById("favourite").setAttribute("class", "on");
@@ -180,16 +180,16 @@ var squareclick = function (square) {
 
 };
 
-socket.on("favourited", function(count){
-   
+socket.on("favourited", function (count) {
+
     document.getElementById("favouritecount").innerHTML = count;
-    
+
 });
 
 //Change square when changed on server
 
 socket.on("light", function (data) {
-    
+
     if (data.squarefield === session.squarefield) {
 
         var square = document.querySelector("#s" + data.number);
@@ -205,6 +205,17 @@ socket.on("light", function (data) {
 
 });
 
+window.onload = function () {
+
+//Random slider values on load
+    document.querySelector('input[type=range].red').value = (Math.random() * 256);
+    document.querySelector('input[type=range].green').value = (Math.random() * 256);
+    document.querySelector('input[type=range].blue').value = (Math.random() * 256);
+
+    setcolour();
+    
+};
+
 //Colour sliders
 
 var setcolour = function () {
@@ -214,6 +225,23 @@ var setcolour = function () {
     var blue = document.querySelector('input[type=range].blue').value;
 
     document.querySelector("#mixed").style.background = "rgb(" + red + "," + green + "," + blue + ")";
+
+    var yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000;
+
+    if (yiq >= 128) {
+
+        var lightordark = "dark";
+
+    } else {
+
+        var lightordark = "light";
+
+    }
+
+
+    document.querySelector("menu").style.background = "rgb(" + red + "," + green + "," + blue + ")";
+
+    document.querySelector("menu").setAttribute("class", lightordark);
 
 };
 
@@ -311,7 +339,7 @@ var signup = function () {
 };
 
 socket.on("signedin", function (user) {
-        
+
     session.username = user.name;
     session.id = user.id;
     session.key = user.key;
