@@ -205,6 +205,44 @@ socket.on("light", function (data) {
 
 });
 
+
+//Image brightness detection function from Stack Overflow 13762864
+
+function getImageLightness(imageSrc,callback) {
+    var img = document.createElement("img");
+    img.src = imageSrc;
+    img.style.display = "none";
+    document.body.appendChild(img);
+
+    var colorSum = 0;
+
+    img.onload = function() {
+        // create canvas
+        var canvas = document.createElement("canvas");
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(this,0,0);
+
+        var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        var data = imageData.data;
+        var r,g,b,avg;
+
+        for(var x = 0, len = data.length; x < len; x+=4) {
+            r = data[x];
+            g = data[x+1];
+            b = data[x+2];
+
+            avg = Math.floor((r+g+b)/3);
+            colorSum += avg;
+        }
+
+        var brightness = Math.floor(colorSum / (this.width*this.height));
+        callback(brightness);
+    }
+}
+
 window.onload = function () {
 
 //Random slider values on load
@@ -250,6 +288,8 @@ var setcolour = function () {
 document.querySelector("#mixed").onclick = function (e) {
 
     session.colour = e.target.style.background;
+    
+    document.querySelector("menu").style.backgroundImage = "none";
 
 };
 
@@ -293,6 +333,18 @@ document.querySelector("#preview").onclick = function (what) {
         session.colour = "url(" + session.image + ")";
 
     }
+    
+    getImageLightness(session.image,function(brightness){
+    if(brightness < 100){
+        
+        document.querySelector("menu").setAttribute("class","light");
+        
+    }
+        
+document.querySelector("menu").style.backgroundImage = "url('"+session.image+"')";
+        
+});
+    
 };
 
 //Sign up and sign in functions
