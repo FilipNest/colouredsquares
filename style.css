@@ -92,6 +92,9 @@ ul li {
     padding: 2px;
     display: none;
 }
+
+#newusername {height:20px;}
+
 #panel .content {
     background-color: white;
     border-style: solid;
