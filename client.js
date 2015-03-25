@@ -80,6 +80,14 @@ socket.on("logout", function(){
     
 });
 
+var changeusername = function(){
+    
+    var newname = document.getElementById("newusername").value;
+    
+    socket.emit("changename", {session:session,newname:newname}); 
+    
+};
+
 var gohome = function(){
         
 var url = document.location.protocol + "//" + document.location.host + "/" + session.username; 

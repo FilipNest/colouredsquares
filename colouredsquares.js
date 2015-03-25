@@ -443,7 +443,7 @@ var db_ready = function (db) {
             //Load squarefield
 
             cs.fields.findOne({
-                name: data.squarefield
+                name: data.squarefield.toLowerCase()
             }, function (err, squarefield) {
                 if (squarefield) {
 
@@ -675,6 +675,43 @@ var db_ready = function (db) {
             };
 
             socket.emit("logout");
+
+        });
+
+        socket.on("changename", function (data) {
+
+            if (cs.authcheck(data.session.id, data.session.key)) {
+
+                cs.fields.findOne({
+                    name: data.newname
+                }, function (err, field) {
+
+                    if (field) {
+
+                        console.log("Already exists");
+
+                    } else {
+                        
+                        console.log(data.session.id);
+
+                        cs.fields.update({
+                                _id: ObjectID(data.session.id)
+                            }, {
+                                $set: {
+                                    "name": data.newname.toLowerCase().replace(" ", "_"),
+                                }
+                            },
+                            function (err, updated) {
+
+                                console.log(updated);
+
+                            });
+
+                    };
+
+                });
+
+            }
 
         });
 
