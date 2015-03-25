@@ -9,13 +9,13 @@ var crypto = require('crypto');
 require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
     if (err) throw err;
 
-    //TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
+    //    TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
 
-    //        db.collection('squarefields').remove(function () {
-    //    
-    //            db_ready(db);
-    //    
-    //        });
+    //            db.collection('squarefields').remove(function () {
+    //        
+    //                db_ready(db);
+    //        
+    //            });
 
     db_ready(db);
 
@@ -691,19 +691,17 @@ var db_ready = function (db) {
                         console.log("Already exists");
 
                     } else {
-                        
-                        console.log(data.session.id);
 
                         cs.fields.update({
                                 _id: ObjectID(data.session.id)
                             }, {
                                 $set: {
-                                    "name": data.newname.toLowerCase().replace(" ", "_"),
+                                    "name": data.newname.toLowerCase().split(" ").join("_"),
                                 }
                             },
                             function (err, updated) {
 
-                                console.log(updated);
+                                socket.emit("namechanged", data.newname);
 
                             });
 

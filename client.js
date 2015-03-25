@@ -58,14 +58,14 @@ socket.on("favourite", function (data) {
 
 });
 
-var logout = function(){
-  
+var logout = function () {
+
     socket.emit("logout", session);
-    
+
 };
 
-socket.on("logout", function(){
-    
+socket.on("logout", function () {
+
     session.username = null;
     session.id = null;
     session.key = null;
@@ -77,23 +77,34 @@ socket.on("logout", function(){
     document.getElementById("me").style.display = "none";
 
     document.querySelector(".me").innerHTML = "";
-    
+
 });
 
-var changeusername = function(){
-    
+var changeusername = function () {
+
     var newname = document.getElementById("newusername").value;
-    
-    socket.emit("changename", {session:session,newname:newname}); 
-    
+
+    socket.emit("changename", {
+        session: session,
+        newname: newname
+    });
+
 };
 
-var gohome = function(){
-        
-var url = document.location.protocol + "//" + document.location.host + "/" + session.username; 
+socket.on("namechanged", function (name) {
 
-document.location.href = url;
+    var url = document.location.protocol + "//" + document.location.host + "/" + name;
     
+    document.location.href = url;
+
+});
+
+var gohome = function () {
+
+    var url = document.location.protocol + "//" + document.location.host + "/" + session.username;
+
+    document.location.href = url;
+
 };
 
 //Load requested squarefield
@@ -101,11 +112,11 @@ document.location.href = url;
 socket.on('load', function (data) {
 
     document.getElementById("favouritedcount").innerHTML = data.friendcount;
-    
+
     document.getElementById("favouritecount").innerHTML = data.friends.length;
-    
+
     //Check if user has been favourited by the field
-    
+
     if (session.id && data.friends.indexOf(session.id) !== -1) {
 
         document.getElementById("favourite").style.borderColor = "orangered";
@@ -145,8 +156,8 @@ socket.on('load', function (data) {
             session.home = true;
             document.getElementById("home").style.display = "block";
             document.getElementById("gohome").style.display = "none";
-            
-            
+
+
 
         } else {
 
@@ -258,7 +269,7 @@ socket.on("light", function (data) {
 
 //Image brightness detection function from Stack Overflow 13762864
 
-function getImageLightness(imageSrc,callback) {
+function getImageLightness(imageSrc, callback) {
     var img = document.createElement("img");
     img.src = imageSrc;
     img.style.display = "none";
@@ -266,44 +277,44 @@ function getImageLightness(imageSrc,callback) {
 
     var colorSum = 0;
 
-    img.onload = function() {
+    img.onload = function () {
         // create canvas
         var canvas = document.createElement("canvas");
         canvas.width = this.width;
         canvas.height = this.height;
 
         var ctx = canvas.getContext("2d");
-        ctx.drawImage(this,0,0);
+        ctx.drawImage(this, 0, 0);
 
-        var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         var data = imageData.data;
-        var r,g,b,avg;
+        var r, g, b, avg;
 
-        for(var x = 0, len = data.length; x < len; x+=4) {
+        for (var x = 0, len = data.length; x < len; x += 4) {
             r = data[x];
-            g = data[x+1];
-            b = data[x+2];
+            g = data[x + 1];
+            b = data[x + 2];
 
-            avg = Math.floor((r+g+b)/3);
+            avg = Math.floor((r + g + b) / 3);
             colorSum += avg;
         }
 
-        var brightness = Math.floor(colorSum / (this.width*this.height));
+        var brightness = Math.floor(colorSum / (this.width * this.height));
         callback(brightness);
     }
 }
 
 window.onload = function () {
 
-//Random slider values on load
+    //Random slider values on load
     document.querySelector('input[type=range].red').value = (Math.random() * 256);
     document.querySelector('input[type=range].green').value = (Math.random() * 256);
     document.querySelector('input[type=range].blue').value = (Math.random() * 256);
 
     setcolour();
-    
+
     document.querySelector("#mixed").click();
-    
+
 };
 
 //Colour sliders
@@ -324,12 +335,12 @@ var setcolour = function () {
 document.querySelector("#mixed").onclick = function (e) {
 
     session.colour = e.target.style.background;
-    
-       var red = document.querySelector('input[type=range].red').value;
+
+    var red = document.querySelector('input[type=range].red').value;
     var green = document.querySelector('input[type=range].green').value;
     var blue = document.querySelector('input[type=range].blue').value;
-    
-        var yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000;
+
+    var yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000;
 
     if (yiq >= 128) {
 
@@ -389,18 +400,18 @@ document.querySelector("#preview").onclick = function (what) {
         session.colour = "url(" + session.image + ")";
 
     }
-    
-    getImageLightness(session.image,function(brightness){
-    if(brightness < 100){
-        
-        document.querySelector("menu").setAttribute("class","light");
-        
-    }
-        
-document.querySelector("menu").style.backgroundImage = "url('"+session.image+"')";
-        
-});
-    
+
+    getImageLightness(session.image, function (brightness) {
+        if (brightness < 100) {
+
+            document.querySelector("menu").setAttribute("class", "light");
+
+        }
+
+        document.querySelector("menu").style.backgroundImage = "url('" + session.image + "')";
+
+    });
+
 };
 
 //Sign up and sign in functions
