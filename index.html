@@ -66,6 +66,16 @@
                     <p>You can change its name/address:</p>
                     <input id="newusername" />
                     <button id="changename" onclick="changeusername()">Change</button>
+                    <p>You can lock squares from viewing/editing (select the info toggle in the menu to view current states):</p>
+                    <select>
+                        <option>0/0 Everyone can edit</option>
+                        <option>0/1 Logged in can edit</option>
+                        <option>0/2 Only friends can edit</option>
+                        <option>0/3 Only I can edit</option>
+                        <option>2/2 Only friends can view/edit</option>
+                        <option>3/3 Only friends can view, I can edit</option>
+                    </select>
+<br />                    <button>Select</button> <button>Set all to this state</button>
                 </div>
             </div>
         </div>
@@ -87,6 +97,7 @@
             <img onclick="menu('colour')" src="icons/colour.png" />
             <img onclick="menu('picture')" src="icons/picture.png" />
             <img onclick="menu('userpanel')" src="icons/me.png" />
+            <img onclick="toggleinfo()" src="icons/information.png" />
             <img onclick="menu('explore')" src="icons/explore.png" />
             <!--<img src="icons/lock.png"/>-->
         </menu>

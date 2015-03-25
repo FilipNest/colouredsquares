@@ -93,7 +93,9 @@ ul li {
     display: none;
 }
 
-#newusername {height:20px;}
+#newusername {height:20px; border-color:black; border-width:2px;}
+
+select {margin-bottom: 10px; border-width:2px; border-color:black;}
 
 #panel .content {
     background-color: white;
