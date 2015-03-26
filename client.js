@@ -94,7 +94,7 @@ var changeusername = function () {
 socket.on("namechanged", function (name) {
 
     var url = document.location.protocol + "//" + document.location.host + "/" + name;
-    
+
     document.location.href = url;
 
 });
@@ -186,7 +186,8 @@ socket.on('load', function (data) {
             var square = document.createElement("div");
             square.setAttribute("id", "s" + index);
             square.setAttribute("class", "square");
-            square.setAttribute("data-access", data.squares[index].access);
+            square.setAttribute("data-view", data.squares[index].view);
+            square.setAttribute("data-edit", data.squares[index].edit);
             square.setAttribute("data-author", data.squares[index].author);
             square.innerHTML = "<span class='author'>" + data.squares[index].author + "</span>";
             square.style.background = data.squares[index].colour;
@@ -227,20 +228,40 @@ socket.on("404", function (name) {
 
 });
 
+var lockselect = function () {
+
+    document.querySelector("menu").style.backgroundColor = "white";
+    session.locking = document.getElementById("locks").value;
+
+};
+
 var squareclick = function (square) {
 
     var id = square.getAttribute("id").replace("s", "");
 
-    square.style.background = session.colour;
-    square.setAttribute("data-author", session.username);
-    socket.emit("light", {
-        squarefield: session.squarefield,
-        square: id,
-        colour: session.colour,
-        id: session.id,
-        key: session.key
-    })
+    if (session.locking) {
+        
+        socket.emit("lock", {
+            squarefield: session.squarefield,
+            square: id,
+            view: parseInt(session.locking.split("/")[0]),
+            edit: parseInt(session.locking.split("/")[1]),
+            id: session.id,
+            key: session.key
+        })
 
+    } else {
+
+        square.style.background = session.colour;
+        square.setAttribute("data-author", session.username);
+        socket.emit("light", {
+            squarefield: session.squarefield,
+            square: id,
+            colour: session.colour,
+            id: session.id,
+            key: session.key
+        })
+    }
 };
 
 socket.on("favourited", function (count) {
@@ -334,6 +355,8 @@ var setcolour = function () {
 
 document.querySelector("#mixed").onclick = function (e) {
 
+    session.locking = null;
+
     session.colour = e.target.style.background;
 
     var red = document.querySelector('input[type=range].red').value;
@@ -396,6 +419,10 @@ socket.on("uploaded", function (url) {
 //Select converted image
 
 document.querySelector("#preview").onclick = function (what) {
+
+
+    session.locking = null;
+
     if (session.image) {
         session.colour = "url(" + session.image + ")";
 

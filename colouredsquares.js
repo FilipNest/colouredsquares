@@ -375,6 +375,38 @@ var db_ready = function (db) {
 
     io.on('connection', function (socket) {
 
+        socket.on("lock", function (data) {
+
+            if (data.id === data.squarefield && cs.authcheck(data.id, data.key)) {
+
+                cs.fields.update({
+                    _id: ObjectID(data.squarefield),
+                    "squares.number": parseInt(data.square)
+                }, {
+                    $set: {
+                        "squares.$.view": data.view,
+                        "squares.$.edit": data.edit,
+                        "squares.$.author": data.id
+                    }
+
+                }, function (err, changed) {
+
+                    if (changed) {
+
+                        cs.fields.findOne({
+                            _id: ObjectID(data.squarefield)
+                        }, function (err, updated) {
+
+                            console.log(updated.squares[data.square]);
+
+                        });
+
+                    };
+
+                })
+            }
+        });
+
         //When user loads page, check if they are signed in
 
         socket.on('hello', function (data) {
@@ -453,7 +485,7 @@ var db_ready = function (db) {
 
                         //Check if square can be viewed
 
-                        if (square.view === 1 && (!auth || data.id != squarefield._id && squarefield.friends.indexOf(data.id) === -1)) {
+                        if (square.view > 1 && (!auth || data.id != squarefield._id && squarefield.friends.indexOf(data.id) === -1)) {
 
 
                             squarefield.squares[index].colour = "black";
