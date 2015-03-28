@@ -183,9 +183,12 @@ socket.on('load', function (data) {
                 data.squares[index].author = "guest";
             }
             
+            var link = data.squares[index].authorname;
+            
             if(!data.squares[index].authorname){
                 
                 data.squares[index].authorname = "guest";
+                link = "coloured_squares";
                 
             };
             
@@ -199,7 +202,7 @@ socket.on('load', function (data) {
             square.setAttribute("data-author", data.squares[index].author);
             square.setAttribute("data-authorname", data.squares[index].authorname);
             square.setAttribute("data-updated", data.squares[index].updated);
-            square.innerHTML = "<span class='author'>" + data.squares[index].authorname + "</span><span class='timestamp'>"+moment(date).fromNow()+"</span>";
+            square.innerHTML = "<span class='author'><a href='"+link+"'>" + data.squares[index].authorname + "</a></span><span class='timestamp'>"+moment(date).fromNow()+"</span>";
             square.style.background = data.squares[index].colour;
 
             square.onclick = function (square) {
