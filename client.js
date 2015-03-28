@@ -182,6 +182,12 @@ socket.on('load', function (data) {
             if (!data.squares[index].author) {
                 data.squares[index].author = "guest";
             }
+            
+            if(!data.squares[index].authorname){
+                
+                data.squares[index].authorname = "guest";
+                
+            };
 
             var square = document.createElement("div");
             square.setAttribute("id", "s" + index);
@@ -189,7 +195,8 @@ socket.on('load', function (data) {
             square.setAttribute("data-view", data.squares[index].view);
             square.setAttribute("data-edit", data.squares[index].edit);
             square.setAttribute("data-author", data.squares[index].author);
-            square.innerHTML = "<span class='author'>" + data.squares[index].author + "</span>";
+            square.setAttribute("data-authorname", data.squares[index].authorname);
+            square.innerHTML = "<span class='author'>" + data.squares[index].authorname + "</span>";
             square.style.background = data.squares[index].colour;
 
             square.onclick = function (square) {
@@ -257,6 +264,7 @@ var squareclick = function (square) {
         socket.emit("light", {
             squarefield: session.squarefield,
             square: id,
+            username: session.username,
             colour: session.colour,
             id: session.id,
             key: session.key
@@ -271,17 +279,26 @@ socket.on("favourited", function (count) {
 //Change square when changed on server
 
 socket.on("light", function (data) {
-
+    
     if (data.squarefield === session.squarefield) {
 
+        console.log(data);
+        
         var square = document.querySelector("#s" + data.number);
 
         square.style.background = data.colour;
-
+        
+        if(!data.authorname){
+          
+            data.authorname = "guest";
+            
+        };
+        
         //Set authorship
 
         square.setAttribute("data-author", data.author);
-        square.innerhtml = "<span class='author'>" + data.author + "</span>";
+        square.setAttribute("data-username", data.authorname)
+        square.innerHTML = "<span class='author'>" + data.authorname + "</span>";
 
     }
 

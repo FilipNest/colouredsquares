@@ -9,15 +9,15 @@ var crypto = require('crypto');
 require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
     if (err) throw err;
 
-    //    TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
+//        TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
 
-    //            db.collection('squarefields').remove(function () {
-    //        
-    //                db_ready(db);
-    //        
-    //            });
+                db.collection('squarefields').remove(function () {
+            
+                    db_ready(db);
+            
+                });
 
-    db_ready(db);
+//    db_ready(db);
 
 })
 
@@ -278,7 +278,7 @@ var db_ready = function (db) {
 
     //Light up square
 
-    cs.light = function (id, key, squarefield, square, colour, callback) {
+    cs.light = function (id, key, name, squarefield, square, colour, callback) {
 
         var auth,
             friend;
@@ -305,7 +305,8 @@ var db_ready = function (db) {
                 }, {
                     $set: {
                         "squares.$.colour": colour,
-                        "squares.$.author": id
+                        "squares.$.author": id,
+                        "squares.$.authorname": name
                     }
 
                 }, function (err, document) {
@@ -757,8 +758,8 @@ var db_ready = function (db) {
 
         socket.on("light", function (data) {
 
-            cs.light(data.id, data.key, data.squarefield, data.square, data.colour, function (square) {
-
+            cs.light(data.id, data.key, data.username, data.squarefield, data.square, data.colour, function (square) {
+                
                 square.squarefield = data.squarefield;
 
                 io.to(data.squarefield).emit('light', square);

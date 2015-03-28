@@ -84,13 +84,16 @@ ul li {
     background-size: cover !important;
 }
 .square .author {
-    font-size: 80%;
-    text-align: right;
+    font-size: 60%;
+    font-family: monospace;
+    text-align: center;
     position: relative;
     top: 70px;
     background-color: white;
     padding: 2px;
-    display: none;
+    display: block;
+    border-style:solid;
+    border-width: 1px;
 }
 
 #newusername {height:20px; border-color:black; border-width:2px;}
