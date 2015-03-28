@@ -188,6 +188,8 @@ socket.on('load', function (data) {
                 data.squares[index].authorname = "guest";
                 
             };
+            
+            date = new Date(parseInt(data.squares[index].timestamp));
 
             var square = document.createElement("div");
             square.setAttribute("id", "s" + index);
@@ -196,7 +198,8 @@ socket.on('load', function (data) {
             square.setAttribute("data-edit", data.squares[index].edit);
             square.setAttribute("data-author", data.squares[index].author);
             square.setAttribute("data-authorname", data.squares[index].authorname);
-            square.innerHTML = "<span class='author'>" + data.squares[index].authorname + "</span>";
+            square.setAttribute("data-updated", data.squares[index].updated);
+            square.innerHTML = "<span class='author'>" + data.squares[index].authorname + "</span><span class='timestamp'>"+moment(date).fromNow()+"</span>";
             square.style.background = data.squares[index].colour;
 
             square.onclick = function (square) {
@@ -282,7 +285,7 @@ socket.on("light", function (data) {
     
     if (data.squarefield === session.squarefield) {
 
-        console.log(data);
+        date = new Date(parseInt(data.timestamp));
         
         var square = document.querySelector("#s" + data.number);
 
@@ -298,7 +301,8 @@ socket.on("light", function (data) {
 
         square.setAttribute("data-author", data.author);
         square.setAttribute("data-username", data.authorname)
-        square.innerHTML = "<span class='author'>" + data.authorname + "</span>";
+        square.setAttribute("data-updated", data.timestamp)
+        square.innerHTML = "<span class='author'>" + data.authorname + "</span></span><span class='timestamp'>"+moment(date).fromNow()+"</span>";
 
     }
 
@@ -553,3 +557,21 @@ var menu = function (which) {
 
     }
 };
+
+//Update timestamps
+
+window.setInterval(function(){
+   
+    var timestamps = document.querySelectorAll(".timestamp"),
+        i;
+    
+    for (i=0; i<timestamps.length; i+=1){
+        
+      date = new Date(parseInt(document.getElementById("s"+i).getAttribute("data-updated")));
+                
+    timestamps[i].innerHTML = moment(date).fromNow();
+        
+    };
+    
+},1000);
+

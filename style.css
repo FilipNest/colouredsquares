@@ -83,7 +83,7 @@ ul li {
     background-position: center center !important;
     background-size: cover !important;
 }
-.square .author {
+.square .author, .square .timestamp {
     font-size: 60%;
     font-family: monospace;
     text-align: center;
@@ -92,8 +92,20 @@ ul li {
     background-color: white;
     padding: 2px;
     display: block;
+}
+
+.square .author {
+ 
     border-style:solid;
-    border-width: 1px;
+    border-width:1px 1px 0 1px;
+    
+}
+
+.square .timestamp {
+ 
+    border-style:solid;
+    border-width:0 1px 1px 1px;
+    
 }
 
 #newusername {height:20px; border-color:black; border-width:2px;}
