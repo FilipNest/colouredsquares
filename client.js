@@ -182,16 +182,16 @@ socket.on('load', function (data) {
             if (!data.squares[index].author) {
                 data.squares[index].author = "guest";
             }
-            
+
             var link = data.squares[index].authorname;
-            
-            if(!data.squares[index].authorname){
-                
+
+            if (!data.squares[index].authorname) {
+
                 data.squares[index].authorname = "guest";
                 link = "coloured_squares";
-                
+
             };
-            
+
             date = new Date(parseInt(data.squares[index].timestamp));
 
             var square = document.createElement("div");
@@ -202,7 +202,7 @@ socket.on('load', function (data) {
             square.setAttribute("data-author", data.squares[index].author);
             square.setAttribute("data-authorname", data.squares[index].authorname);
             square.setAttribute("data-updated", data.squares[index].updated);
-            square.innerHTML = "<span class='author'><a href='"+link+"'>" + data.squares[index].authorname + "</a></span><span class='timestamp'>"+moment(date).fromNow()+"</span>";
+            square.innerHTML = "<span class='author'><a href='" + link + "'>" + data.squares[index].authorname + "</a></span><span class='timestamp'>" + moment(date).fromNow() + "</span>";
             square.style.background = data.squares[index].colour;
 
             square.onclick = function (square) {
@@ -253,7 +253,7 @@ var squareclick = function (square) {
     var id = square.getAttribute("id").replace("s", "");
 
     if (session.locking) {
-        
+
         socket.emit("lock", {
             squarefield: session.squarefield,
             square: id,
@@ -285,27 +285,36 @@ socket.on("favourited", function (count) {
 //Change square when changed on server
 
 socket.on("light", function (data) {
-    
+
     if (data.squarefield === session.squarefield) {
 
         date = new Date(parseInt(data.timestamp));
-        
+
         var square = document.querySelector("#s" + data.number);
 
         square.style.background = data.colour;
-        
-        if(!data.authorname){
-          
+
+        if (!data.authorname) {
+
             data.authorname = "guest";
-            
+
         };
-        
+
         //Set authorship
 
         square.setAttribute("data-author", data.author);
         square.setAttribute("data-username", data.authorname)
         square.setAttribute("data-updated", data.timestamp)
-        square.innerHTML = "<span class='author'>" + data.authorname + "</span></span><span class='timestamp'>"+moment(date).fromNow()+"</span>";
+
+        if (session.info) {
+
+            square.innerHTML = "<span style='display:block' class='author'>" + data.authorname + "</span></span><span style='display:block' class='timestamp'>" + moment(date).fromNow() + "</span>";
+
+        } else {
+
+            square.innerHTML = "<span class='author'>" + data.authorname + "</span></span><span class='timestamp'>" + moment(date).fromNow() + "</span>";
+
+        }
 
     }
 
@@ -563,18 +572,50 @@ var menu = function (which) {
 
 //Update timestamps
 
-window.setInterval(function(){
-   
+window.setInterval(function () {
+
     var timestamps = document.querySelectorAll(".timestamp"),
         i;
-    
-    for (i=0; i<timestamps.length; i+=1){
-        
-      date = new Date(parseInt(document.getElementById("s"+i).getAttribute("data-updated")));
-                
-    timestamps[i].innerHTML = moment(date).fromNow();
-        
-    };
-    
-},1000);
 
+    for (i = 0; i < timestamps.length; i += 1) {
+
+        date = new Date(parseInt(document.getElementById("s" + i).getAttribute("data-updated")));
+
+        timestamps[i].innerHTML = moment(date).fromNow();
+
+    };
+
+}, 1000);
+
+//Toggle info
+
+var toggleinfo = function () {
+
+    var status = document.getElementById("infotoggle").getAttribute("class");
+
+    if (status === "off") {
+
+        document.getElementById("infotoggle").setAttribute("class", "on");
+        session.info = true;
+
+    } else {
+
+        document.getElementById("infotoggle").setAttribute("class", "off");
+        session.info = false;
+
+    }
+
+    var i;
+
+    for (i = 0; i < 255; i += 1) {
+
+        if (status === "off") {
+            document.querySelector("#s" + i + " .timestamp").style.display = "block";
+            document.querySelector("#s" + i + " .author").style.display = "block";
+        } else {
+            document.querySelector("#s" + i + " .timestamp").style.display = "none";
+            document.querySelector("#s" + i + " .author").style.display = "none";
+        }
+    };
+
+}
