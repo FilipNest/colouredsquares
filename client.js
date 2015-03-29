@@ -202,7 +202,39 @@ socket.on('load', function (data) {
             square.setAttribute("data-author", data.squares[index].author);
             square.setAttribute("data-authorname", data.squares[index].authorname);
             square.setAttribute("data-updated", data.squares[index].updated);
-            square.innerHTML = "<span class='author'><a href='" + link + "'>" + data.squares[index].authorname + "</a></span><span class='timestamp'>" + moment(date).fromNow() + "</span>";
+            
+            switch (data.squares[index].view) {
+            case 0:
+                data.squares[index].view = "Anyone"
+                break;
+            case 1:
+                data.squares[index].view = "Signed in"
+                break;
+            case 2:
+                data.squares[index].view = "Friends"
+                break;
+            case 3:
+                data.squares[index].view = "Owner"
+                break;
+            };
+            
+            switch (data.squares[index].edit) {
+            case 0:
+                data.squares[index].edit = "Anyone"
+                break;
+            case 1:
+                data.squares[index].edit = "Signed in"
+                break;
+            case 2:
+                data.squares[index].edit = "Friends"
+                break;
+            case 3:
+                data.squares[index].edit = "Owner"
+                break;
+            };
+
+
+            square.innerHTML = "<span class='access'>See:" + data.squares[index].view + " Paint:" + data.squares[index].edit + "</span><span class='author'><a href='" + link + "'>" + data.squares[index].authorname + "</a></span><span class='timestamp'>" + moment(date).fromNow() + "</span>";
             square.style.background = data.squares[index].colour;
 
             square.onclick = function (square) {
@@ -299,22 +331,52 @@ socket.on("light", function (data) {
             data.authorname = "guest";
 
         };
+        
+         switch (data.view) {
+            case 0:
+                data.view = "Anyone"
+                break;
+            case 1:
+                data.view = "Signed in"
+                break;
+            case 2:
+                data.view = "Friends"
+                break;
+            case 3:
+                data.view = "Owner"
+                break;
+            };
+            
+            switch (data.edit) {
+            case 0:
+                data.edit = "Anyone"
+                break;
+            case 1:
+                data.edit = "Signed in"
+                break;
+            case 2:
+                data.edit = "Friends"
+                break;
+            case 3:
+                data.edit = "Owner"
+                break;
+            };
 
         //Set authorship
 
         square.setAttribute("data-author", data.author);
         square.setAttribute("data-username", data.authorname)
         square.setAttribute("data-updated", data.timestamp)
-         square.setAttribute("data-view", data.view);
+        square.setAttribute("data-view", data.view);
         square.setAttribute("data-edit", data.edit)
 
         if (session.info) {
 
-            square.innerHTML = "<span style='display:block' class='author'>" + data.authorname + "</span></span><span style='display:block' class='timestamp'>" + moment(date).fromNow() + "</span>";
+            square.innerHTML = "<span class='access' style='display:block'>See:" + data.view + " Paint:" + data.edit + "</span><span style='display:block' class='author'>" + data.authorname + "</span></span><span style='display:block' class='timestamp'>" + moment(date).fromNow() + "</span>";
 
         } else {
 
-            square.innerHTML = "<span class='author'>" + data.authorname + "</span></span><span class='timestamp'>" + moment(date).fromNow() + "</span>";
+            square.innerHTML = "<span class='access'>See:" + data.view + " Paint:" + data.edit + "</span><span class='author'>" + data.authorname + "</span></span><span class='timestamp'>" + moment(date).fromNow() + "</span>";
 
         }
 
@@ -614,9 +676,12 @@ var toggleinfo = function () {
         if (status === "off") {
             document.querySelector("#s" + i + " .timestamp").style.display = "block";
             document.querySelector("#s" + i + " .author").style.display = "block";
+            document.querySelector("#s" + i + " .access").style.display = "block";
         } else {
             document.querySelector("#s" + i + " .timestamp").style.display = "none";
             document.querySelector("#s" + i + " .author").style.display = "none";
+            document.querySelector("#s" + i + " .access").style.display = "none";
+
         }
     };
 
