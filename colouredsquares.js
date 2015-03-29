@@ -9,15 +9,15 @@ var crypto = require('crypto');
 require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
     if (err) throw err;
 
-//        TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
+    //        TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
 
-                db.collection('squarefields').remove(function () {
-            
-                    db_ready(db);
-            
-                });
+    db.collection('squarefields').remove(function () {
 
-//    db_ready(db);
+        db_ready(db);
+
+    });
+
+    //    db_ready(db);
 
 })
 
@@ -308,7 +308,7 @@ var db_ready = function (db) {
                         "squares.$.colour": colour,
                         "squares.$.author": id,
                         "squares.$.authorname": name,
-                        "squares.$.updated":Date.now()
+                        "squares.$.updated": Date.now()
                     }
 
                 }, function (err, document) {
@@ -408,6 +408,44 @@ var db_ready = function (db) {
 
                 })
             }
+        });
+
+        //Request list of all squarefields
+
+        socket.on('fieldfetcher', function (request) {
+
+            if (request) {
+
+                var list = [];
+
+                request.forEach(function (element, index) {
+
+                    list.push(ObjectID(element));
+
+                });
+
+
+                cs.fields.find({
+                    _id: {
+                        $in: list
+                    }
+                }).limit(256).toArray(function (err, data) {
+
+                    console.log(data);
+
+                });
+
+            } else {
+
+                cs.fields.find().limit(256).toArray(function (err, data) {
+
+                    console.log(data);
+
+                });
+
+
+            };
+
         });
 
         //When user loads page, check if they are signed in
@@ -761,7 +799,7 @@ var db_ready = function (db) {
         socket.on("light", function (data) {
 
             cs.light(data.id, data.key, data.username, data.squarefield, data.square, data.colour, function (square) {
-                
+
                 square.squarefield = data.squarefield;
 
                 io.to(data.squarefield).emit('light', square);
