@@ -94,7 +94,7 @@ ul li {
     display: none;
 }
 
-#toggleinfo.off {opacity:0.2;}
+#infotoggle.off {opacity:0.2;}
 
 .square .author {
  
