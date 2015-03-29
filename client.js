@@ -305,6 +305,8 @@ socket.on("light", function (data) {
         square.setAttribute("data-author", data.author);
         square.setAttribute("data-username", data.authorname)
         square.setAttribute("data-updated", data.timestamp)
+         square.setAttribute("data-view", data.view);
+        square.setAttribute("data-edit", data.edit)
 
         if (session.info) {
 

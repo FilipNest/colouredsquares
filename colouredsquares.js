@@ -307,7 +307,8 @@ var db_ready = function (db) {
                     $set: {
                         "squares.$.colour": colour,
                         "squares.$.author": id,
-                        "squares.$.authorname": name
+                        "squares.$.authorname": name,
+                        "squares.$.updated":Date.now()
                     }
 
                 }, function (err, document) {
