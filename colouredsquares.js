@@ -230,6 +230,7 @@ var db_ready = function (db) {
                             number: i,
                             colour: "transparent",
                             author: null,
+                            authorname: "coloured_squares",
                             edit: 0,
                             view: 0,
                             updated: Date.now()
