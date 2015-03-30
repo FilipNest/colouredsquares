@@ -414,6 +414,8 @@ var db_ready = function (db) {
 
         socket.on('fieldfetcher', function (request) {
 
+            var query = {};
+
             if (request) {
 
                 var list = [];
@@ -424,27 +426,48 @@ var db_ready = function (db) {
 
                 });
 
-
-                cs.fields.find({
+                query = {
                     _id: {
                         $in: list
                     }
-                }).limit(256).toArray(function (err, data) {
+                };
+            }
 
-                    console.log(data);
+            cs.fields.find(query).limit(256).toArray(function (err, data) {
 
-                });
+                if (data) {
+                    var popular = [];
 
-            } else {
+                    data.forEach(function (element, index) {
 
-                cs.fields.find().limit(256).toArray(function (err, data) {
+                        if (!popular[element._id]) {
 
-                    console.log(data);
+                            popular[element._id] = 0;
 
-                });
+                        }
 
+                        element.friends.forEach(function (element, index) {
 
-            };
+                            if (!popular[element]) {
+
+                                popular[element] = 0;
+
+                            }
+
+                            popular[element] += 1;
+
+                        });
+
+                    });
+
+                    popular = Object.keys(popular).sort(function (a, b) {
+                        return popular[a] - popular[b]
+                    })
+
+                    console.log(popular);
+
+                }
+            });
 
         });
 
