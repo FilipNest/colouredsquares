@@ -332,6 +332,14 @@ socket.on("light", function (data) {
 
         };
 
+        //Set authorship
+
+        square.setAttribute("data-author", data.author);
+        square.setAttribute("data-username", data.authorname)
+        square.setAttribute("data-updated", data.updated)
+        square.setAttribute("data-view", data.view);
+        square.setAttribute("data-edit", data.edit)
+        
         switch (data.view) {
         case 0:
             data.view = "Anyone"
@@ -361,14 +369,6 @@ socket.on("light", function (data) {
             data.edit = "Owner"
             break;
         };
-
-        //Set authorship
-
-        square.setAttribute("data-author", data.author);
-        square.setAttribute("data-username", data.authorname)
-        square.setAttribute("data-updated", data.updated)
-        square.setAttribute("data-view", data.view);
-        square.setAttribute("data-edit", data.edit)
 
         if (session.info) {
 
