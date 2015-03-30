@@ -242,6 +242,11 @@ var db_ready = function (db) {
                     //Add friends list
 
                     options.friends = [];
+                    options.friended = [];
+                    options.lastestsquare = 0;
+                    options.friendcount = 0;
+                    options.friendedcount = 0;
+                    options.updated = Date.now();
 
                     cs.fields.insert(options, function (err, document) {
 
@@ -436,35 +441,8 @@ var db_ready = function (db) {
             cs.fields.find(query).limit(256).toArray(function (err, data) {
 
                 if (data) {
-                    var popular = [];
 
-                    data.forEach(function (element, index) {
-
-                        if (!popular[element._id]) {
-
-                            popular[element._id] = 0;
-
-                        }
-
-                        element.friends.forEach(function (element, index) {
-
-                            if (!popular[element]) {
-
-                                popular[element] = 0;
-
-                            }
-
-                            popular[element] += 1;
-
-                        });
-
-                    });
-
-                    popular = Object.keys(popular).sort(function (a, b) {
-                        return popular[a] - popular[b]
-                    })
-
-                    console.log(popular);
+                    console.log(data);
 
                 }
             });
@@ -704,13 +682,23 @@ var db_ready = function (db) {
 
                                     if (update) {
 
-                                        socket.emit("favourite", {
-                                            status: false,
-                                            id: data.squarefield
+                                        cs.fields.update({
+                                            _id: ObjectID(data.squarefield)
+                                        }, {
+                                            $pull: {
+                                                friended: data.id
+                                            }
+
+                                        }, function (err, update) {
+
+                                            socket.emit("favourite", {
+                                                status: false,
+                                                id: data.squarefield
+                                            });
+
+                                            io.to(data.squarefield).emit('favourited', field.friends.length - 1);
+
                                         });
-
-                                        io.to(data.squarefield).emit('favourited', field.friends.length - 1);
-
                                     }
 
                                 });
@@ -728,13 +716,23 @@ var db_ready = function (db) {
 
                                     if (update) {
 
-                                        socket.emit("favourite", {
-                                            status: true,
-                                            id: data.squarefield
+                                        cs.fields.update({
+                                            _id: ObjectID(data.squarefield)
+                                        }, {
+                                            $push: {
+                                                friended: data.id
+                                            }
+
+                                        }, function (err, update) {
+
+                                            socket.emit("favourite", {
+                                                status: true,
+                                                id: data.squarefield
+                                            });
+
+                                            io.to(data.squarefield).emit('favourited', field.friends.length + 1);
+
                                         });
-
-                                        io.to(data.squarefield).emit('favourited', field.friends.length + 1);
-
                                     }
 
                                 });
