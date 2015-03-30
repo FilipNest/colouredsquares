@@ -243,7 +243,7 @@ var db_ready = function (db) {
 
                     options.friends = [];
                     options.friended = [];
-                    options.lastestsquare = 0;
+                    options.newestsquare = 0;
                     options.friendcount = 0;
                     options.friendedcount = 0;
                     options.updated = Date.now();
@@ -313,7 +313,9 @@ var db_ready = function (db) {
                         "squares.$.colour": colour,
                         "squares.$.author": id,
                         "squares.$.authorname": name,
-                        "squares.$.updated": Date.now()
+                        "squares.$.updated": Date.now(),
+                        updated: Date.now(),
+                        newestsquare: parseInt(square)
                     }
 
                 }, function (err, document) {
@@ -442,10 +444,8 @@ var db_ready = function (db) {
 
                 if (data) {
 
-                    console.log(data[0].name);
-                    console.log(data[0].friendedcount);
-                    console.log(data[0].friendcount);
-
+                    console.log(data[0].newestsquare);
+                    
                 }
             });
 
