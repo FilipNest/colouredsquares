@@ -315,7 +315,7 @@ socket.on("favourited", function (count) {
 //Change square when changed on server
 
 socket.on("light", function (data) {
-
+    
     if (data.squarefield === session.squarefield) {
 
         date = new Date(parseInt(data.timestamp));
@@ -683,3 +683,9 @@ var toggleinfo = function () {
     };
 
 }
+
+socket.on("problem", function(data){
+   
+    alert(data);
+    
+});

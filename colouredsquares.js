@@ -10,14 +10,14 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
     if (err) throw err;
 
     //        TEMPORARY CLEARING OF DATABASE BEFORE EACH RUN
+    //
+    //    db.collection('squarefields').remove(function () {
+    //
+    //        db_ready(db);
+    //
+    //    });
 
-    db.collection('squarefields').remove(function () {
-
-        db_ready(db);
-
-    });
-
-    //    db_ready(db);
+    db_ready(db);
 
 })
 
@@ -284,7 +284,7 @@ var db_ready = function (db) {
 
     //Light up square
 
-    cs.light = function (id, key, name, squarefield, square, colour, callback) {
+    cs.light = function (socket, id, key, name, squarefield, square, colour, callback) {
 
         var auth,
             friend;
@@ -326,7 +326,10 @@ var db_ready = function (db) {
                             _id: ObjectID(squarefield)
                         }, function (err, updated) {
 
-                            callback(updated.squares[square]);
+                            callback({
+                                square: updated.squares[square],
+                                field: updated
+                            });
 
                         });
 
@@ -348,24 +351,24 @@ var db_ready = function (db) {
                 var edit = field.squares[square].edit;
 
                 //Light if no access requirements
-                
+
                 if (edit === 0) {
 
                     light();
-                    
-                //Light if needed to log in to edit
+
+                    //Light if needed to log in to edit
 
                 } else if (edit === 1 && auth) {
 
                     light();
-                
-                //Light if friendship needed to edit
 
-                } else if (edit === 2 && friend) {
+                    //Light if friendship needed to edit
+
+                } else if (edit === 2 && friend || edit === 2 && field._id == id) {
 
                     light();
-                    
-                //Light if only owner can edit
+
+                    //Light if only owner can edit
 
                 } else if (edit === 3 && field._id == id) {
 
@@ -373,7 +376,7 @@ var db_ready = function (db) {
 
                 } else {
 
-                    console.log("Can't light");
+                    socket.emit("problem", "can't light");
 
                 }
 
@@ -452,7 +455,7 @@ var db_ready = function (db) {
                 if (data) {
 
                     console.log(data[0].newestsquare);
-                    
+
                 }
             });
 
@@ -536,11 +539,17 @@ var db_ready = function (db) {
 
                         //Check if square can be viewed
 
-                        if (square.view > 1 && (!auth || data.id != squarefield._id && squarefield.friends.indexOf(data.id) === -1)) {
+                        if (square.view == 2 && squarefield.friends.indexOf(data.id) === -1) {
 
+                            if (data.id != squarefield._id) {
+
+                                squarefield.squares[index].colour = "black";
+
+                            }
+
+                        } else if (square.view == 3 && data.id != squarefield._id) {
 
                             squarefield.squares[index].colour = "black";
-
 
                         }
 
@@ -576,8 +585,9 @@ var db_ready = function (db) {
 
                         });
 
-                        //Join room for specific squarefield
+                        //Join room for specific squarefield and own squarefield
 
+                        socket.join(data.id);
                         socket.join(squarefield._id);
 
                     });
@@ -840,12 +850,33 @@ var db_ready = function (db) {
 
         socket.on("light", function (data) {
 
-            cs.light(data.id, data.key, data.username, data.squarefield, data.square, data.colour, function (square) {
+            cs.light(socket, data.id, data.key, data.username, data.squarefield, data.square, data.colour, function (updated) {
 
-                square.squarefield = data.squarefield;
+                updated.square.squarefield = updated.field._id;
 
-                io.to(data.squarefield).emit('light', square);
+                //Send to self
 
+                socket.emit("light", updated.square);
+
+                //Check if viewer can see the squarefield before sending
+
+                if (updated.square.view === 2) {
+
+                    updated.field.friends.forEach(function (element, index) {
+
+                        io.to(element).emit("light", updated.square);
+
+                    });
+
+                } else if (updated.square.view === 3) {
+
+                    //Own square, do nothing.
+
+                } else {
+
+                    io.to(data.squarefield).emit('light', updated.square);
+
+                }
             });
 
         });
