@@ -202,7 +202,7 @@ socket.on('load', function (data) {
             square.setAttribute("data-author", data.squares[index].author);
             square.setAttribute("data-authorname", data.squares[index].authorname);
             square.setAttribute("data-updated", data.squares[index].updated);
-            
+
             switch (data.squares[index].view) {
             case 0:
                 data.squares[index].view = "Anyone"
@@ -217,7 +217,7 @@ socket.on('load', function (data) {
                 data.squares[index].view = "Owner"
                 break;
             };
-            
+
             switch (data.squares[index].edit) {
             case 0:
                 data.squares[index].edit = "Anyone"
@@ -331,42 +331,42 @@ socket.on("light", function (data) {
             data.authorname = "guest";
 
         };
-        
-         switch (data.view) {
-            case 0:
-                data.view = "Anyone"
-                break;
-            case 1:
-                data.view = "Signed in"
-                break;
-            case 2:
-                data.view = "Friends"
-                break;
-            case 3:
-                data.view = "Owner"
-                break;
-            };
-            
-            switch (data.edit) {
-            case 0:
-                data.edit = "Anyone"
-                break;
-            case 1:
-                data.edit = "Signed in"
-                break;
-            case 2:
-                data.edit = "Friends"
-                break;
-            case 3:
-                data.edit = "Owner"
-                break;
-            };
+
+        switch (data.view) {
+        case 0:
+            data.view = "Anyone"
+            break;
+        case 1:
+            data.view = "Signed in"
+            break;
+        case 2:
+            data.view = "Friends"
+            break;
+        case 3:
+            data.view = "Owner"
+            break;
+        };
+
+        switch (data.edit) {
+        case 0:
+            data.edit = "Anyone"
+            break;
+        case 1:
+            data.edit = "Signed in"
+            break;
+        case 2:
+            data.edit = "Friends"
+            break;
+        case 3:
+            data.edit = "Owner"
+            break;
+        };
 
         //Set authorship
 
         square.setAttribute("data-author", data.author);
         square.setAttribute("data-username", data.authorname)
-        square.setAttribute("data-updated", data.timestamp)
+        square.setAttribute("data-updated", data.updated)
         square.setAttribute("data-view", data.view);
         square.setAttribute("data-edit", data.edit)
 
@@ -638,14 +638,13 @@ var menu = function (which) {
 
 window.setInterval(function () {
 
-    var timestamps = document.querySelectorAll(".timestamp"),
-        i;
+    var i;
 
-    for (i = 0; i < timestamps.length; i += 1) {
+    for (i = 0; i < 255; i += 1) {
 
         date = new Date(parseInt(document.getElementById("s" + i).getAttribute("data-updated")));
-
-        timestamps[i].innerHTML = moment(date).fromNow();
+        
+        document.querySelector("#s"+i+" .timestamp").innerHTML = moment(date).fromNow();
 
     };
 
