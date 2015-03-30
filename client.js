@@ -296,9 +296,7 @@ var squareclick = function (square) {
         })
 
     } else {
-
-        square.style.background = session.colour;
-        square.setAttribute("data-author", session.username);
+        
         socket.emit("light", {
             squarefield: session.squarefield,
             square: id,
