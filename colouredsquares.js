@@ -442,7 +442,9 @@ var db_ready = function (db) {
 
                 if (data) {
 
-                    console.log(data);
+                    console.log(data[0].name);
+                    console.log(data[0].friendedcount);
+                    console.log(data[0].friendcount);
 
                 }
             });
@@ -676,6 +678,9 @@ var db_ready = function (db) {
                                 }, {
                                     $pull: {
                                         friends: data.squarefield
+                                    },
+                                    $inc: {
+                                        friendcount: -1
                                     }
 
                                 }, function (err, update) {
@@ -687,6 +692,9 @@ var db_ready = function (db) {
                                         }, {
                                             $pull: {
                                                 friended: data.id
+                                            },
+                                            $inc: {
+                                                friendedcount: -1
                                             }
 
                                         }, function (err, update) {
@@ -710,6 +718,9 @@ var db_ready = function (db) {
                                 }, {
                                     $push: {
                                         friends: data.squarefield
+                                    },
+                                    $inc: {
+                                        friendcount: 1
                                     }
 
                                 }, function (err, update) {
@@ -721,6 +732,9 @@ var db_ready = function (db) {
                                         }, {
                                             $push: {
                                                 friended: data.id
+                                            },
+                                            $inc: {
+                                                friendedcount: 1
                                             }
 
                                         }, function (err, update) {
