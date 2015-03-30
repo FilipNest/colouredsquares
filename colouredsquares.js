@@ -616,7 +616,10 @@ var db_ready = function (db) {
 
                     if (!user) {
 
-                        console.log("user doesn't exist");
+                        callback({
+                            error: true,
+                            message: "User doesn't exist. Try signing up?"
+                        });
 
                     } else if (user.password === data.password) {
 
