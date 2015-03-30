@@ -433,11 +433,11 @@ var db_ready = function (db) {
 
             var query = {};
 
-            if (request) {
+            if (request && request.query) {
 
                 var list = [];
 
-                request.forEach(function (element, index) {
+                request.query.forEach(function (element, index) {
 
                     list.push(ObjectID(element));
 
@@ -454,7 +454,41 @@ var db_ready = function (db) {
 
                 if (data) {
 
-                    console.log(data[0].newestsquare);
+                    var result = [];
+
+                    data.forEach(function (element, index) {
+
+                        result.push({
+                            name: element.name,
+                            id: element._id,
+                            square: element.squares[element.newestsquare],
+                            friendcount: element.friendcount
+                        });
+
+                        var view = element.squares[element.newestsquare].view;
+
+                        if (!request || !request.id) {
+
+                            request = {};
+                            request.id = "guest";
+                        }
+                        
+                        if (view == 2 && element.friends.indexOf(request.id) == -1) {
+                                                        
+                            if (element._id != request.id) {
+                                data[index].squares[element.newestsquare].colour = "black";
+                            }
+                        }
+
+                        if (view == 3 && request.id != element._id) {
+
+                            data[index].squares[element.newestsquare].colour = "black";
+
+                        }
+
+                    });
+
+                    console.log(result);
 
                 }
             });
@@ -781,7 +815,7 @@ var db_ready = function (db) {
 
                 } else {
 
-                    console.log("can't favourite your own field");
+                    socket.emit("problem", "You can't befriend your own squarefield");
 
                 }
 
@@ -849,7 +883,7 @@ var db_ready = function (db) {
             cs.checkin(data, function (user) {
 
                 if (user.error) {
-                    
+
                     socket.emit("problem", user.message);
 
                 } else {
