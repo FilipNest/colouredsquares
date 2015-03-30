@@ -450,7 +450,7 @@ var db_ready = function (db) {
                 };
             }
 
-            cs.fields.find(query).limit(256).toArray(function (err, data) {
+            cs.fields.find(query).sort({updated : -1}).limit(256).toArray(function (err, data) {
 
                 if (data) {
 
