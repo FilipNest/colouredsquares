@@ -296,7 +296,7 @@ var squareclick = function (square) {
         })
 
     } else {
-        
+
         socket.emit("light", {
             squarefield: session.squarefield,
             square: id,
@@ -315,7 +315,7 @@ socket.on("favourited", function (count) {
 //Change square when changed on server
 
 socket.on("light", function (data) {
-    
+
     if (data.squarefield === session.squarefield) {
 
         date = new Date(parseInt(data.timestamp));
@@ -337,7 +337,7 @@ socket.on("light", function (data) {
         square.setAttribute("data-updated", data.updated)
         square.setAttribute("data-view", data.view);
         square.setAttribute("data-edit", data.edit)
-        
+
         switch (data.view) {
         case 0:
             data.view = "Anyone"
@@ -641,8 +641,8 @@ window.setInterval(function () {
     for (i = 0; i < 255; i += 1) {
 
         date = new Date(parseInt(document.getElementById("s" + i).getAttribute("data-updated")));
-        
-        document.querySelector("#s"+i+" .timestamp").innerHTML = moment(date).fromNow();
+
+        document.querySelector("#s" + i + " .timestamp").innerHTML = moment(date).fromNow();
 
     };
 
@@ -684,8 +684,15 @@ var toggleinfo = function () {
 
 }
 
-socket.on("problem", function(data){
-   
-    alert(data);
-    
+socket.on("problem", function (data) {
+
+    document.getElementById("error").innerHTML = data;
+    document.getElementById("error").setAttribute("class", "on");
+
+    window.setTimeout(function () {
+
+        document.getElementById("error").setAttribute("class", "");
+
+    }, 3000);
+
 });

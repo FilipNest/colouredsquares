@@ -376,7 +376,7 @@ var db_ready = function (db) {
 
                 } else {
 
-                    socket.emit("problem", "can't light");
+                    socket.emit("problem", "That square is locked. Toggle square details to see what you can edit.");
 
                 }
 
@@ -497,7 +497,7 @@ var db_ready = function (db) {
 
             }, function () {
 
-                console.log("Already exists");
+                socket.emit("problem", "There's already a squarefield with those details");
 
             });
 
@@ -641,7 +641,10 @@ var db_ready = function (db) {
 
                     } else {
 
-                        console.log("Wrong password");
+                        callback({
+                            error: true,
+                            message: "Wrong password"
+                        });
 
                     }
 
@@ -813,7 +816,7 @@ var db_ready = function (db) {
 
                     if (field) {
 
-                        console.log("Already exists");
+                        socket.emit("problem", "There's already a squarefield called that");
 
                     } else {
 
@@ -842,8 +845,14 @@ var db_ready = function (db) {
 
             cs.checkin(data, function (user) {
 
-                socket.emit("signedin", user);
+                if (user.error) {
+                    
+                    socket.emit("problem", user.message);
 
+                } else {
+
+                    socket.emit("signedin", user);
+                }
             });
 
         });
