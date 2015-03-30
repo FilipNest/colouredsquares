@@ -127,7 +127,7 @@ socket.on('load', function (data) {
 
     if (session.id && session.friends.indexOf(data._id) !== -1) {
 
-        document.getElementById("favourite").setAttribute("class", "on");
+        document.getElementById("favourite").style.backgroundColor = "orangered";
 
     };
 
