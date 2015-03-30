@@ -347,24 +347,31 @@ var db_ready = function (db) {
 
                 var edit = field.squares[square].edit;
 
+                //Light if no access requirements
+                
                 if (edit === 0) {
 
                     light();
+                    
+                //Light if needed to log in to edit
 
                 } else if (edit === 1 && auth) {
 
                     light();
+                
+                //Light if friendship needed to edit
 
                 } else if (edit === 2 && friend) {
 
                     light();
+                    
+                //Light if only owner can edit
 
                 } else if (edit === 3 && field._id == id) {
 
                     light();
 
                 } else {
-
 
                     console.log("Can't light");
 
