@@ -11,8 +11,8 @@ Please don't hestitate to get in touch if you want to help improve Coloured Squa
 Upcoming features
 -----------------
 
-# Colour names
-# Image attribution/alt text
-# Squarefield searches
-# Faster server response times
-# A dynamic favicon
+* Colour names
+* Image attribution/alt text
+* Squarefield searches
+* Faster server response times
+* A dynamic favicon
