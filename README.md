@@ -16,3 +16,4 @@ Upcoming features
 * Squarefield searches
 * Faster server response times
 * A dynamic favicon
+* Email password/password reset
