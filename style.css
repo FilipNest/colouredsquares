@@ -28,6 +28,7 @@ html {
 }
 
 body {
+    touch-action: chained;
     margin: 0;
     padding: 0;
 }
@@ -89,7 +90,6 @@ ul li {
 
 #squarefield,
 #fieldlist {
-    touch-action: chained;
     width: 1728px;
     height: 1728px;
     position: relative;
