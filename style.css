@@ -1,6 +1,9 @@
 @import url(http://fonts.googleapis.com/css?family=Actor);
+* {
+    touch-action: none;
+}
+
 html {
-    -ms-scroll-chaining: none;
     height: 100%;
     font-size: 16px;
     font-family: "actor";
@@ -88,6 +91,7 @@ ul li {
 
 #squarefield,
 #fieldlist {
+    touch-action: chained;
     width: 1728px;
     height: 1728px;
     position: relative;
@@ -131,9 +135,9 @@ ul li {
     text-align: center;
     position: relative;
     top: 85px;
-    border-style:solid;
-    border-color:black;
-    border-width:1px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
     background-color: white;
     padding: 2px;
     display: block;
