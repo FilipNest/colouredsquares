@@ -145,14 +145,7 @@ socket.on('load', function (data) {
 
         document.getElementById("favourite").onclick = function () {
 
-            document.getElementById("error").innerHTML = "Please log in to befriend a squarefield";
-    document.getElementById("error").setAttribute("class", "on");
-
-    window.setTimeout(function () {
-
-        document.getElementById("error").setAttribute("class", "");
-
-    }, 3000);
+         problem("Please log in to befriend a squarefield");
 
         };
 
@@ -697,16 +690,22 @@ var toggleinfo = function () {
 
 socket.on("problem", function (data) {
 
-    document.getElementById("error").innerHTML = data;
+    problem(data);
+
+});
+
+var problem = function(message){
+    
+   document.getElementById("error").innerHTML = message;
     document.getElementById("error").setAttribute("class", "on");
 
     window.setTimeout(function () {
 
         document.getElementById("error").setAttribute("class", "");
 
-    }, 3000);
-
-});
+    }, 3000); 
+    
+};
 
 var showlatest = function () {
 
