@@ -285,8 +285,9 @@ var lockselect = function () {
 
     document.querySelector("menu").style.backgroundColor = "white";
     document.querySelector("menu").setAttribute("class","");
-    
+        
     session.locking = document.getElementById("locks").value;
+    mobiletoggle("userpanel");
 
 };
 
@@ -440,6 +441,10 @@ window.onload = function () {
     setcolour();
 
     document.querySelector("#mixed").click();
+    
+    window.setTimeout(function(){
+    mobiletoggle("colour");
+    },10);
 
 };
 
@@ -485,6 +490,8 @@ document.querySelector("#mixed").onclick = function (e) {
 
     document.querySelector("menu").setAttribute("class", lightordark);
     document.querySelector("menu").style.backgroundImage = "none";
+    
+    mobiletoggle("colour");
 
 };
 
@@ -543,6 +550,8 @@ document.querySelector("#preview").onclick = function (what) {
         document.querySelector("menu").style.backgroundImage = "url('" + session.image + "')";
 
     });
+    
+    mobiletoggle("picture");
 
 };
 
@@ -755,5 +764,15 @@ var showfriended = function(){
         id: session.id,
         query: session.fieldfriends
     });
+    
+};
+
+var mobiletoggle = function(which){
+    
+  if(window.innerWidth < 400){
+    
+      menu(which);
+      
+  };
     
 };
