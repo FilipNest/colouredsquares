@@ -1,9 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Actor);
-* {
-    touch-action: none;
-}
 
 html {
+    touch-action: none;
     height: 100%;
     font-size: 16px;
     font-family: "actor";
