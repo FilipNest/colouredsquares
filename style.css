@@ -5,8 +5,25 @@ html {
     font-family: "actor";
 }
 
-#error {background-color:red; color:white; border-style:solid; font-size:20px; position: fixed; z-index: 5; top:-100px; border-color:black; border-width:0 0 1px 0; width:100%; transition: all 500ms; padding:10px; font-family: monospace;}
-#error.on {top:0px;}
+#error {
+    background-color: red;
+    color: white;
+    border-style: solid;
+    font-size: 20px;
+    position: fixed;
+    z-index: 5;
+    top: -100px;
+    border-color: black;
+    border-width: 0 0 1px 0;
+    width: 100%;
+    transition: all 500ms;
+    padding: 10px;
+    font-family: monospace;
+}
+
+#error.on {
+    top: 0px;
+}
 
 body {
     margin: 0;
@@ -34,16 +51,19 @@ ul li {
     position: relative;
     display: inline-block;
     top: -6px;
-    left:5px;
-    margin-right:10px;
+    left: 5px;
+    margin-right: 10px;
 }
 
-#separator {top:-3px; position:relative;}
+#separator {
+    top: -3px;
+    position: relative;
+}
 
 #favourites {
     display: inline-block;
-    position:relative;
-    top:-3px;
+    position: relative;
+    top: -3px;
 }
 
 #favourite {
@@ -53,18 +73,20 @@ ul li {
     display: inline-block;
     background-color: white;
     position: relative;
-    top:5px;
-    border-style:solid;
+    top: 5px;
+    border-style: solid;
     border-color: black;
-    margin-right:5px;
+    margin-right: 5px;
 }
 
-#favouritecount, #favouritedcount {
+#favouritecount,
+#favouritedcount {
     top: -3px;
     position: relative;
 }
 
-#squarefield {
+#squarefield,
+#fieldlist {
     width: 1728px;
     height: 1728px;
     position: relative;
@@ -73,9 +95,12 @@ ul li {
     transition: all 200ms;
     margin-left: 0px;
 }
-#squarefield.menu {
+
+#squarefield.menu,
+#fieldlist.menu {
     margin-left: 300px;
 }
+
 .square {
     float: left;
     width: 100px;
@@ -86,7 +111,9 @@ ul li {
     background-position: center center !important;
     background-size: cover !important;
 }
-.square .author, .square .timestamp {
+
+.square .author,
+.square .timestamp {
     font-size: 60%;
     font-family: monospace;
     text-align: center;
@@ -97,39 +124,58 @@ ul li {
     display: none;
 }
 
-.square .access {
-
-    display: none;
+.square .name {
+    font-size: 60%;
     font-family: monospace;
-    font-size:40%;
-    position:relative;
-    top:0px;
-    right:0px;
-    background-color:white;
-    padding: 2px;
+    text-align: center;
+    position: relative;
+    top: 85px;
     border-style:solid;
+    border-color:black;
     border-width:1px;
+    background-color: white;
+    padding: 2px;
+    display: block;
 }
 
-#infotoggle.off {opacity:0.2;}
+.square .access {
+    display: none;
+    font-family: monospace;
+    font-size: 40%;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    background-color: white;
+    padding: 2px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#infotoggle.off {
+    opacity: 0.2;
+}
 
 .square .author {
- 
-    border-style:solid;
-    border-width:1px 1px 0 1px;
-    
+    border-style: solid;
+    border-width: 1px 1px 0 1px;
 }
 
 .square .timestamp {
- 
-    border-style:solid;
-    border-width:0 1px 1px 1px;
-    
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
 }
 
-#newusername {height:20px; border-color:black; border-width:2px;}
+#newusername {
+    height: 20px;
+    border-color: black;
+    border-width: 2px;
+}
 
-select {margin-bottom: 10px; border-width:2px; border-color:black;}
+select {
+    margin-bottom: 10px;
+    border-width: 2px;
+    border-color: black;
+}
 
 #panel .content {
     background-color: white;
@@ -145,17 +191,19 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     padding: 10px;
     transition: all 200ms
 }
+
 #panel .on {
     left: 0px;
 }
+
 #panel button {
     font-weight: bold;
     cursor: pointer;
     padding: 5px;
     color: black;
     background-color: white;
-    border-style:solid;
-    border-color:black;
+    border-style: solid;
+    border-color: black;
 }
 
 #panel button:hover {
@@ -165,12 +213,15 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
 #panel p {
     font-size: 80%;
 }
+
 #panel h2 {
     margin: 0px;
 }
+
 #panel .content#colourpicker {
     display: block;
 }
+
 #panel input[type="range"] {
     width: 200px;
     vertical-align: middle;
@@ -178,6 +229,7 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     padding: 0;
     margin-left: 10px;
 }
+
 #panel label {
     display: inline-block;
     vertical-align: middle;
@@ -185,14 +237,17 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     padding: 0;
     width: 50px;
 }
+
 .slider {
     height: 35px;
 }
+
 #panel h3 {
     text-align: center;
     font-weight: normal;
     font-size: 100%;
 }
+
 #panel #mixed {
     display: block;
     width: 100%;
@@ -200,6 +255,7 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     background-color: white;
     cursor: pointer;
 }
+
 #preview {
     width: 100px;
     height: 100px;
@@ -212,18 +268,22 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     background-size: cover;
     background-position: center center !important;
 }
+
 #image-preview {
     width: 160px;
     margin-right: 10px;
     float: left;
 }
+
 #signinform input {
     margin-bottom: 10px;
 }
+
 #signinform label {
     width: 50px;
     margin-right: 10px;
 }
+
 #signinform button {
     color: #333333;
     background-color: white;
@@ -232,39 +292,50 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     width: 123px;
     margin: 10px auto;
 }
+
 #passwordpicker {
     width: 220px;
     float: left;
 }
+
 #passwordpicker .square {
     width: 50px;
     height: 50px;
     margin: 2px;
 }
+
 #passred {
     background-color: red;
 }
+
 #passorange {
     background-color: orange;
 }
+
 #passyellow {
     background-color: yellow;
 }
+
 #passgreen {
     background-color: green;
 }
+
 #passblue {
     background-color: blue;
 }
+
 #passindigo {
     background-color: indigo;
 }
+
 #passviolet {
     background-color: violet;
 }
+
 #passwhite {
     background-color: white;
 }
+
 #passwordpicked {
     float: right;
     width: 50px;
@@ -275,6 +346,7 @@ select {margin-bottom: 10px; border-width:2px; border-color:black;}
     font-size: 80%;
     line-height: 20px;
 }
+
 footer {
     position: fixed;
     z-index: 2;
@@ -285,16 +357,19 @@ footer {
     border-style: solid;
     border-width: 2px 2px 0 0;
 }
+
 menu img {
     width: 40px;
     height: 40px;
     margin: 5px;
     cursor: pointer;
 }
+
 menu.light img {
     -webkit-filter: invert(100%);
     filter: invert(100%)
 }
+
 menu {
     margin: 0px;
     padding: 0px;
@@ -302,11 +377,11 @@ menu {
     border-width: 2px 0 0 0;
     border-style: solid;
 }
+
 @media(max-width:400px) {
     #panel .content {
         width: 100%;
     }
-    
     footer {
         width: 100%;
     }

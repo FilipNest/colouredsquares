@@ -488,7 +488,7 @@ var db_ready = function (db) {
 
                     });
 
-                    console.log(result);
+                    socket.emit("fetched", result);
 
                 }
             });

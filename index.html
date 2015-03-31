@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="error">Hello!!!</div>
+    <div id="error"></div>
     <section id="panel">
         <div id="colour" class="content">
             <h2>Colours</h2>
@@ -80,7 +80,14 @@
                 </div>
             </div>
         </div>
+        <div id="explore" class="content">
+            <p>Explore other squarefields</p>
+            <p><button onclick="showsquarefield()">Current squarefield</button></p>
+            <p><button onclick="showlatest()">Last updated squarefields</button></p>
+            <p><button onclick="showfriended()">Friends of this field</button></p>
+        </div>
     </section>
+    <section id="fieldlist" style="display:none"></section>
     <section id="squarefield">
 
     </section>

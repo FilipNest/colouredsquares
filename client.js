@@ -111,6 +111,8 @@ var gohome = function () {
 
 socket.on('load', function (data) {
 
+    session.fieldfriends = data.friends;
+    
     document.getElementById("favouritedcount").innerHTML = data.friendcount;
 
     document.getElementById("favouritecount").innerHTML = data.friends.length;
@@ -143,7 +145,14 @@ socket.on('load', function (data) {
 
         document.getElementById("favourite").onclick = function () {
 
-            alert("Please log in to favourite");
+            document.getElementById("error").innerHTML = "Please log in to befriend a squarefield";
+    document.getElementById("error").setAttribute("class", "on");
+
+    window.setTimeout(function () {
+
+        document.getElementById("error").setAttribute("class", "");
+
+    }, 3000);
 
         };
 
@@ -608,11 +617,13 @@ var menu = function (which) {
     var toggled = document.getElementById(which);
 
     document.getElementById("squarefield").setAttribute("class", "menu");
+    document.getElementById("fieldlist").setAttribute("class", "menu");
 
     if (toggled.getAttribute("class") === "content on") {
 
         var on = true;
         document.getElementById("squarefield").setAttribute("class", "");
+        document.getElementById("fieldlist").setAttribute("class", "");
 
     }
 
@@ -696,3 +707,46 @@ socket.on("problem", function (data) {
     }, 3000);
 
 });
+
+var showlatest = function () {
+
+    socket.emit("fieldfetcher", {
+        id: session.id
+    });
+
+};
+
+socket.on("fetched", function (result) {
+
+    document.getElementById("squarefield").style.display = "none";
+    document.getElementById("fieldlist").style.display = "block";
+    
+    //Clear any previous results
+    
+    document.getElementById("fieldlist").innerHTML = "";
+
+    //Loop over returned results
+
+    result.forEach(function (element, index) {
+
+        document.getElementById("fieldlist").innerHTML += "<div class='square' style='background:"+element.square.colour+"'>"+"<a class='name' href='"+element.name+"'>"+element.name+"</a></div>";
+
+    });
+
+});
+
+var showsquarefield = function () {
+
+    document.getElementById("squarefield").style.display = "block";
+    document.getElementById("fieldlist").style.display = "none";
+
+};
+
+var showfriended = function(){
+  
+    socket.emit("fieldfetcher", {
+        id: session.id,
+        query: session.fieldfriends
+    });
+    
+};
