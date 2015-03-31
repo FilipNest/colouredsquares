@@ -6,6 +6,8 @@ html {
     font-family: "actor";
 }
 
+.about {font-size:80%; position:relative; top:-5px; left:15px;}
+
 #error {
     background-color: red;
     color: white;
