@@ -284,6 +284,8 @@ socket.on("404", function (name) {
 var lockselect = function () {
 
     document.querySelector("menu").style.backgroundColor = "white";
+    document.querySelector("menu").setAttribute("class","");
+    
     session.locking = document.getElementById("locks").value;
 
 };
