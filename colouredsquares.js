@@ -230,7 +230,7 @@ var db_ready = function (db) {
                             number: i,
                             colour: "transparent",
                             author: null,
-                            authorname: "coloured_squares",
+                            authorname: "colouredsquares",
                             edit: 0,
                             view: 0,
                             updated: Date.now()
@@ -268,7 +268,7 @@ var db_ready = function (db) {
     //Create root user
 
     cs.CreateField({
-        name: "coloured_squares",
+        name: "colouredsquares",
         email: "filip@bluejumpers.com",
         password: "rgbw"
     }, function (document) {
@@ -556,7 +556,7 @@ var db_ready = function (db) {
 
             if (!data.squarefield) {
 
-                data.squarefield = "coloured_squares";
+                data.squarefield = "colouredsquares";
 
             }
 
