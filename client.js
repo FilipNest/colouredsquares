@@ -83,6 +83,12 @@ socket.on("logout", function () {
 var changeusername = function () {
 
     var newname = document.getElementById("newusername").value;
+    
+    if(newname.length > 14){
+     
+        problem("Try something a little shorter");
+        return false;
+    }
 
     socket.emit("changename", {
         session: session,
