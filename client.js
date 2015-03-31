@@ -84,7 +84,7 @@ var changeusername = function () {
 
     var newname = document.getElementById("newusername").value;
     
-    if(newname.length > 14){
+    if(newname.length > 15){
      
         problem("Try something a little shorter");
         return false;
