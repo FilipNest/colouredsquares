@@ -89,6 +89,13 @@ var changeusername = function () {
         problem("Try something a little shorter");
         return false;
     }
+  
+  if(newname.length === 0){
+    
+    problem("You have to pick a name.")
+    return false;
+    
+  };
 
     socket.emit("changename", {
         session: session,
