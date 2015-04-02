@@ -83,19 +83,19 @@ socket.on("logout", function () {
 var changeusername = function () {
 
     var newname = document.getElementById("newusername").value;
-    
-    if(newname.length > 15){
-     
+
+    if (newname.length > 15) {
+
         problem("Try something a little shorter");
         return false;
     }
-  
-  if(newname.length === 0){
-    
-    problem("You have to pick a name.")
-    return false;
-    
-  };
+
+    if (newname.length === 0) {
+
+        problem("You have to pick a name.")
+        return false;
+
+    };
 
     socket.emit("changename", {
         session: session,
@@ -125,7 +125,7 @@ var gohome = function () {
 socket.on('load', function (data) {
 
     session.fieldfriends = data.friends;
-    
+
     document.getElementById("favouritedcount").innerHTML = data.friendcount;
 
     document.getElementById("favouritecount").innerHTML = data.friends.length;
@@ -158,7 +158,7 @@ socket.on('load', function (data) {
 
         document.getElementById("favourite").onclick = function () {
 
-         problem("Please log in to befriend a squarefield");
+            problem("Please log in to befriend a squarefield");
 
         };
 
@@ -291,8 +291,8 @@ socket.on("404", function (name) {
 var lockselect = function () {
 
     document.querySelector("menu").style.backgroundColor = "white";
-    document.querySelector("menu").setAttribute("class","");
-        
+    document.querySelector("menu").setAttribute("class", "");
+
     session.locking = document.getElementById("locks").value;
     mobiletoggle("userpanel");
 
@@ -448,10 +448,10 @@ window.onload = function () {
     setcolour();
 
     document.querySelector("#mixed").click();
-    
-    window.setTimeout(function(){
-    mobiletoggle("colour");
-    },10);
+
+    window.setTimeout(function () {
+        mobiletoggle("colour");
+    }, 10);
 
 };
 
@@ -497,7 +497,7 @@ document.querySelector("#mixed").onclick = function (e) {
 
     document.querySelector("menu").setAttribute("class", lightordark);
     document.querySelector("menu").style.backgroundImage = "none";
-    
+
     mobiletoggle("colour");
 
 };
@@ -557,7 +557,7 @@ document.querySelector("#preview").onclick = function (what) {
         document.querySelector("menu").style.backgroundImage = "url('" + session.image + "')";
 
     });
-    
+
     mobiletoggle("picture");
 
 };
@@ -600,20 +600,21 @@ var signup = function () {
     var user = {};
     user.email = document.querySelector("#email").value;
     user.password = session.password;
-    
-    if(email.length < 1){
-      
+
+    if (email.length < 1) {
+
         problem("Did you enter an email address?");
         
+        return false;
+
     };
-    
-    if(password.length < 3){
-     
+
+    if (password.length < 3) {
+
         problem("Did you enter a password?");
-        
+
+        return false;
     }
-        
-    };
 
     socket.emit("signup", user);
 
@@ -732,17 +733,17 @@ socket.on("problem", function (data) {
 
 });
 
-var problem = function(message){
-    
-   document.getElementById("error").innerHTML = message;
+var problem = function (message) {
+
+    document.getElementById("error").innerHTML = message;
     document.getElementById("error").setAttribute("class", "on");
 
     window.setTimeout(function () {
 
         document.getElementById("error").setAttribute("class", "");
 
-    }, 3000); 
-    
+    }, 3000);
+
 };
 
 var showlatest = function () {
@@ -757,16 +758,16 @@ socket.on("fetched", function (result) {
 
     document.getElementById("squarefield").style.display = "none";
     document.getElementById("fieldlist").style.display = "block";
-    
+
     //Clear any previous results
-    
+
     document.getElementById("fieldlist").innerHTML = "";
 
     //Loop over returned results
 
     result.forEach(function (element, index) {
 
-        document.getElementById("fieldlist").innerHTML += "<div class='square' style='background:"+element.square.colour+"'>"+"<a class='name' href='"+element.name+"'>"+element.name+"</a></div>";
+        document.getElementById("fieldlist").innerHTML += "<div class='square' style='background:" + element.square.colour + "'>" + "<a class='name' href='" + element.name + "'>" + element.name + "</a></div>";
 
     });
 
@@ -779,21 +780,21 @@ var showsquarefield = function () {
 
 };
 
-var showfriended = function(){
-  
+var showfriended = function () {
+
     socket.emit("fieldfetcher", {
         id: session.id,
         query: session.fieldfriends
     });
-    
+
 };
 
-var mobiletoggle = function(which){
-    
-  if(window.innerWidth < 400){
-    
-      menu(which);
-      
-  };
-    
+var mobiletoggle = function (which) {
+
+    if (window.innerWidth < 400) {
+
+        menu(which);
+
+    };
+
 };
