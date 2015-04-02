@@ -609,7 +609,7 @@ var signup = function () {
 
     };
 
-    if (password.length < 3) {
+    if (!user.password || user.password.length < 3) {
 
         problem("Did you enter a password?");
 
