@@ -396,35 +396,36 @@ var db_ready = function (db) {
     io.on('connection', function (socket) {
 
         socket.on("lock", function (data) {
+            
+            data.squares.forEach(function (element, index) {
 
-            if (data.id === data.squarefield && cs.authcheck(data.id, data.key)) {
+                if (data.id === data.squarefield && cs.authcheck(data.id, data.key)) {
 
-                cs.fields.update({
-                    _id: ObjectID(data.squarefield),
-                    "squares.number": parseInt(data.square)
-                }, {
-                    $set: {
-                        "squares.$.view": data.view,
-                        "squares.$.edit": data.edit,
-                        "squares.$.author": data.id
-                    }
+                    cs.fields.update({
+                        _id: ObjectID(data.squarefield),
+                        "squares.number": parseInt(element)
+                    }, {
+                        $set: {
+                            "squares.$.view": data.view,
+                            "squares.$.edit": data.edit,
+                            "squares.$.author": data.id
+                        }
 
-                }, function (err, changed) {
+                    }, function (err, changed) {
 
-                    if (changed) {
+                        if (changed) {
 
-                        cs.fields.findOne({
-                            _id: ObjectID(data.squarefield)
-                        }, function (err, updated) {
+                            cs.fields.findOne({
+                                _id: ObjectID(data.squarefield)
+                            }, function (err, updated) {
 
-                            console.log(updated.squares[data.square]);
+                            });
 
-                        });
+                        };
 
-                    };
-
-                })
-            }
+                    })
+                }
+            })
         });
 
         //Request list of all squarefields
@@ -450,7 +451,9 @@ var db_ready = function (db) {
                 };
             }
 
-            cs.fields.find(query).sort({updated : -1}).limit(256).toArray(function (err, data) {
+            cs.fields.find(query).sort({
+                updated: -1
+            }).limit(256).toArray(function (err, data) {
 
                 if (data) {
 
@@ -472,9 +475,9 @@ var db_ready = function (db) {
                             request = {};
                             request.id = "guest";
                         }
-                        
+
                         if (view == 2 && element.friends.indexOf(request.id) == -1) {
-                                                        
+
                             if (element._id != request.id) {
                                 data[index].squares[element.newestsquare].colour = "black";
                             }

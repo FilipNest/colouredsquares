@@ -298,15 +298,42 @@ var lockselect = function () {
 
 };
 
+var lockall = function () {
+
+    document.querySelector("menu").style.backgroundColor = "white";
+    document.querySelector("menu").setAttribute("class", "");
+
+    session.locking = document.getElementById("locks").value;
+    mobiletoggle("userpanel");
+
+    var i,
+        squares = [];
+
+    for (i = 0; i < 255; i += 1) {
+
+        squares.push(i.toString());
+
+    };
+
+    socket.emit("lock", {
+        squarefield: session.squarefield,
+        squares: squares,
+        view: parseInt(session.locking.split("/")[0]),
+        edit: parseInt(session.locking.split("/")[1]),
+        id: session.id,
+        key: session.key
+    })
+};
+
 var squareclick = function (square) {
 
-    var id = square.getAttribute("id").replace("s", "");
+    var id = [square.getAttribute("id").replace("s", "")];
 
     if (session.locking) {
 
         socket.emit("lock", {
             squarefield: session.squarefield,
-            square: id,
+            squares: id,
             view: parseInt(session.locking.split("/")[0]),
             edit: parseInt(session.locking.split("/")[1]),
             id: session.id,
@@ -604,7 +631,7 @@ var signup = function () {
     if (user.email.length < 1) {
 
         problem("Did you enter an email address?");
-        
+
         return false;
 
     };
