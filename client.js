@@ -601,7 +601,7 @@ var signup = function () {
     user.email = document.querySelector("#email").value;
     user.password = session.password;
 
-    if (email.length < 1) {
+    if (user.email.length < 1) {
 
         problem("Did you enter an email address?");
         
