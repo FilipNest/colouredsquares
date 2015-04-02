@@ -600,6 +600,20 @@ var signup = function () {
     var user = {};
     user.email = document.querySelector("#email").value;
     user.password = session.password;
+    
+    if(email.length < 1){
+      
+        problem("Did you enter an email address?");
+        
+    };
+    
+    if(password.length < 3){
+     
+        problem("Did you enter a password?");
+        
+    }
+        
+    };
 
     socket.emit("signup", user);
 
