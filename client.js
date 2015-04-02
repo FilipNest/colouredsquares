@@ -169,6 +169,7 @@ socket.on('load', function (data) {
         if (data._id === session.id) {
 
             session.home = true;
+            document.getElementById("whyhome").style.display = "none";
             document.getElementById("home").style.display = "block";
             document.getElementById("gohome").style.display = "none";
 
