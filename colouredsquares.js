@@ -26,7 +26,11 @@ var db_ready = function (db) {
     console.log("Ready...");
 
     //Required modules
-
+        
+    var appssl = require('https').createServer(settings.ssl, handler);
+    
+    appssl.listen(settings.sslport);
+    
     var app = require('http').createServer(handler)
     var io = require('socket.io')(app);
     var ObjectID = require('mongodb').ObjectID;
