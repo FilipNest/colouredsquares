@@ -23,30 +23,29 @@ require('mongodb').MongoClient.connect(settings.mongo, function (err, db) {
 
 var db_ready = function (db) {
 
-    console.log("Ready...");
+    //Listen to port in settings file
 
-    //Required modules
+    
+    if(settings.sslmode){
         
     var appssl = require('https').createServer(settings.ssl, handler);
-    
     appssl.listen(settings.sslport);
+    var io = require('socket.io')(appssl);
+    
+    } else {
     
     var app = require('http').createServer(handler)
+    app.listen(settings.port);
     var io = require('socket.io')(app);
+    
+    }
+    
     var ObjectID = require('mongodb').ObjectID;
     var fs = require('fs');
     var url = require('url');
     var format = require('util').format;
 
-    /*
 
-    SERVER ROUTING
-
-    */
-
-    //Listen to port in settings file
-
-    app.listen(settings.port);
 
     //HTTP request handling
 
