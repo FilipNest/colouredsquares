@@ -1,0 +1,48 @@
+<!doctype HTML>
+
+<html>
+
+<head>
+
+  <link rel="stylesheet" href="/client.css">
+
+</head>
+
+<body>
+
+  <form id="squarefield" method="post">
+
+    <input id="red" name="red" max="256" value="{{req.query.red}}" type="range" />
+    <br />
+    <input id="green" name="green" max="256" value="{{req.query.green}}" type="range" />
+    <br />
+    <input id="blue" name="blue" max="256" value="{{req.query.blue}}" type="range" />
+    <br /> {{#each field.squares}}
+
+    <label for="square_{{@index}}"></label>
+    <button type="submit" name="square_{{@index}}" tabindex="0" class="square">
+      <div id="author_{{@index}}" style="border-color:rgba({{this.author.red}},{{this.author.green}},{{this.author.blue}},1)" class="author">
+
+        <div id="inner_{{@index}}" data-date="{{this.date}}" class="inner {{this.age}}" style="background-color:rgba({{this.colours.red}},{{this.colours.green}},{{this.colours.blue}},1)">
+
+
+        </div>
+
+      </div>
+    </button>
+
+    {{/each}}
+
+  </form>
+
+  <script>
+    window.cs = {};
+    cs.squarefield = "{{field.id}}";
+    cs.ages = {{ages}};
+  </script>
+
+  <script src="/client.js"></script>
+
+</body>
+
+</html>
