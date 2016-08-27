@@ -149,15 +149,21 @@ app.post("/fields/:id", function (req, res) {
 
   });
 
+  res.redirect(req.path + "?" + querystring.stringify(fields[req.params.id].squares[square].colours));
+
+});
+
+cs.events.on("squareUpdated", function (data) {
+
   // send socket message to subscribers
 
-  var subscribers = fields[req.params.id].subscribers;
+  var subscribers = data.field.subscribers;
 
   Object.keys(subscribers).forEach(function (subscriber) {
 
     try {
 
-      subscribers[subscriber].send(JSON.stringify(fields[req.params.id].squares[square]));
+      subscribers[subscriber].send(JSON.stringify(data.square));
 
     } catch (e) {
 
@@ -171,9 +177,7 @@ app.post("/fields/:id", function (req, res) {
 
   });
 
-  res.redirect(req.path + "?" + querystring.stringify(fields[req.params.id].squares[square].colours));
-
-});
+})
 
 // Add subscribers to all squarefields
 

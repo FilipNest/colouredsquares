@@ -52,7 +52,7 @@ var fields = {};
 
 var sessions = {};
 
-// Random colour helper function
+// Anonymous session creator
 
 var anonSession = function () {
 
@@ -107,9 +107,9 @@ var checkToken = function (rgb, secret) {
 };
 
 var createField = function (id) {
-  
+
   var created = new field(id, fieldSize);
-  
+
   events.emit("newField", created);
 
   return created;
@@ -132,6 +132,11 @@ var updateSquare = function (field, id, info) {
 
   fields[field].squares[id].date = Date.now();
   fields[field].squares[id].id = id;
+
+  events.emit("squareUpdated", {
+    field: fields[field],
+    square: fields[field].squares[id]
+  });
 
   return fields[field].squares[id];
 
