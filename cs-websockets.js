@@ -35,7 +35,7 @@ module.exports = function (server, cs) {
 
     });
 
-  })
+  });
 
   // Add subscribers to all squarefields
 
@@ -85,4 +85,4 @@ module.exports = function (server, cs) {
 
   });
 
-}
+};
