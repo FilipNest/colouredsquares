@@ -1,142 +1,224 @@
-// Dependencies
+var cs = require("./cs-core");
+var express = require("express");
+var fs = require("fs");
+var url = require("url");
+var bodyParser = require("body-parser");
+var session = require("express-session");
+var fields = cs.fields;
+var querystring = require("querystring");
 
-var server = require('http').createServer(),
-  port = 3000,
-  fieldSize = 16;
+var app = express(cs.server);
 
-// Root square
-
-var square = function (id) {
-
-  return {
-    "colours": {
-      red: 256,
-      green: 256,
-      blue: 256
-    },
-    "author": "root",
-    "date": Date.now(),
-    "id": id
+app.use(session({
+  secret: 'coloured-squares',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false
   }
+}));
 
-}
+app.use(function (req, res, next) {
 
-// Squarefield generation
+  if (!req.session.colour) {
 
-var field = function (id, size) {
-
-  var output = {
-    squares: [],
-    id: id
-  };
-
-  for (var i = 0; i < size; i += 1) {
-
-    output.squares.push(new square(i));
+    req.session.colour = cs.anonSession();
 
   }
 
-  return output;
+  next();
 
-}
+});
 
-// Object for storing fields
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
-var fields = {};
+cs.server.on("request", app);
 
-// Storage of unique session colours
+var WebSocketServer = require('ws').Server;
+var wss = new WebSocketServer({
+  server: cs.server
+});
 
-var colours = {};
+var Handlebars = require("handlebars");
 
-// Random colour helper function
+// Home page
 
-var randomColour = function () {
+app.use(express.static('public'));
 
-  var red = Math.floor(Math.random() * 256) + 1;
-  var green = Math.floor(Math.random() * 256) + 1;
-  var blue = Math.floor(Math.random() * 256) + 1;
+app.get('/', function (req, res) {
 
-  if (colours[red + "_" + green + "_" + blue]) {
+  var source = fs.readFileSync(__dirname + "/front.html", "utf8");
 
-    return randomColour();
+  var template = Handlebars.compile(source);
 
-  } else {
+  res.send(template());
 
-    colours[red + "_" + green + "_" + blue] = "anonymous";
+});
 
-    return {
-      "red": red,
-      "green": green,
-      "blue": blue
+// Squarefield page
+
+var ages = [1000, 2000, 3000, 4000];
+
+app.get('/fields/:fieldName', function (req, res) {
+
+  var id = req.params.fieldName.split("?")[0];
+
+  // Create a field if one doesn't exist
+
+  if (!fields[id]) {
+
+    fields[id] = cs.createField(id);
+
+  }
+
+  fields[id].squares.forEach(function (squareObject, index) {
+
+    var age = Date.now() - squareObject.date;
+
+    var square = fields[id].squares[index];
+
+    if (age < ages[0]) {
+
+      square.age = "age0";
+
+    } else if (age < ages[1]) {
+
+      square.age = "age1";
+
+    } else if (age < ages[2]) {
+
+      square.age = "age2";
+
+    } else if (age < ages[3]) {
+
+      square.age = "age3";
+
+    } else {
+
+      square.age = "age4";
+
     }
 
-  }
+  });
 
-};
+  var source = fs.readFileSync(__dirname + "/field.html", "utf8");
 
-var makeToken = function (rgb, secret) {
+  var template = Handlebars.compile(source);
 
-  if (colours[rgb.red + "_" + rgb.green + "_" + rgb.blue]) {
+  res.send(template({
+    field: fields[id],
+    req: req,
+    ages: JSON.stringify(ages)
+  }));
 
-    return false;
+});
 
-  } else {
+app.post("/fields/:id", function (req, res) {
 
-    colours[rgb.red + "_" + rgb.green + "_" + rgb.blue] = secret;
+  req.params.id = req.params.id.split("?")[0];
 
-  }
+  var change = {};
+  var square;
 
-}
+  Object.keys(req.body).forEach(function (key) {
 
-var checkToken = function (rgb, secret) {
+    if (key.indexOf("square") !== -1) {
 
-  if (colours[rgb.red + "_" + rgb.green + "_" + rgb.blue] && colours[rgb.red + "_" + rgb.green + "_" + rgb.blue] === secret) {
+      square = key.split("_")[1];
 
-    return true;
+    }
 
-  } else {
+  });
 
-    return false;
+  cs.updateSquare(req.params.id, square, {
 
-  }
+    colours: {
+      red: parseInt(req.body.red),
+      blue: parseInt(req.body.blue),
+      green: parseInt(req.body.green)
+    },
+    author: {
 
-}
+      red: req.session.colour.red,
+      blue: req.session.colour.blue,
+      green: req.session.colour.green
 
-var updateSquare = function (field, id, info) {
+    }
 
-  // Create a squarefield if none exists
+  });
 
-  if (!fields[field]) {
+  // send socket message to subscribers
 
-    fields[field] = new field(req.params.id, fieldSize);
+  var subscribers = fields[req.params.id].subscribers;
 
-  }
+  Object.keys(subscribers).forEach(function (subscriber) {
 
-  fields[field].squares[id] = info;
+    try {
 
-  // Must set ID and date
+      subscribers[subscriber].send(JSON.stringify(fields[req.params.id].squares[square]));
 
-  fields[field].squares[id].date = Date.now();
-  fields[field].squares[id].id = id;
+    } catch (e) {
 
-  return fields[field].squares[id];
+      if (subscribers[subscriber].readyState === 3) {
 
-};
+        delete subscribers[subscriber];
 
-server.listen(port);
+      }
 
-module.exports = {
+    }
 
-  server: server,
-  checkToken: checkToken,
-  makeToken: makeToken,
-  updateSquare: updateSquare,
-  fields: fields,
-  createField: function (id) {
+  });
 
-    return new field(id, fieldSize);
+  res.redirect(req.path + "?" + querystring.stringify(fields[req.params.id].squares[square].colours));
 
-  },
-  randomColour: randomColour
+});
 
-}
+// Add subscribers to all squarefields
+
+cs.events.on("newField", function (field) {
+
+  field.subscribers = {};
+
+});
+
+// Store websocket subscribers on connection
+
+wss.on('connection', function connection(ws) {
+
+  ws.id = Date.now();
+
+  var location = url.parse(ws.upgradeReq.url, true);
+
+  // you might use location.query.access_token to authenticate or share sessions
+  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+
+  ws.on('message', function (message) {
+
+    try {
+      message = JSON.parse(message);
+    } catch (e) {
+
+      // Not valid JSON
+
+      return false;
+
+    }
+
+    Object.keys(message).forEach(function (item) {
+
+      if (item === "pair") {
+
+        var socket = ws;
+        var field = message[item];
+
+        fields[field].subscribers[socket.id] = socket;
+
+      }
+
+    });
+
+  });
+
+});
