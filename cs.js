@@ -1,13 +1,26 @@
+// Dependencies and basic setup
+
 var cs = require("./cs-core");
 var express = require("express");
 var fs = require("fs");
-var url = require("url");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 var fields = cs.fields;
 var querystring = require("querystring");
-
 var app = express(cs.server);
+var Handlebars = require("handlebars");
+
+// Set up Express server and websockets 
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+app.use(express.static('public'));
+
+cs.server.on("request", app);
+
+// Store sessions and create anonymous session if not logged in
 
 app.use(session({
   secret: 'coloured-squares',
@@ -29,23 +42,6 @@ app.use(function (req, res, next) {
   next();
 
 });
-
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-
-cs.server.on("request", app);
-
-var WebSocketServer = require('ws').Server;
-var wss = new WebSocketServer({
-  server: cs.server
-});
-
-var Handlebars = require("handlebars");
-
-// Home page
-
-app.use(express.static('public'));
 
 app.get('/', function (req, res) {
 
@@ -153,76 +149,4 @@ app.post("/fields/:id", function (req, res) {
 
 });
 
-cs.events.on("squareUpdated", function (data) {
-
-  // send socket message to subscribers
-
-  var subscribers = data.field.subscribers;
-
-  Object.keys(subscribers).forEach(function (subscriber) {
-
-    try {
-
-      subscribers[subscriber].send(JSON.stringify(data.square));
-
-    } catch (e) {
-
-      if (subscribers[subscriber].readyState === 3) {
-
-        delete subscribers[subscriber];
-
-      }
-
-    }
-
-  });
-
-})
-
-// Add subscribers to all squarefields
-
-cs.events.on("newField", function (field) {
-
-  field.subscribers = {};
-
-});
-
-// Store websocket subscribers on connection
-
-wss.on('connection', function connection(ws) {
-
-  ws.id = Date.now();
-
-  var location = url.parse(ws.upgradeReq.url, true);
-
-  // you might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
-  ws.on('message', function (message) {
-
-    try {
-      message = JSON.parse(message);
-    } catch (e) {
-
-      // Not valid JSON
-
-      return false;
-
-    }
-
-    Object.keys(message).forEach(function (item) {
-
-      if (item === "pair") {
-
-        var socket = ws;
-        var field = message[item];
-
-        fields[field].subscribers[socket.id] = socket;
-
-      }
-
-    });
-
-  });
-
-});
+require("./cs-websockets")(cs.server,cs);
