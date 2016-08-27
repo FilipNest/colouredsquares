@@ -14,11 +14,11 @@ cs.lightSquare = function (square) {
 }
 
 if (window.WebSocket) {
-  document.getElementById("squarefield").onsubmit = function (e) {
+  document.getElementById("squarefield").onsubmit = function (event) {
 
     var target = event.explicitOriginalTarget || event.relatedTarget ||
       document.activeElement || undefined;
-
+    
     if (target) {
 
       var red = document.getElementById("red").value;
@@ -36,7 +36,7 @@ if (window.WebSocket) {
 
       http.send(params);
 
-      e.preventDefault();
+      event.preventDefault();
 
     }
 
@@ -76,7 +76,7 @@ var getTiming = function (squareID) {
   var square = document.getElementById("inner_" + squareID);
   var date = square.getAttribute("data-date");
   var age = Date.now() - date;
-
+  
   if (age < cs.ages[0]) {
 
     square.className = "inner age0";
@@ -109,4 +109,4 @@ setInterval(function () {
 
   }
 
-})
+},100)

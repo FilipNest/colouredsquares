@@ -5,12 +5,12 @@ var express = require("express");
 var fs = require("fs");
 var bodyParser = require("body-parser");
 var session = require("express-session");
-var fields = cs.fields;
 var querystring = require("querystring");
-var app = express(cs.server);
 var Handlebars = require("handlebars");
 
 // Set up Express server and websockets 
+
+var app = express(cs.server);
 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -19,6 +19,10 @@ app.use(bodyParser.urlencoded({
 app.use(express.static('public'));
 
 cs.server.on("request", app);
+
+// Shortcut to fields
+
+var fields = cs.fields;
 
 // Store sessions and create anonymous session if not logged in
 
@@ -43,13 +47,88 @@ app.use(function (req, res, next) {
 
 });
 
+// Login
+
+app.post("/user", function (req, res) {
+
+  var colour = {
+    red: req.body.red,
+    green: req.body.green,
+    blue: req.body.blue
+  }
+
+  var secret = req.body.secret;
+
+  // Logging in
+
+  if (req.body.new && req.body.new === "new") {
+
+    var success = cs.makeToken(colour, secret);
+
+    if (success) {
+
+      // Made token - add to session
+
+      req.session.colour = colour;
+      req.session.loggedIn = true;
+
+      if (req.query.path) {
+
+        res.redirect(req.query.path);
+
+      } else {
+
+        res.send("Logged in");
+
+      }
+
+    } else {
+
+      if (req.query.path) {
+        
+        res.redirect(req.query.path + "?duplicateColour=true");
+
+      } else {
+
+        res.send("Duplicate colour");
+
+      }
+
+    }
+
+  } else {
+
+    var success = cs.checkToken(colour, secret);
+
+    if (success) {
+
+      if (!req.query.path) {
+
+      } else {
+
+        res.send("username");
+
+      }
+
+    } else {
+
+      res.status(400).send("NO");
+
+    }
+
+  }
+
+});
+
 app.get('/', function (req, res) {
 
   var source = fs.readFileSync(__dirname + "/front.html", "utf8");
 
   var template = Handlebars.compile(source);
 
-  res.send(template());
+  res.send(template({
+    req: req
+  }));
 
 });
 
@@ -149,4 +228,4 @@ app.post("/fields/:id", function (req, res) {
 
 });
 
-require("./cs-websockets")(cs.server,cs);
+require("./cs-websockets")(cs.server, cs);

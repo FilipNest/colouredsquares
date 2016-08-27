@@ -35,6 +35,31 @@
 
   </form>
 
+  {{#unless req.session.loggedIn}}
+  
+  {{#if req.query.duplicateColour}}
+  
+  <span class="error">Duplicate colour</span>
+  
+  {{/if}}
+  
+  <div id="user">
+
+    <form method="post" action="/user?path={{req.path}}" id="user">
+
+      <label for="red">Red</label><input name="red" type="number" min="0" max="256">
+      <label for="green">Green</label><input name="green" type="number" min="0" max="256">
+      <label for="blue">Blue</label><input name="blue" type="number" min="0" max="256">
+      <label for="secret">Secret</label><input name="secret" type="text">
+      
+      <button type="submit" value="new" name="new">New account</button>
+      <button type="submit" value="existing" name="login">Login</button>
+
+    </form>
+
+  </div>
+  {{/unless}}
+
   <script>
     window.cs = {};
     cs.squarefield = "{{field.id}}";

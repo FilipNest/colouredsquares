@@ -85,8 +85,10 @@ var makeToken = function (rgb, secret) {
     return false;
 
   } else {
-
+    
     sessions[rgb.red + "_" + rgb.green + "_" + rgb.blue] = secret;
+    
+    return true;
 
   }
 
