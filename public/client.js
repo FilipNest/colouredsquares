@@ -109,4 +109,4 @@ setInterval(function () {
 
   }
 
-},100)
+},10)

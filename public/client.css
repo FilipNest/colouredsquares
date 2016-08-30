@@ -1,18 +1,24 @@
+* {
+  max-width: 100%;
+}
 head,
 body {
+  color: white;
   background-color: black;
-  width: 100%;
+  width: 300px;
+  margin: auto;
   height: 100%;
+  font-family: monospace;
+  font-size: 20px;
 }
 .error {
   display: block;
   position: fixed;
-  color:white;
-  width:100%;
-  top:0;
+  width: 100%;
+  top: 0;
   background-color: red;
   padding: 5px;
-  left:0;
+  left: 0;
   clear: both;
 }
 .inner {
@@ -42,6 +48,11 @@ body {
 .age4 {
   border-style: none;
 }
+#current-colour {
+  margin-top: 10px;
+  width: 50px;
+  height: 50px;
+}
 .author {
   box-sizing: border-box;
   position: relative;
@@ -55,22 +66,19 @@ body {
 form#squarefield label {
   display: none;
 }
-form#squarefield {
-  margin-top: 50px;
+.grid {
   width: 300px;
   height: 300px;
 }
-form#user {
-  display: block;
-  clear: both;
-  color: white;
-}
 form#user input {
   display: block;
+  width: 100%;
+  border: none;
 }
-body {
-  font-family: monospace;
-  font-size: 20px;
+form#user button {
+  display: block;
+  margin-top: 10px;
+  width: 100%;
 }
 #squarefield input {
   width: 100%;
@@ -82,10 +90,10 @@ body {
   border: none;
   cursor: pointer;
   outline: none;
-  width: calc(25% - 2px);
-  height: calc(25% - 2px);
-  margin-right: 2px;
-  margin-bottom: 2px;
+  width: calc(25% - 4px);
+  height: calc(25% - 4px);
+  margin-right: 4px;
+  margin-bottom: 4px;
   padding: 0px;
   display: block;
   float: left;
