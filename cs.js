@@ -4,7 +4,8 @@ global.cs = {};
 
 cs.config = {
   "squarefieldSize": 16,
-  "dbFile": "squarefields.db"
+  "dbFile": "squarefields.db",
+  "port": 3000
 };
 
 var checkColours = function (colourObject) {
@@ -174,7 +175,7 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
         fetchedField.squares[index].colour = squareColours;
         fetchedField.squares[index].date = Date.now();
         fetchedField.squares[index].author = author;
-        
+
         cs.squarefields.update({
           _id: id
         }, fetchedField, {}, function (err, updated) {
@@ -198,30 +199,131 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
 
 };
 
-var test = {
-  red: 255,
-  green: 255,
-  blue: 255
-};
+// Server
 
-cs.fetchSquarefield(test).then(function (field) {
+var server = require('http').createServer(),
+  url = require('url'),
+  WebSocketServer = require('ws').Server,
+  wss = new WebSocketServer({
+    server: server
+  }),
+  express = require('express'),
+  app = express(),
+  fs = require("fs"),
+  bodyParser = require("body-parser"),
+  session = require("express-session"),
+  querystring = require("querystring"),
+  Handlebars = require("handlebars");
 
-  cs.lightSquare(test, test, 1, {
-    red: 100,
-    green: 100,
-    blue: 100
-  }).then(function () {
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
-    console.log("updated");
+app.use(express.static('public'));
 
-  }, function (fail) {
+// Parse querystring as JSON
 
-    console.log("failed upadte");
+app.use(function (req, res, next) {
 
-  });
+  try {
 
-}, function (fail) {
+    Object.keys(req.query).forEach(function (key) {
 
-  console.log("failed");
+      req.query[key] = JSON.parse(req.query[key]);
+
+    });
+
+  } catch (e) {
+
+    // Invalid JSON
+
+    res.status(400).send("Bad JSON");
+    return false;
+
+  }
+
+  next();
 
 });
+
+// URLS are of the form ?red=255&green=255&blue=255&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint
+
+app.get("/", function (req, res, next) {
+
+  if (checkColours(req.query)) {
+
+    cs.fetchSquarefield(req.query).then(function (field) {
+
+      var source = fs.readFileSync(__dirname + "/index.html", "utf8");
+
+      var template = Handlebars.compile(source);
+
+      res.send(template({
+        field: field
+      }));
+
+    }, function (fail) {
+
+      res.status(500).send("500");
+
+    });
+
+  } else {
+
+    next();
+
+  }
+
+});
+
+app.use(function (req, res) {
+
+  res.status(404).send("404");
+
+});
+
+//wss.on('connection', function connection(ws) {
+//
+//  //  var location = url.parse(ws.upgradeReq.url, true);
+//  // you might use location.query.access_token to authenticate or share sessions
+//  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+//
+//  ws.on('message', function (message) {
+//    console.log('received: %s', message);
+//  });
+//
+//  ws.send('something');
+//
+//});
+
+server.on('request', app);
+
+server.listen(cs.config.port);
+
+//var test = {
+//  red: 255,
+//  green: 255,
+//  blue: 255
+//};
+//
+//cs.fetchSquarefield(test).then(function (field) {
+//
+//  cs.lightSquare(test, test, 1, {
+//    red: 100,
+//    green: 100,
+//    blue: 100
+//  }).then(function () {
+//
+//    console.log("updated");
+//
+//  }, function (fail) {
+//
+//    console.log("failed upadte");
+//
+//  });
+//
+//}, function (fail) {
+//
+//  console.log("failed");
+//
+//});
