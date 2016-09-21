@@ -17,7 +17,7 @@ initial-scale=1.0">
 
   <main>
 
-    <form id="interface">
+    <form method="post" id="interface">
 
       <section id="left">
 
@@ -25,22 +25,11 @@ initial-scale=1.0">
 
           <legend class="visually-hidden">Squares:</legend>
 
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
-          <button type="submit" name="one" class="square">One Me: Red. Colour: Blue</button>
+          {{#each field.squares}}
+
+          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgba({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}},1)"></button>
+
+          {{/each}}
 
         </fieldset>
 
@@ -52,11 +41,11 @@ initial-scale=1.0">
           <div id="sliders">
 
             <label class="visually-hidden" for="red">Red</label>
-            <input type="range" name="red" min="0" max="256" />
+            <input value="{{req.query.redSlider}}" type="range" name="red" min="0" max="255" />
             <label class="visually-hidden" for="green">Green</label>
-            <input type="range" name="green" min="0" max="256" />
+            <input value="{{req.query.greenSlider}}" type="range" name="green" min="0" max="255" />
             <label class="visually-hidden" for="blue">Blue</label>
-            <input type="range" name="blue" min="0" max="256" />
+            <input value="{{req.query.blueSlider}}" type="range" name="blue" min="0" max="255" />
 
           </div>
 

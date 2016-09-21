@@ -221,24 +221,19 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
-// Parse querystring as JSON
-
 app.use(function (req, res, next) {
 
   try {
 
-    Object.keys(req.query).forEach(function (key) {
+    req.squareField = {
+      red: parseInt(req.query.red),
+      green: parseInt(req.query.green),
+      blue: parseInt(req.query.blue)
 
-      req.query[key] = JSON.parse(req.query[key]);
-
-    });
+    };
 
   } catch (e) {
 
-    // Invalid JSON
-
-    res.status(400).send("Bad JSON");
-    return false;
 
   }
 
@@ -250,16 +245,16 @@ app.use(function (req, res, next) {
 
 app.get("/", function (req, res, next) {
 
-  if (checkColours(req.query)) {
-
-    cs.fetchSquarefield(req.query).then(function (field) {
+  if (checkColours(req.squareField)) {
+    cs.fetchSquarefield(req.squareField).then(function (field) {
 
       var source = fs.readFileSync(__dirname + "/index.html", "utf8");
 
       var template = Handlebars.compile(source);
 
       res.send(template({
-        field: field
+        field: field,
+        req: req
       }));
 
     }, function (fail) {
@@ -271,6 +266,47 @@ app.get("/", function (req, res, next) {
   } else {
 
     next();
+
+  }
+
+});
+
+var url = require('url');
+
+app.post("/", function (req, res) {
+
+  var currentPath = url.parse(req.url).pathname;
+
+  if (req.body.square && req.squareField) {
+
+    req.query.focus = req.body.square;
+
+    if (req.body.mode === "paint") {
+
+      req.query.redSlider = parseInt(req.body.red);
+      req.query.blueSlider = parseInt(req.body.blue);
+      req.query.greenSlider = parseInt(req.body.green);
+
+    } else {
+
+
+    }
+
+    var newQuery = querystring.stringify(req.query);
+
+    cs.lightSquare(req.squareField, req.squareField, req.body.square, {
+      red: parseInt(req.body.red),
+      green: parseInt(req.body.green),
+      blue: parseInt(req.body.green)
+    }).then(function () {
+
+      res.redirect(currentPath + "?" + newQuery);
+
+    }, function (fail) {
+
+      res.redirect(currentPath + "?" + newQuery);
+
+    });
 
   }
 
@@ -308,19 +344,6 @@ server.listen(cs.config.port);
 //
 //cs.fetchSquarefield(test).then(function (field) {
 //
-//  cs.lightSquare(test, test, 1, {
-//    red: 100,
-//    green: 100,
-//    blue: 100
-//  }).then(function () {
-//
-//    console.log("updated");
-//
-//  }, function (fail) {
-//
-//    console.log("failed upadte");
-//
-//  });
 //
 //}, function (fail) {
 //
