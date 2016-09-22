@@ -18,8 +18,8 @@ label {
   display: none;
 }
 button {
-  box-shadow:inset 0 0 0 4px #fff;
-  border-color:black;
+  box-shadow: inset 0 0 0 4px #fff;
+  border-color: black;
 }
 button:focus {
   outline: green;
@@ -35,10 +35,6 @@ form {
 }
 #left {
   width: 75%;
-  height: 100%;
-}
-#right {
-  width: 25%;
   height: 100%;
 }
 
@@ -76,25 +72,28 @@ input[type=range] {
   margin: 0px;
   height: 33%;
 }
-#current {
-  display: inline-block;
-  width: 24%;
-  height: 74%;
-  margin-top: 4%;
-  vertical-align: top;
-}
 
 /* Right */
 
+#right {
+  width: 25%;
+  height: 100%;
+  padding-top: 1%;
+  padding-left: 3%;
+  box-sizing: border-box;
+  padding-right: 3%;
+}
 #mode {
   width: 100%;
-  height: 75%;
+  height: 55.75%;
+  padding-top: 4%;
+  box-sizing: border-box;
 }
 input[type=radio] {
   border: none;
-  width: 25%;
+  width: 33%;
   display: block;
-  height: 25%;
+  height: 33%;
   margin: auto;
 }
 #home-wrapper {
@@ -102,8 +101,15 @@ input[type=radio] {
   padding: 25%;
   height: 25%;
 }
-#home {
-  display: block;
+.square-wrapper {
+  width: 100%;
+  height: 18%;
+  box-sizing: border-box;
+}
+.square-wrapper button {
   width: 100%;
   height: 100%;
+}
+#current {
+  margin-top: 20%;
 }
