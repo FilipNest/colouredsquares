@@ -27,7 +27,7 @@ initial-scale=1.0">
 
           {{#each field.squares}}
 
-          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})"></button>
+          <button title="colour or copy colours" type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})"></button>
 
           {{/each}}
 
@@ -67,7 +67,8 @@ initial-scale=1.0">
       <section id="right">
 
         <div class="control-wrapper">
-          <button type="submit" id="home" name="home">Home. Me: Red. Colour: Blue</button>
+          <button title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" name="home">
+          </button>
         </div>
 
         <legend class="visually-hidden">Mode:</legend>
@@ -87,7 +88,8 @@ initial-scale=1.0">
         </div>
 
         <div class="control-wrapper">
-          <button style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}})" id="current" type="submit" name="current">Current. Author: Red. Colour: Blue</button>
+          <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current">
+          </button>
         </div>
 
         <!--   Login / Claim / Logout button to go here  -->
