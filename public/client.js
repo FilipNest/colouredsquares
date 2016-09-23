@@ -12,9 +12,9 @@ var getColours = function () {
     red: red,
     green: green,
     blue: blue
-  }
+  };
 
-}
+};
 
 var updateColour = function () {
 
@@ -22,7 +22,7 @@ var updateColour = function () {
 
   document.getElementById("current").style.backgroundColor = "rgb(" + colours.red + "," + colours.green + "," + colours.blue + ")";
 
-}
+};
 
 if (sliders[0].type === "range") {
 
@@ -37,7 +37,7 @@ if (sliders[0].type === "range") {
 
       updateColour();
 
-    })
+    });
 
   }
 
