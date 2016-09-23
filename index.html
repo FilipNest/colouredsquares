@@ -74,17 +74,19 @@ initial-scale=1.0">
         <legend class="visually-hidden">Mode:</legend>
         <div class="control-wrapper">
           <label for="paint">Paint</label>
-          <input type="radio" name="mode" id="paint" value="paint" checked="checked" />
+
+          <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}} {{#unless req.query.mode}} checked {{/unless}}/>
+
         </div>
 
         <div class="control-wrapper">
           <label for="copy-outer">Copy outer</label>
-          <input type="radio" name="mode" id="copy-outer" value="copy outer" />
+          <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
         </div>
 
         <div class="control-wrapper">
           <label for="copy-inner">Copy inner</label>
-          <input type="radio" name="mode" id="copy-inner" value="copy inner" />
+          <input type="radio" name="mode" id="copy-inner" value="copy-inner" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
         </div>
 
         <div class="control-wrapper">

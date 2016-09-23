@@ -215,6 +215,15 @@ var server = require('http').createServer(),
   querystring = require("querystring"),
   Handlebars = require("handlebars");
 
+// Equality Handlebars helper
+
+Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+  if (v1 === v2) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
+
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -347,6 +356,12 @@ app.post("/", function (req, res) {
 
   newQuery.mode = req.body.mode;
 
+  if (!newQuery.mode) {
+
+    newQuery.mode = "paint";
+
+  }
+
   var currentPath = url.parse(req.url).pathname;
 
   if (req.body.square) {
@@ -373,7 +388,7 @@ app.post("/", function (req, res) {
 
       });
 
-    } else if (req.body.mode === "copy inner") {
+    } else if (req.body.mode === "copy-inner") {
 
       newQuery.redSlider = parseInt(square.colour.red);
       newQuery.blueSlider = parseInt(square.colour.blue);
@@ -381,7 +396,7 @@ app.post("/", function (req, res) {
 
       res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
-    } else if (req.body.mode === "copy outer") {
+    } else if (req.body.mode === "copy-outer") {
 
       newQuery.redSlider = parseInt(square.author.red);
       newQuery.blueSlider = parseInt(square.author.blue);
