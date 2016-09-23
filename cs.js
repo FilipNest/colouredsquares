@@ -364,51 +364,68 @@ app.post("/", function (req, res) {
 
   var currentPath = url.parse(req.url).pathname;
 
-  if (req.body.square) {
+
+  if (req.body.mode === "paint") {
+
+    newQuery.redSlider = parseInt(req.body.red);
+    newQuery.blueSlider = parseInt(req.body.blue);
+    newQuery.greenSlider = parseInt(req.body.green);
+    
+    if (req.body.current) {
+
+      newQuery.red = newQuery.redSlider;
+      newQuery.blue = newQuery.blueSlider;
+      newQuery.green = newQuery.greenSlider;
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
+
+    if (!req.body.square) {
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
 
     var square = req.fetchedSquarefield.squares[req.body.square];
 
-    if (req.body.mode === "paint") {
-
-      newQuery.redSlider = parseInt(req.body.red);
-      newQuery.blueSlider = parseInt(req.body.blue);
-      newQuery.greenSlider = parseInt(req.body.green);
-
-      cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
-        red: parseInt(req.body.red),
-        green: parseInt(req.body.green),
-        blue: parseInt(req.body.blue)
-      }).then(function () {
-
-        res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      }, function (fail) {
-
-        res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      });
-
-    } else if (req.body.mode === "copy-inner") {
-
-      newQuery.redSlider = parseInt(square.colour.red);
-      newQuery.blueSlider = parseInt(square.colour.blue);
-      newQuery.greenSlider = parseInt(square.colour.green);
+    cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
+      red: parseInt(req.body.red),
+      green: parseInt(req.body.green),
+      blue: parseInt(req.body.blue)
+    }).then(function () {
 
       res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
-    } else if (req.body.mode === "copy-outer") {
-
-      newQuery.redSlider = parseInt(square.author.red);
-      newQuery.blueSlider = parseInt(square.author.blue);
-      newQuery.greenSlider = parseInt(square.author.green);
+    }, function (fail) {
 
       res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
-    } else {
+    });
 
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+  } else if (req.body.mode === "copy-inner") {
 
-    }
+    newQuery.redSlider = parseInt(square.colour.red);
+    newQuery.blueSlider = parseInt(square.colour.blue);
+    newQuery.greenSlider = parseInt(square.colour.green);
+
+    res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+  } else if (req.body.mode === "copy-outer") {
+
+    newQuery.redSlider = parseInt(square.author.red);
+    newQuery.blueSlider = parseInt(square.author.blue);
+    newQuery.greenSlider = parseInt(square.author.green);
+
+    res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+  } else {
+
+    res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
   }
 

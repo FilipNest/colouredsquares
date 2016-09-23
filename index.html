@@ -13,7 +13,7 @@ initial-scale=1.0">
 
 </head>
 
-<body style="background-color:rgb({{req.query.red}},{{req.query.blue}},{{req.query.green}})">
+<body style="background-color:rgb({{req.query.red}},{{req.query.green}},{{req.query.blue}})">
 
   <main>
 
@@ -90,7 +90,7 @@ initial-scale=1.0">
         </div>
 
         <div class="control-wrapper">
-          <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current">
+          <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current" value="current">
           </button>
         </div>
 
