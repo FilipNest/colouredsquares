@@ -74,7 +74,6 @@ form {
   height: 100%;
   width: 75%;
   float: left;
-  display: none;
 }
 #text-colours input {
   box-sizing: border-box;
@@ -88,9 +87,6 @@ form {
   padding-left: 1.5%;
   width: 25%;
   float: right;
-}
-#sliders.visible {
-  display: block;
 }
 #text-colours {
   box-sizing: border-box;

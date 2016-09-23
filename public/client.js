@@ -20,6 +20,7 @@ if (sliders[0].type === "range") {
   // Range type supported, enable range type
 
   document.getElementById("sliders").className += " visible";
+  document.getElementById("sliders").style.display = "block";
 
 
 }
