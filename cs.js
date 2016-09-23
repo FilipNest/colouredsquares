@@ -217,7 +217,7 @@ var server = require('http').createServer(),
   compression = require('compression');
 
 
-app.use(compression())
+app.use(compression());
 
 // Equality Handlebars helper
 
@@ -311,11 +311,7 @@ app.use(function (req, res, next) {
 
   if (!req.squareField || !checkColours(req.squareField)) {
 
-    var query = querystring.stringify({
-      red: 256,
-      green: 256,
-      blue: 256
-    });
+    var query = querystring.stringify(req.session.colour);
 
     res.redirect("/?" + query);
 
@@ -334,6 +330,24 @@ app.use(function (req, res, next) {
     });
 
   }
+
+});
+
+// Get home squarefield
+
+app.use(function (req, res, next) {
+
+  cs.fetchSquarefield(req.session.colour).then(function (field) {
+
+    req.authorSquarefield = field;
+
+    next();
+
+  }, function (fail) {
+
+    res.status(500).send("500");
+
+  });
 
 });
 
@@ -368,8 +382,10 @@ app.post("/", function (req, res) {
 
   var currentPath = url.parse(req.url).pathname;
 
+  var square;
+
   if (req.body.square) {
-    var square = req.fetchedSquarefield.squares[req.body.square];
+    square = req.fetchedSquarefield.squares[req.body.square];
   }
 
   if (req.body.mode === "paint") {
@@ -414,7 +430,21 @@ app.post("/", function (req, res) {
     });
 
   } else if (req.body.mode === "copy-inner") {
-    
+
+    if (req.body.current) {
+
+      // Copy current squarefield
+
+      newQuery.redSlider = req.session.colour.red;
+      newQuery.blueSlider = req.session.colour.blue;
+      newQuery.greenSlider = req.session.colour.green;
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
+
     newQuery.redSlider = parseInt(square.colour.red);
     newQuery.blueSlider = parseInt(square.colour.blue);
     newQuery.greenSlider = parseInt(square.colour.green);
@@ -422,6 +452,18 @@ app.post("/", function (req, res) {
     res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
   } else if (req.body.mode === "copy-outer") {
+
+    if (req.body.current) {
+
+      newQuery.redSlider = req.squareField.red;
+      newQuery.blueSlider = req.squareField.blue;
+      newQuery.greenSlider = req.squareField.green;
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
 
     newQuery.redSlider = parseInt(square.author.red);
     newQuery.blueSlider = parseInt(square.author.blue);
