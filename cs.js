@@ -414,6 +414,16 @@ app.post("/", function (req, res) {
 
   if (req.body.mode === "paint") {
 
+    if (req.body.home) {
+
+      // light up square on home squarefield
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
+
     newQuery.redSlider = parseInt(req.body.red);
     newQuery.blueSlider = parseInt(req.body.blue);
     newQuery.greenSlider = parseInt(req.body.green);
@@ -454,6 +464,20 @@ app.post("/", function (req, res) {
 
   } else if (req.body.mode === "copy-inner") {
 
+    if (req.body.home) {
+
+      // Copy current squarefield
+
+      newQuery.redSlider = req.homeLastUpdated.colour.red;
+      newQuery.blueSlider = req.homeLastUpdated.colour.blue;
+      newQuery.greenSlider = req.homeLastUpdated.colour.green;
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
+
     if (req.body.current) {
 
       // Copy current squarefield
@@ -475,6 +499,20 @@ app.post("/", function (req, res) {
     res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
   } else if (req.body.mode === "copy-outer") {
+
+    if (req.body.home) {
+
+      // Copy current squarefield
+
+      newQuery.redSlider = req.homeLastUpdated.author.red;
+      newQuery.blueSlider = req.homeLastUpdated.author.blue;
+      newQuery.greenSlider = req.homeLastUpdated.author.green;
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      return false;
+
+    }
 
     if (req.body.current) {
 
