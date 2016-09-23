@@ -18,7 +18,7 @@ var checkColours = function (colourObject) {
 
   var check = function (property) {
 
-    if (typeof property === "number" && property <= 255 && property >= 0) {
+    if (typeof property === "number" && property <= 256 && property >= 0) {
 
       return true;
 
@@ -45,18 +45,18 @@ var checkColours = function (colourObject) {
 // Create square generator
 
 var square = function (id, author = {
-  red: 255,
-  green: 255,
-  blue: 255
+  red: 256,
+  green: 256,
+  blue: 256
 }) {
 
   return {
     "id": id,
     "author": author,
     "colour": {
-      "red": 255,
-      "green": 255,
-      "blue": 255
+      "red": 256,
+      "green": 256,
+      "blue": 256
     },
     "date": Date.now()
   };
@@ -231,23 +231,47 @@ var sessions = require("express-session")(sessionConfig);
 
 app.use(sessions);
 
-// Anonymous session
+// Random anonymous session (for now)
+
+var randomColour = function () {
+
+  return {
+    red: Math.floor(Math.random() * 256) + 1,
+    green: Math.floor(Math.random() * 256) + 1,
+    blue: Math.floor(Math.random() * 256) + 1
+  };
+
+};
 
 app.use(function (req, res, next) {
 
   if (!req.session.colour) {
 
-    req.session.colour = {
-      red: Math.floor(Math.random() * 256) + 1,
-      green: Math.floor(Math.random() * 256) + 1,
-      blue: Math.floor(Math.random() * 256) + 1
-    }
+    req.session.colour = randomColour();
 
   }
 
   next();
 
-})
+});
+
+// Set sliders to random colour if not set
+
+app.use(function (req, res, next) {
+
+  if (!req.query.redSlider) {
+
+    var colour = randomColour();
+
+    req.query.redSlider = colour.red;
+    req.query.blueSlider = colour.blue;
+    req.query.greenSlider = colour.green;
+
+  }
+
+  next();
+
+});
 
 app.use(express.static('public'));
 
@@ -264,14 +288,30 @@ app.use(function (req, res, next) {
 
   } catch (e) {
 
+    // No squarefield selected redirect to homepage
 
   }
 
-  next();
+  if (!req.squareField || !checkColours(req.squareField)) {
+
+    var query = querystring.stringify({
+      red: 256,
+      green: 256,
+      blue: 256
+    });
+
+    res.redirect("/?" + query);
+
+  } else {
+
+    next();
+
+  }
+
 
 });
 
-// URLS are of the form ?red=255&green=255&blue=255&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint
+// URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint
 
 app.get("/", function (req, res, next) {
 
@@ -367,9 +407,9 @@ server.on('request', app);
 server.listen(cs.config.port);
 
 //var test = {
-//  red: 255,
-//  green: 255,
-//  blue: 255
+//  red: 256,
+//  green: 256,
+//  blue: 256
 //};
 //
 //cs.fetchSquarefield(test).then(function (field) {
