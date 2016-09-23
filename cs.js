@@ -273,7 +273,11 @@ app.use(function (req, res, next) {
 
 });
 
+// Client side assets
+
 app.use(express.static('public'));
+
+// Set default squarefield
 
 app.use(function (req, res, next) {
 
@@ -304,28 +308,11 @@ app.use(function (req, res, next) {
 
   } else {
 
-    next();
-
-  }
-
-
-});
-
-// URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint
-
-app.get("/", function (req, res, next) {
-
-  if (checkColours(req.squareField)) {
     cs.fetchSquarefield(req.squareField).then(function (field) {
 
-      var source = fs.readFileSync(__dirname + "/index.html", "utf8");
+      req.fetchedSquarefield = field;
 
-      var template = Handlebars.compile(source);
-
-      res.send(template({
-        field: field,
-        req: req
-      }));
+      next();
 
     }, function (fail) {
 
@@ -333,11 +320,22 @@ app.get("/", function (req, res, next) {
 
     });
 
-  } else {
-
-    next();
-
   }
+
+});
+
+// URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint
+
+app.get("/", function (req, res, next) {
+
+  var source = fs.readFileSync(__dirname + "/index.html", "utf8");
+
+  var template = Handlebars.compile(source);
+
+  res.send(template({
+    field: req.fetchedSquarefield,
+    req: req
+  }));
 
 });
 
@@ -345,46 +343,59 @@ var url = require('url');
 
 app.post("/", function (req, res) {
 
+  var newQuery = req.query;
+
+  newQuery.mode = req.body.mode;
+
   var currentPath = url.parse(req.url).pathname;
 
-  if (req.body.square && req.squareField) {
+  if (req.body.square) {
 
-    req.query.focus = req.body.square;
+    var square = req.fetchedSquarefield.squares[req.body.square];
 
     if (req.body.mode === "paint") {
 
-      req.query.redSlider = parseInt(req.body.red);
-      req.query.blueSlider = parseInt(req.body.blue);
-      req.query.greenSlider = parseInt(req.body.green);
+      newQuery.redSlider = parseInt(req.body.red);
+      newQuery.blueSlider = parseInt(req.body.blue);
+      newQuery.greenSlider = parseInt(req.body.green);
+
+      cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
+        red: parseInt(req.body.red),
+        green: parseInt(req.body.green),
+        blue: parseInt(req.body.blue)
+      }).then(function () {
+
+        res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      }, function (fail) {
+
+        res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+      });
+
+    } else if (req.body.mode === "copy inner") {
+
+      newQuery.redSlider = parseInt(square.colour.red);
+      newQuery.blueSlider = parseInt(square.colour.blue);
+      newQuery.greenSlider = parseInt(square.colour.green);
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+
+    } else if (req.body.mode === "copy outer") {
+
+      newQuery.redSlider = parseInt(square.author.red);
+      newQuery.blueSlider = parseInt(square.author.blue);
+      newQuery.greenSlider = parseInt(square.author.green);
+
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
     } else {
 
+      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
     }
 
-    var newQuery = querystring.stringify(req.query);
-
-    cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
-      red: parseInt(req.body.red),
-      green: parseInt(req.body.green),
-      blue: parseInt(req.body.blue)
-    }).then(function () {
-
-      res.redirect(currentPath + "?" + newQuery);
-
-    }, function (fail) {
-
-      res.redirect(currentPath + "?" + newQuery);
-
-    });
-
   }
-
-});
-
-app.use(function (req, res) {
-
-  res.status(404).send("404");
 
 });
 
