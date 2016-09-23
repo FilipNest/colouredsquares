@@ -213,7 +213,11 @@ var server = require('http').createServer(),
   bodyParser = require("body-parser"),
   session = require("express-session"),
   querystring = require("querystring"),
-  Handlebars = require("handlebars");
+  Handlebars = require("handlebars"),
+  compression = require('compression');
+
+
+app.use(compression())
 
 // Equality Handlebars helper
 
@@ -364,13 +368,16 @@ app.post("/", function (req, res) {
 
   var currentPath = url.parse(req.url).pathname;
 
+  if (req.body.square) {
+    var square = req.fetchedSquarefield.squares[req.body.square];
+  }
 
   if (req.body.mode === "paint") {
 
     newQuery.redSlider = parseInt(req.body.red);
     newQuery.blueSlider = parseInt(req.body.blue);
     newQuery.greenSlider = parseInt(req.body.green);
-    
+
     if (req.body.current) {
 
       newQuery.red = newQuery.redSlider;
@@ -391,7 +398,6 @@ app.post("/", function (req, res) {
 
     }
 
-    var square = req.fetchedSquarefield.squares[req.body.square];
 
     cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
       red: parseInt(req.body.red),
@@ -408,7 +414,7 @@ app.post("/", function (req, res) {
     });
 
   } else if (req.body.mode === "copy-inner") {
-
+    
     newQuery.redSlider = parseInt(square.colour.red);
     newQuery.blueSlider = parseInt(square.colour.blue);
     newQuery.greenSlider = parseInt(square.colour.green);
