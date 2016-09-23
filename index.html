@@ -13,7 +13,7 @@ initial-scale=1.0">
 
 </head>
 
-<body style="background-color:rgba({{req.query.red}},{{req.query.blue}},{{req.query.green}},1)">
+<body style="background-color:rgb({{req.query.red}},{{req.query.blue}},{{req.query.green}})">
 
   <main>
 
@@ -27,7 +27,7 @@ initial-scale=1.0">
 
           {{#each field.squares}}
 
-          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgba({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}},1)"></button>
+          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}})"></button>
 
           {{/each}}
 
