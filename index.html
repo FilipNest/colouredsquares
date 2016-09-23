@@ -27,7 +27,7 @@ initial-scale=1.0">
 
           {{#each field.squares}}
 
-          <button title="colour or copy colours" type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})"></button>
+          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})"></button>
 
           {{/each}}
 
@@ -72,21 +72,21 @@ initial-scale=1.0">
         </div>
 
         <legend class="visually-hidden">Mode:</legend>
-        <div class="control-wrapper">
+        <div class="control-wrapper" id="paint-wrapper">
           <label for="paint">Paint</label>
 
           <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}} {{#unless req.query.mode}} checked {{/unless}}/>
 
         </div>
 
-        <div class="control-wrapper">
-          <label for="copy-outer">Copy outer</label>
-          <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
-        </div>
-
-        <div class="control-wrapper">
+        <div class="control-wrapper" id="copy-inner-wrapper">
           <label for="copy-inner">Copy inner</label>
           <input type="radio" name="mode" id="copy-inner" value="copy-inner" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
+        </div>
+
+        <div class="control-wrapper" id="copy-outer-wrapper">
+          <label for="copy-outer">Copy outer</label>
+          <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
         </div>
 
         <div class="control-wrapper">
