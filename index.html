@@ -27,7 +27,7 @@ initial-scale=1.0">
 
           {{#each field.squares}}
 
-          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}})"></button>
+          <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})"></button>
 
           {{/each}}
 
@@ -37,25 +37,25 @@ initial-scale=1.0">
 
           <legend hidden>Colour:</legend>
 
-          <div id="sliders">
+          <div id="sliders" style="display:none">
 
             <label class="visually-hidden" for="red">Red</label>
-            <input id="slide-red" value="{{req.query.redSlider}}" type="range" name="slide-red" min="0" max="255" />
+            <input id="slide-red" value="{{req.query.redSlider}}" type="range" name="slide-red" min="0" max="256" />
             <label class="visually-hidden" for="green">Green</label>
-            <input id="slide-green" value="{{req.query.greenSlider}}" type="range" name="slide-green" min="0" max="255" />
+            <input id="slide-green" value="{{req.query.greenSlider}}" type="range" name="slide-green" min="0" max="256" />
             <label class="visually-hidden" for="blue">Blue</label>
-            <input id="slide-blue" value="{{req.query.blueSlider}}" type="range" name="slide-blue" min="0" max="255" />
+            <input id="slide-blue" value="{{req.query.blueSlider}}" type="range" name="slide-blue" min="0" max="256" />
 
           </div>
 
           <div id="text-colours">
 
             <label class="visually-hidden" for="red">Red</label>
-            <input style="color:red;" value="{{req.query.redSlider}}" type="number" name="red" min="0" max="255" />
+            <input style="color:red;" value="{{req.query.redSlider}}" type="number" name="red" min="0" max="256" />
             <label class="visually-hidden" for="green">Green</label>
-            <input style="color:green;" value="{{req.query.greenSlider}}" type="number" name="green" min="0" max="255" />
+            <input style="color:green;" value="{{req.query.greenSlider}}" type="number" name="green" min="0" max="256" />
             <label class="visually-hidden" for="blue">Blue</label>
-            <input style="color:blue;" value="{{req.query.blueSlider}}" type="number" name="blue" min="0" max="255" />
+            <input style="color:blue;" value="{{req.query.blueSlider}}" type="number" name="blue" min="0" max="256" />
 
           </div>
 
@@ -87,7 +87,7 @@ initial-scale=1.0">
         </div>
 
         <div class="control-wrapper">
-          <button id="current" type="submit" name="current">Current. Author: Red. Colour: Blue</button>
+          <button style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}})" id="current" type="submit" name="current">Current. Author: Red. Colour: Blue</button>
         </div>
 
         <!--   Login / Claim / Logout button to go here  -->

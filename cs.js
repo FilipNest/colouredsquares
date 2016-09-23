@@ -219,6 +219,36 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 
+var crypto = require("crypto");
+
+var sessionConfig = {
+  secret: crypto.randomBytes(8).toString('hex'),
+  resave: false,
+  saveUninitialized: true,
+};
+
+var sessions = require("express-session")(sessionConfig);
+
+app.use(sessions);
+
+// Anonymous session
+
+app.use(function (req, res, next) {
+
+  if (!req.session.colour) {
+
+    req.session.colour = {
+      red: Math.floor(Math.random() * 256) + 1,
+      green: Math.floor(Math.random() * 256) + 1,
+      blue: Math.floor(Math.random() * 256) + 1
+    }
+
+  }
+
+  next();
+
+})
+
 app.use(express.static('public'));
 
 app.use(function (req, res, next) {
@@ -294,7 +324,7 @@ app.post("/", function (req, res) {
 
     var newQuery = querystring.stringify(req.query);
 
-    cs.lightSquare(req.squareField, req.squareField, req.body.square, {
+    cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),
       blue: parseInt(req.body.blue)
