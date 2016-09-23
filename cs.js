@@ -297,7 +297,7 @@ app.post("/", function (req, res) {
     cs.lightSquare(req.squareField, req.squareField, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),
-      blue: parseInt(req.body.green)
+      blue: parseInt(req.body.blue)
     }).then(function () {
 
       res.redirect(currentPath + "?" + newQuery);

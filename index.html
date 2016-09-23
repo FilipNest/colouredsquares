@@ -13,7 +13,7 @@ initial-scale=1.0">
 
 </head>
 
-<body>
+<body style="background-color:rgba({{req.query.red}},{{req.query.blue}},{{req.query.green}},1)">
 
   <main>
 
@@ -56,21 +56,27 @@ initial-scale=1.0">
 
       <section id="right">
 
-        <div class="square-wrapper">
+        <div class="control-wrapper">
           <button type="submit" id="home" name="home">Home. Me: Red. Colour: Blue</button>
         </div>
 
-        <fieldset id="mode">
-          <legend class="visually-hidden">Mode:</legend>
+        <legend class="visually-hidden">Mode:</legend>
+        <div class="control-wrapper">
           <label for="paint">Paint</label>
           <input type="radio" name="mode" id="paint" value="paint" checked="checked" />
+        </div>
+
+        <div class="control-wrapper">
           <label for="copy-outer">Copy outer</label>
           <input type="radio" name="mode" id="copy-outer" value="copy outer" />
+        </div>
+
+        <div class="control-wrapper">
           <label for="copy-inner">Copy inner</label>
           <input type="radio" name="mode" id="copy-inner" value="copy inner" />
-        </fieldset>
+        </div>
 
-        <div class="square-wrapper">
+        <div class="control-wrapper">
           <button id="current" type="submit" name="current">Current. Author: Red. Colour: Blue</button>
         </div>
 
