@@ -67,7 +67,7 @@ initial-scale=1.0">
       <section id="right">
 
         <div class="control-wrapper">
-          <button title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" name="home">
+          <button style="border-color:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}}); background-color:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" name="home">
           </button>
         </div>
 

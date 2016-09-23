@@ -180,6 +180,8 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
           _id: id
         }, fetchedField, {}, function (err, updated) {
 
+          process.emit("light", fetchedField.squares[index]);
+
           resolve(updated);
 
         });
@@ -339,7 +341,29 @@ app.use(function (req, res, next) {
 
   cs.fetchSquarefield(req.session.colour).then(function (field) {
 
+    // Last updated square
+
+    field.squares.sort(function (a, b) {
+
+      if (a.date < b.date) {
+
+        return +1;
+
+      } else if (a.date > b.date) {
+
+        return -1;
+
+      } else {
+
+        return 0;
+
+      }
+
+    });
+
     req.authorSquarefield = field;
+
+    req.homeLastUpdated = field.squares[0];
 
     next();
 
@@ -414,7 +438,6 @@ app.post("/", function (req, res) {
 
     }
 
-
     cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),
@@ -479,35 +502,24 @@ app.post("/", function (req, res) {
 
 });
 
-//wss.on('connection', function connection(ws) {
-//
-//  //  var location = url.parse(ws.upgradeReq.url, true);
-//  // you might use location.query.access_token to authenticate or share sessions
-//  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-//
-//  ws.on('message', function (message) {
-//    console.log('received: %s', message);
-//  });
-//
-//  ws.send('something');
-//
-//});
+wss.on('connection', function connection(ws) {
+
+  process.on("light", function (light) {
+
+    try {
+
+      ws.send(JSON.stringify(light));
+
+    } catch (e) {
+
+      //
+
+    }
+
+  });
+
+});
 
 server.on('request', app);
 
 server.listen(cs.config.port);
-
-//var test = {
-//  red: 256,
-//  green: 256,
-//  blue: 256
-//};
-//
-//cs.fetchSquarefield(test).then(function (field) {
-//
-//
-//}, function (fail) {
-//
-//  console.log("failed");
-//
-//});
