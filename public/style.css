@@ -1,5 +1,8 @@
 /*Resets*/
 
+* {
+  font-family: monospace;
+}
 html,
 body {
   padding: 0px;
@@ -56,7 +59,7 @@ form {
   width: 23%;
   height: 23%;
   box-sizing: border-box;
-  margin:1%;
+  margin: 1%;
 }
 
 /* Bottom */
@@ -68,11 +71,33 @@ form {
   height: 20%;
 }
 #sliders {
-  display: inline-block;
   height: 100%;
   width: 75%;
+  float: left;
+  display: none;
+}
+#text-colours input {
+  box-sizing: border-box;
+  font-size: 200%;
+  text-align: center;
+  width: 100%;
+  height: 33%;
+  display: block;
+}
+#sliders.visible + #text-colours {
+  padding-left: 1.5%;
+  width: 25%;
+  float: right;
+}
+#sliders.visible {
+  display: block;
+}
+#text-colours {
+  box-sizing: border-box;
+  height: 100%;
 }
 input[type=range] {
+  box-sizing: border-box;
   display: block;
   width: 100%;
   padding: 0px;

@@ -37,15 +37,25 @@ initial-scale=1.0">
 
           <legend hidden>Colour:</legend>
 
-
           <div id="sliders">
 
             <label class="visually-hidden" for="red">Red</label>
-            <input value="{{req.query.redSlider}}" type="range" name="red" min="0" max="255" />
+            <input id="slide-red" value="{{req.query.redSlider}}" type="range" name="slide-red" min="0" max="255" />
             <label class="visually-hidden" for="green">Green</label>
-            <input value="{{req.query.greenSlider}}" type="range" name="green" min="0" max="255" />
+            <input id="slide-green" value="{{req.query.greenSlider}}" type="range" name="slide-green" min="0" max="255" />
             <label class="visually-hidden" for="blue">Blue</label>
-            <input value="{{req.query.blueSlider}}" type="range" name="blue" min="0" max="255" />
+            <input id="slide-blue" value="{{req.query.blueSlider}}" type="range" name="slide-blue" min="0" max="255" />
+
+          </div>
+
+          <div id="text-colours">
+
+            <label class="visually-hidden" for="red">Red</label>
+            <input style="color:red;" value="{{req.query.redSlider}}" type="number" name="red" min="0" max="255" />
+            <label class="visually-hidden" for="green">Green</label>
+            <input style="color:green;" value="{{req.query.greenSlider}}" type="number" name="green" min="0" max="255" />
+            <label class="visually-hidden" for="blue">Blue</label>
+            <input style="color:blue;" value="{{req.query.blueSlider}}" type="number" name="blue" min="0" max="255" />
 
           </div>
 
@@ -88,6 +98,8 @@ initial-scale=1.0">
     </form>
 
   </main>
+
+  <script src="client.js"></script>
 
 </body>
 
