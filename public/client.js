@@ -52,17 +52,17 @@ if (sliders[0].type === "range") {
 
 var lightSquare = function (square) {
 
-//  var target = document.getElementsByName("square")[square.id - 1];
-//
-//  target.style.backgroundColor = "rgb(" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + ")";
-//
-//  target.style.borderColor = "rgb(" + square.author.red + "," + square.author.green + "," + square.author.blue + ")";
+    var target = document.getElementsByName("square")[square.id - 1];
+  
+    target.style.backgroundColor = "rgb(" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + ")";
+  
+    target.style.borderColor = "rgb(" + square.author.red + "," + square.author.green + "," + square.author.blue + ")";
 
-}
+};
 
 if (window.WebSocket) {
 
-  var websocket = new WebSocket("ws://" + document.location.host)
+  var websocket = new WebSocket("ws://" + document.location.host);
 
   websocket.onmessage = function (evt) {
 
@@ -83,6 +83,12 @@ if (window.WebSocket) {
 
     }
 
-  }
+  };
+
+  websocket.onopen = function () {
+
+    websocket.send(document.location.href);
+
+  };
 
 }

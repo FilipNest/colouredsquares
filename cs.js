@@ -180,7 +180,17 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
           _id: id
         }, fetchedField, {}, function (err, updated) {
 
-          process.emit("light", fetchedField.squares[index]);
+          var connectionString = field.colours.red + "-" + field.colours.green + "-" + field.colours.blue;
+
+          if (cs.connections[connectionString]) {
+
+            cs.connections[connectionString].forEach(function (socket) {
+
+              socket.send(JSON.stringify(fetchedField.squares[index]));
+
+            });
+
+          }
 
           resolve(updated);
 
@@ -218,6 +228,7 @@ var server = require('http').createServer(),
   Handlebars = require("handlebars"),
   compression = require('compression');
 
+cs.connections = {};
 
 app.use(compression());
 
@@ -542,17 +553,35 @@ app.post("/", function (req, res) {
 
 wss.on('connection', function connection(ws) {
 
-  process.on("light", function (light) {
+  ws.on("message", function (message) {
 
-    try {
+    var squarefield = querystring.parse(url.parse(message).search.replace("?", ""));
 
-      ws.send(JSON.stringify(light));
+    var string = squarefield.red + "-" + squarefield.green + "-" + squarefield.blue;
 
-    } catch (e) {
+    if (!cs.connections[string]) {
 
-      //
+      cs.connections[string] = [];
 
     }
+
+    cs.connections[string].push(ws);
+
+    ws.subscribed = string;
+
+  });
+
+  ws.on("close", function () {
+
+    cs.connections[ws.subscribed].forEach(function (socket, index) {
+
+      if (socket === ws) {
+
+        delete cs.connections[ws.subscribed][index];
+
+      }
+
+    });
 
   });
 
