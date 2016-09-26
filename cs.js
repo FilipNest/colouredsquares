@@ -285,9 +285,78 @@ app.use(function (req, res, next) {
 
 });
 
+// Client side assets
+
+app.use(express.static('public'));
+
+// Function for getting squarefield colours from string
+
+var colourFromString = function (colour) {
+
+  var colour = colour.split("-");
+
+  if (colour.length !== 3) {
+
+    return false;
+
+  } else {
+
+    var colour = {
+      red: parseInt(colour[0]),
+      green: parseInt(colour[1]),
+      blue: parseInt(colour[2])
+    }
+
+    if (checkColours(colour)) {
+
+      return colour;
+
+    } else {
+
+      return false;
+
+    }
+
+  };
+
+}
+
+// Fetch squarefield ready for use
+
+app.use("/field/:colour", function (req, res, next) {
+
+  // Split colour into components and check if valid
+
+  var colour = colourFromString(req.params.colour);
+
+  if (!colour) {
+
+    res.status(400).send("Bad request");
+
+  }
+
+  // Set squarefieldColour and squarefieldEntity
+
+  req.squarefieldColour = colour;
+
+  cs.fetchSquarefield(colour).then(function (fetchedField) {
+
+    req.squarefieldEntity = fetchedField;
+
+    next();
+
+  }, function (fail) {
+
+    res.status(400).send("Bad request");
+
+  })
+
+});
+
+
 // Set sliders to random colour if not set
 
-app.use(function (req, res, next) {
+app.use("/field/:colour", function (req, res, next) {
 
   if (!req.query.redSlider) {
 
@@ -299,56 +368,22 @@ app.use(function (req, res, next) {
 
   }
 
+  if (!req.query.mode) {
+
+    req.query.mode = "paint";
+
+  }
+
   next();
-
-});
-
-// Client side assets
-
-app.use(express.static('public'));
-
-// Set default squarefield
-
-app.use(function (req, res, next) {
-
-  var squareField;
-
-  try {
-
-    squareField = {
-      red: parseInt(req.query.red),
-      green: parseInt(req.query.green),
-      blue: parseInt(req.query.blue)
-
-    };
-
-  } catch (e) {
-
-    // No squarefield selected redirect to homepage
-
-  }
-
-  if (checkColours(squareField)) {
-
-    req.squareField = squareField;
-    cs.fetchSquarefield(req.squareField).then(function (field) {
-
-      req.fetchedSquarefield = field;
-      next();
-
-    });
-
-  } else {
-
-    next();
-
-  }
 
 });
 
 // Get home squarefield
 
-app.use(function (req, res, next) {
+
+// Get home squarefield
+
+app.use("/field/:colour", function (req, res, next) {
 
   cs.fetchSquarefield(req.session.colour).then(function (field) {
 
@@ -372,7 +407,7 @@ app.use(function (req, res, next) {
 
     });
 
-    req.authorSquarefield = field;
+    req.homeSquarefield = field;
 
     req.homeLastUpdated = field.squares[0];
 
@@ -386,16 +421,9 @@ app.use(function (req, res, next) {
 
 });
 
-// URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint?format=JSON
+// Getting squarefield
 
-app.get("/", function (req, res, next) {
-
-  if (!req.squareField) {
-
-    next();
-    return false;
-
-  }
+app.get("/field/:colour", function (req, res) {
 
   var source = fs.readFileSync(__dirname + "/index.html", "utf8");
 
@@ -403,12 +431,12 @@ app.get("/", function (req, res, next) {
 
   if (req.query.format && req.query.format.toUpperCase() === "JSON") {
 
-    res.json(req.fetchedSquarefield);
+    res.json(req.squarefieldEntity);
 
   } else {
 
     res.send(template({
-      field: req.fetchedSquarefield,
+      field: req.squarefieldEntity,
       req: req
     }));
 
@@ -418,15 +446,9 @@ app.get("/", function (req, res, next) {
 
 var url = require('url');
 
-app.post("/", function (req, res) {
+app.post("/field/:colour", function (req, res) {
 
   var newQuery = req.query;
-
-  if (!req.body.mode) {
-
-    req.body.mode = "paint";
-
-  }
 
   newQuery.mode = req.body.mode;
 
@@ -435,7 +457,7 @@ app.post("/", function (req, res) {
   var square;
 
   if (req.body.square) {
-    square = req.fetchedSquarefield.squares[req.body.square];
+    square = req.squarefieldEntity.squares[req.body.square];
   }
 
   if (req.body.mode === "paint") {
@@ -466,15 +488,7 @@ app.post("/", function (req, res) {
 
     }
 
-    if (!req.body.square) {
-
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      return false;
-
-    }
-
-    cs.lightSquare(req.session.colour, req.squareField, req.body.square, {
+    cs.lightSquare(req.session.colour, req.squarefieldColour, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),
       blue: parseInt(req.body.blue)
@@ -542,9 +556,9 @@ app.post("/", function (req, res) {
 
     if (req.body.current) {
 
-      newQuery.redSlider = req.squareField.red;
-      newQuery.blueSlider = req.squareField.blue;
-      newQuery.greenSlider = req.squareField.green;
+      newQuery.redSlider = req.squarefieldColour.red;
+      newQuery.blueSlider = req.squarefieldColour.blue;
+      newQuery.greenSlider = req.squarefieldColour.green;
 
       res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
@@ -566,6 +580,7 @@ app.post("/", function (req, res) {
 
 });
 
+
 // 404 catching
 
 app.use(function (req, res) {
@@ -578,19 +593,15 @@ wss.on('connection', function connection(ws) {
 
   ws.on("message", function (message) {
 
-    var squarefield = querystring.parse(url.parse(message).search.replace("?", ""));
+    if (!cs.connections[message]) {
 
-    var string = squarefield.red + "-" + squarefield.green + "-" + squarefield.blue;
-
-    if (!cs.connections[string]) {
-
-      cs.connections[string] = [];
+      cs.connections[message] = [];
 
     }
 
-    cs.connections[string].push(ws);
+    cs.connections[message].push(ws);
 
-    ws.subscribed = string;
+    ws.subscribed = message;
 
   });
 

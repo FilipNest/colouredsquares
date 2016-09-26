@@ -9,13 +9,13 @@ initial-scale=1.0">
 
   <meta charset="utf-8">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
   
-  <title>Squarefield {{req.query.red}}-{{req.query.green}}-{{req.query.blue}} | Coloured Squares</title>
+  <title>Squarefield {{req.squarefieldColour.red}}-{{req.squarefieldColour.green}}-{{req.squarefieldColour.blue}} | Coloured Squares</title>
 
 </head>
 
-<body style="background-color:rgb({{req.query.red}},{{req.query.green}},{{req.query.blue}})">
+<body style="background-color:rgb({{req.squarefieldColour.red}},{{req.squarefieldColour.green}},{{req.squarefieldColour.blue}})">
   
   <header>
   
@@ -87,8 +87,8 @@ initial-scale=1.0">
         <legend class="visually-hidden">Mode:</legend>
         <div class="control-wrapper" id="paint-wrapper">
           <label for="paint">Paint</label>
-
-          <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}} {{#unless req.query.mode}} checked {{/unless}}/>
+          
+          <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
 
         </div>
 
@@ -109,12 +109,11 @@ initial-scale=1.0">
 
       </section>
 
-
     </form>
 
   </main>
 
-  <script src="client.js"></script>
+  <script src="/client.js"></script>
 
 </body>
 
