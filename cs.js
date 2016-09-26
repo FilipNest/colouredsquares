@@ -390,7 +390,7 @@ app.use(function (req, res, next) {
 
 });
 
-// URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint
+// URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint?format=JSON
 
 app.get("/", function (req, res, next) {
 
@@ -419,13 +419,13 @@ app.post("/", function (req, res) {
 
   var newQuery = req.query;
 
-  newQuery.mode = req.body.mode;
+  if (!req.body.mode) {
 
-  if (!newQuery.mode) {
-
-    newQuery.mode = "paint";
+    req.body.mode = "paint";
 
   }
+
+  newQuery.mode = req.body.mode;
 
   var currentPath = url.parse(req.url).pathname;
 
