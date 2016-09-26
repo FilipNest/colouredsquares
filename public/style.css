@@ -33,11 +33,16 @@ button:focus {
 /* Header */
 
 header {
-  width: 100vmin;
+  width: 100%;
   margin: auto;
   padding: 10px;
   box-sizing: border-box;
   background-color: white;
+}
+h1 {
+  font-weight: normal;
+  margin: 0px;
+  font-size: 2em;
 }
 
 /* Layout */
@@ -46,8 +51,8 @@ form {
   padding: 2%;
   background-color: black;
   box-sizing: border-box;
-  width: 100vmin;
-  height: 100vmin;
+  width: 90vmin;
+  height: 90vmin;
   min-width: 200px;
   min-height: 200px;
   margin: auto;
