@@ -8,6 +8,8 @@ cs.config = {
   "port": 3000
 };
 
+// Function for checking colour objects are valid
+
 var checkColours = function (colourObject) {
 
   if (typeof colourObject !== "object") {
@@ -63,14 +65,6 @@ var square = function (id, author = {
 
 };
 
-// Create squarefield database
-
-var Datastore = require('nedb');
-cs.squarefields = new Datastore({
-  filename: cs.config.dbFile,
-  autoload: true
-});
-
 // Create squarefield generator
 
 var squarefield = function (colours) {
@@ -104,7 +98,15 @@ var squarefield = function (colours) {
 
 };
 
-// Query on squarefield, create or return exisiting
+// Create squarefield database
+
+var Datastore = require('nedb');
+cs.squarefields = new Datastore({
+  filename: cs.config.dbFile,
+  autoload: true
+});
+
+// Query on squarefield, create new or return exisiting
 
 cs.fetchSquarefield = function (colours) {
 
@@ -181,6 +183,8 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
         }, fetchedField, {}, function (err, updated) {
 
           var connectionString = field.colours.red + "-" + field.colours.green + "-" + field.colours.blue;
+
+          // Send websocket message
 
           if (cs.connections[connectionString]) {
 
@@ -394,10 +398,18 @@ app.get("/", function (req, res, next) {
 
   var template = Handlebars.compile(source);
 
-  res.send(template({
-    field: req.fetchedSquarefield,
-    req: req
-  }));
+  if (req.query.format && req.query.format.toUpperCase() === "JSON") {
+
+    res.json(req.fetchedSquarefield);
+
+  } else {
+
+    res.send(template({
+      field: req.fetchedSquarefield,
+      req: req
+    }));
+
+  }
 
 });
 
