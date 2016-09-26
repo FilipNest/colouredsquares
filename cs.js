@@ -325,28 +325,8 @@ app.use(function (req, res, next) {
     // No squarefield selected redirect to homepage
 
   }
-
-  if (!req.squareField || !checkColours(req.squareField)) {
-
-    var query = querystring.stringify(req.session.colour);
-
-    res.redirect("/?" + query);
-
-  } else {
-
-    cs.fetchSquarefield(req.squareField).then(function (field) {
-
-      req.fetchedSquarefield = field;
-
-      next();
-
-    }, function (fail) {
-
-      res.status(500).send("500");
-
-    });
-
-  }
+  
+  next();
 
 });
 
@@ -393,6 +373,13 @@ app.use(function (req, res, next) {
 // URLS are of the form ?red=256&green=256&blue=256&sliderRed=200&sliderGreen=200&&sliderBlue=200&mode=paint?format=JSON
 
 app.get("/", function (req, res, next) {
+
+  if (!req.fetchedSquarefield) {
+
+    next();
+    return false;
+
+  }
 
   var source = fs.readFileSync(__dirname + "/index.html", "utf8");
 
@@ -561,6 +548,14 @@ app.post("/", function (req, res) {
 
   }
 
+});
+
+// 404 catching
+
+app.use(function(req,res){
+  
+  res.status(404).send("404 page");
+  
 });
 
 wss.on('connection', function connection(ws) {
