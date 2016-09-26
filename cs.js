@@ -311,9 +311,11 @@ app.use(express.static('public'));
 
 app.use(function (req, res, next) {
 
+  var squareField;
+
   try {
 
-    req.squareField = {
+    squareField = {
       red: parseInt(req.query.red),
       green: parseInt(req.query.green),
       blue: parseInt(req.query.blue)
@@ -325,8 +327,22 @@ app.use(function (req, res, next) {
     // No squarefield selected redirect to homepage
 
   }
-  
-  next();
+
+  if (checkColours(squareField)) {
+
+    req.squareField = squareField;
+    cs.fetchSquarefield(req.squareField).then(function (field) {
+
+      req.fetchedSquarefield = field;
+      next();
+
+    });
+
+  } else {
+
+    next();
+
+  }
 
 });
 
@@ -374,7 +390,7 @@ app.use(function (req, res, next) {
 
 app.get("/", function (req, res, next) {
 
-  if (!req.fetchedSquarefield) {
+  if (!req.squareField) {
 
     next();
     return false;
@@ -552,10 +568,10 @@ app.post("/", function (req, res) {
 
 // 404 catching
 
-app.use(function(req,res){
-  
+app.use(function (req, res) {
+
   res.status(404).send("404 page");
-  
+
 });
 
 wss.on('connection', function connection(ws) {
