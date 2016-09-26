@@ -3,7 +3,7 @@
     <style>
       .cls-2 {
         fill: transparent;
-        stroke: blue;
+        stroke: rgb(0,0,256);
         stroke-width: 5px
       }
 
