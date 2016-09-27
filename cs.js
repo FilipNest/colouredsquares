@@ -353,8 +353,7 @@ app.use("/field/:colour", function (req, res, next) {
 
 });
 
-
-// Set sliders to random colour if not set
+// Set sliders to random colour if not set. Also set default paint mode if not set.
 
 app.use("/field/:colour", function (req, res, next) {
 
@@ -377,9 +376,6 @@ app.use("/field/:colour", function (req, res, next) {
   next();
 
 });
-
-// Get home squarefield
-
 
 // Get home squarefield
 
@@ -444,47 +440,37 @@ app.get("/field/:colour", function (req, res) {
 
 });
 
-var url = require('url');
+// Post and paint
 
-app.post("/field/:colour", function (req, res) {
+app.post("/field/:colour", function (req, res, next) {
 
-  var newQuery = req.query;
+  if (req.body.mode !== "paint") {
 
-  // Always make the mode paint after post
-  
-  newQuery.mode = "paint";
+    next();
+    return false;
 
-  var currentPath = url.parse(req.url).pathname;
-
-  var square;
-
-  if (req.body.square) {
-    square = req.squarefieldEntity.squares[req.body.square];
-  }
-
-  if (req.body.mode === "paint") {
+  } else {
 
     if (req.body.home) {
 
       // light up square on home squarefield
 
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
+      next();
       return false;
 
     }
 
-    newQuery.redSlider = parseInt(req.body.red);
-    newQuery.blueSlider = parseInt(req.body.blue);
-    newQuery.greenSlider = parseInt(req.body.green);
+    req.query.redSlider = parseInt(req.body.red);
+    req.query.blueSlider = parseInt(req.body.blue);
+    req.query.greenSlider = parseInt(req.body.green);
 
     if (req.body.current) {
 
-      newQuery.red = newQuery.redSlider;
-      newQuery.blue = newQuery.blueSlider;
-      newQuery.green = newQuery.greenSlider;
+      req.query.red = req.query.redSlider;
+      req.query.blue = req.query.blueSlider;
+      req.query.green = req.query.greenSlider;
 
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+      res.redirect("/field/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query));
 
       return false;
 
@@ -496,98 +482,142 @@ app.post("/field/:colour", function (req, res) {
       blue: parseInt(req.body.blue)
     }).then(function () {
 
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+      next();
 
     }, function (fail) {
 
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
+      next();
 
     });
-
-  } else if (req.body.mode === "copy-inner") {
-
-    if (req.body.home) {
-
-      // Copy current squarefield
-
-      newQuery.redSlider = req.homeLastUpdated.colour.red;
-      newQuery.blueSlider = req.homeLastUpdated.colour.blue;
-      newQuery.greenSlider = req.homeLastUpdated.colour.green;
-
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      return false;
-
-    }
-
-    if (req.body.current) {
-
-      // Copy current squarefield
-
-      newQuery.redSlider = req.session.colour.red;
-      newQuery.blueSlider = req.session.colour.blue;
-      newQuery.greenSlider = req.session.colour.green;
-
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      return false;
-
-    }
-
-    newQuery.redSlider = parseInt(square.colour.red);
-    newQuery.blueSlider = parseInt(square.colour.blue);
-    newQuery.greenSlider = parseInt(square.colour.green);
-
-    res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-  } else if (req.body.mode === "copy-outer") {
-
-    if (req.body.home) {
-
-      // Copy current squarefield
-
-      newQuery.redSlider = req.homeLastUpdated.author.red;
-      newQuery.blueSlider = req.homeLastUpdated.author.blue;
-      newQuery.greenSlider = req.homeLastUpdated.author.green;
-
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      return false;
-
-    }
-
-    if (req.body.current) {
-
-      newQuery.redSlider = req.squarefieldColour.red;
-      newQuery.blueSlider = req.squarefieldColour.blue;
-      newQuery.greenSlider = req.squarefieldColour.green;
-
-      res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-      return false;
-
-    }
-
-    newQuery.redSlider = parseInt(square.author.red);
-    newQuery.blueSlider = parseInt(square.author.blue);
-    newQuery.greenSlider = parseInt(square.author.green);
-
-    res.redirect(currentPath + "?" + querystring.stringify(newQuery));
-
-  } else {
-
-    res.redirect(currentPath + "?" + querystring.stringify(newQuery));
 
   }
 
 });
 
+// Post and copy inner
+
+app.post("/field/:colour", function (req, res, next) {
+
+  if (req.body.mode !== "copy-inner") {
+
+    next();
+    return false;
+
+  }
+
+  var square;
+
+  if (req.body.square) {
+    square = req.squarefieldEntity.squares[req.body.square];
+  }
+
+  if (req.body.home) {
+
+    // Copy current squarefield
+
+    req.query.redSlider = req.homeLastUpdated.colour.red;
+    req.query.blueSlider = req.homeLastUpdated.colour.blue;
+    req.query.greenSlider = req.homeLastUpdated.colour.green;
+
+    next();
+
+    return false;
+
+  }
+
+  if (req.body.current) {
+
+    // Copy current squarefield
+
+    req.query.redSlider = req.session.colour.red;
+    req.query.blueSlider = req.session.colour.blue;
+    req.query.greenSlider = req.session.colour.green;
+
+    next();
+    return false;
+
+  }
+
+  req.query.redSlider = parseInt(square.colour.red);
+  req.query.blueSlider = parseInt(square.colour.blue);
+  req.query.greenSlider = parseInt(square.colour.green);
+
+  next();
+
+});
+
+// Post and copy outer
+
+app.post("/field/:colour", function (req, res, next) {
+
+  if (req.body.mode !== "copy-outer") {
+
+    next();
+    return false;
+
+  }
+
+  var square;
+
+  if (req.body.square) {
+    square = req.squarefieldEntity.squares[req.body.square];
+  }
+
+  if (req.body.home) {
+
+    // Copy current squarefield
+
+    req.query.redSlider = req.homeLastUpdated.author.red;
+    req.query.blueSlider = req.homeLastUpdated.author.blue;
+    req.query.greenSlider = req.homeLastUpdated.author.green;
+
+    next();
+    return false;
+
+  }
+
+  if (req.body.current) {
+
+    req.query.redSlider = req.squarefieldColour.red;
+    req.query.blueSlider = req.squarefieldColour.blue;
+    req.query.greenSlider = req.squarefieldColour.green;
+
+    next();
+
+    return false;
+
+  }
+
+  req.query.redSlider = parseInt(square.author.red);
+  req.query.blueSlider = parseInt(square.author.blue);
+  req.query.greenSlider = parseInt(square.author.green);
+
+  next();
+
+});
+
+// Final post function tidy up (not called when travelling)
+
+app.post("/field/:colour", function (req, res) {
+
+  // Always make the mode paint after post
+
+  req.query.mode = "paint";
+
+  var url = require('url');
+  var currentPath = url.parse(req.url).pathname;
+
+  res.redirect(currentPath + "?" + querystring.stringify(req.query));
+
+  return false;
+
+})
 
 // 404 catching
 
 app.use(function (req, res) {
 
-  res.status(404).send("404 page");
+  res.status(404).send("404");
 
 });
 
