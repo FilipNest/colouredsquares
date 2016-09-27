@@ -120,6 +120,13 @@ input[type=range] {
   margin: 0px;
   height: 33%;
 }
+#refresh {
+  border-style:none;
+  font-size: 100%;
+  width: 100%;
+  display: block;
+  color: black;
+}
 
 /* Right */
 
