@@ -52,11 +52,8 @@ var square = function (id, author = {
   blue: 256
 }) {
 
-  var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"];
-
   return {
     "id": id,
-    "letter": letters[id - 1],
     "author": author,
     "colour": {
       "red": 256,
@@ -111,6 +108,22 @@ cs.squarefields = new Datastore({
 
 // Query on squarefield, create new or return exisiting
 
+// Function for transforming the field for viewing
+
+var formatField = function (field) {
+
+  field.squares.forEach(function (square) {
+
+    var date = new Date(square.date);
+
+    square.time = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getUTCHours() + ":" + date.getMinutes();
+
+  });
+
+  return field;
+
+};
+
 cs.fetchSquarefield = function (colours) {
 
   return new Promise(function (resolve, reject) {
@@ -133,14 +146,13 @@ cs.fetchSquarefield = function (colours) {
 
         cs.squarefields.insert(field, function (err, newField) {
 
-          resolve(newField);
+          resolve(formatField(newField));
 
         });
 
-
       } else {
 
-        resolve(fields[0]);
+        resolve(formatField(fields[0]));
 
       }
 
