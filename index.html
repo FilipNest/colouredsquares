@@ -21,6 +21,13 @@ initial-scale=1.0">
 
     <h1>Coloured Squares</h1>
 
+    <nav>
+      <ul>
+        <li>
+          <a href="#about">About</a></li>
+      </ul>
+    </nav>
+
   </header>
 
   <main>
@@ -31,7 +38,7 @@ initial-scale=1.0">
 
         <fieldset id="squarefield">
 
-          <legend class="visually-hidden">Squares:</legend>
+          <legend class="visually-hidden">Squarefield squares:</legend>
 
           {{#each field.squares}}
 
@@ -125,13 +132,24 @@ initial-scale=1.0">
 
     <aside>
 
+      <a name="about"></a>
+
       <h2>About Coloured Squares</h2>
 
-      <p>Coloured Squares is a social network, art project and web controller. This version was created from scratch for the A List Apart 10kb challenge.</p>
-      
-      <h3>Quick guide</h3>
-      
-      <p>There are 16 million squarefields (one for every colour). Each identified by their combination of red, green and blue. These RGB values are all between 0 and 256. Squarefield "256-256-256" is white, squarefield "0,0,0" is black.</p>
+      <p>Coloured Squares is a social network, art project and web controller. This version was created from scratch for the <a href="https://a-k-apart.com/">A List Apart 10kb challenge</a>.</p>
+
+      <h3>Definitions</h3>
+
+      <dl>
+        <dt>Colour</dt>
+        <dd>One of around 16 million colours. Made up of red, green and blue values between 0 and 256 each.</dd>
+        <dt>User</dt>
+        <dd>Every user is assigned a single colour. Yours is {{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}</dd>
+        <dt>Squarefields/squares</dt>
+        <dd>For every colour/user there is a squarefield. This consists of 16 squares which store two colour values. The colour of the user who changed the colour and the colour they changed it to.</dd>
+      </dl>
+
+      <h3>Controls</h3>
 
     </aside>
 
