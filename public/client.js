@@ -58,7 +58,7 @@ window.setInterval(function () {
 
   } catch (e) {
 
-    // Does not support queryselector
+    // Browser does not support queryselector.
 
   }
 
