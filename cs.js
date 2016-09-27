@@ -5,7 +5,7 @@ global.cs = {};
 cs.config = {
   "squarefieldSize": 16,
   "dbFile": "squarefields.db",
-  "port": 3000
+  "port": 1616
 };
 
 // Function for checking colour objects are valid
