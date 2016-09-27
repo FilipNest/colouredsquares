@@ -10,21 +10,21 @@ initial-scale=1.0">
   <meta charset="utf-8">
 
   <link rel="stylesheet" href="/style.css">
-  
+
   <title>Squarefield {{req.squarefieldColour.red}}-{{req.squarefieldColour.green}}-{{req.squarefieldColour.blue}} | Coloured Squares</title>
 
 </head>
 
 <body style="background-color:rgb({{req.squarefieldColour.red}},{{req.squarefieldColour.green}},{{req.squarefieldColour.blue}})">
-  
+
   <header>
-  
+
     <h1>Coloured Squares</h1>
-  
+
   </header>
-  
+
   <main>
-    
+
     <form method="post" id="interface">
 
       <section id="left">
@@ -37,9 +37,7 @@ initial-scale=1.0">
 
           <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})">
 
-            Colour: {{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}
-            Author: {{this.author.red}},{{this.author.green}},{{this.author.blue}}
-            Date : {{this.date}}
+            Colour: {{this.colour.red}},{{this.colour.green}},{{this.colour.blue}} Author: {{this.author.red}},{{this.author.green}},{{this.author.blue}} Date : {{this.date}}
 
           </button>
 
@@ -87,18 +85,27 @@ initial-scale=1.0">
         <legend class="visually-hidden">Mode:</legend>
         <div class="control-wrapper" id="paint-wrapper">
           <label for="paint">Paint</label>
-          
+          <svg>
+            <use xlink:href="#bulb"></use>
+          </svg>
           <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
 
         </div>
 
         <div class="control-wrapper" id="copy-inner-wrapper">
+          <svg>
+            <use xlink:href="#inner"></use>
+          </svg>
           <label for="copy-inner">Copy inner</label>
           <input type="radio" name="mode" id="copy-inner" value="copy-inner" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
         </div>
 
         <div class="control-wrapper" id="copy-outer-wrapper">
+
           <label for="copy-outer">Copy outer</label>
+          <svg>
+            <use xlink:href="#outer"></use>
+          </svg>
           <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
         </div>
 
@@ -114,6 +121,29 @@ initial-scale=1.0">
   </main>
 
   <script src="/client.js"></script>
+
+  <!-- SVG images -->
+
+  <!-- Bulb -->
+
+  <svg hidden id="bulb" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 89.6 140">
+    <path class="st0" style="fill: rgb(256, 0, 0);" d="M24.4,102.6l1,36.7l41.1,0.7l0.1-12.5l-0.7-25.7c0,0-7.5,3.8-19.6,4.3
+	C34.2,106.7,24.4,102.6,24.4,102.6z" />
+    <path style="fill: #FFFFFF; stroke: #000000;" class="st1" d="M89.1,44.2c0,12.1-8,26.7-15.8,40.4s-0.9,26-27.7,26.4c-28,0.4-21.5-14.7-29.7-28.4
+	S0.5,56.3,0.5,44.2c0-24.1,19.9-43.7,44.3-43.7S89.1,20,89.1,44.2z" />
+  </svg>
+
+  <!-- Inner -->
+
+  <svg hidden id="inner" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
+    <rect style="fill: rgb(0, 256, 0);" x="12" y="12" width="71.34" height="71.34" />
+  </svg>
+
+  <!-- Outer -->
+
+  <svg hidden id="outer" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
+    <rect style="fill: transparent; stroke: rgb(0,0,256); stroke-width: 5px" x="12" y="12" width="71.34" height="71.34" />
+  </svg>
 
 </body>
 
