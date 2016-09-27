@@ -450,7 +450,9 @@ app.post("/field/:colour", function (req, res) {
 
   var newQuery = req.query;
 
-  newQuery.mode = req.body.mode;
+  // Always make the mode paint after post
+  
+  newQuery.mode = "paint";
 
   var currentPath = url.parse(req.url).pathname;
 
