@@ -161,6 +161,9 @@ input[type=range] {
 
 /* Right */
 
+#mode {
+  height: 100%;
+}
 #current {
   border-radius: 50%;
 }

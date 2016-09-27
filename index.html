@@ -34,7 +34,7 @@ initial-scale=1.0">
 
     <form method="post" id="interface">
 
-      <section id="left">
+      <div id="left">
 
         <fieldset id="squarefield">
 
@@ -58,11 +58,11 @@ initial-scale=1.0">
 
           <div id="sliders" style="display:none">
 
-            <label class="visually-hidden" for="red">Red</label>
+            <label class="visually-hidden" for="slide-red">Red</label>
             <input id="slide-red" value="{{req.query.redSlider}}" type="range" name="slide-red" min="0" max="256" />
-            <label class="visually-hidden" for="green">Green</label>
+            <label class="visually-hidden" for="slide-green">Green</label>
             <input id="slide-green" value="{{req.query.greenSlider}}" type="range" name="slide-green" min="0" max="256" />
-            <label class="visually-hidden" for="blue">Blue</label>
+            <label class="visually-hidden" for="slide-blue">Blue</label>
             <input id="slide-blue" value="{{req.query.blueSlider}}" type="range" name="slide-blue" min="0" max="256" />
 
           </div>
@@ -70,11 +70,11 @@ initial-scale=1.0">
           <div id="text-colours">
 
             <label class="visually-hidden" for="red">Red</label>
-            <input style="color:red;" value="{{req.query.redSlider}}" type="number" name="red" min="0" max="256" />
+            <input style="color:red;" value="{{req.query.redSlider}}" id="red" type="number" name="red" min="0" max="256" />
             <label class="visually-hidden" for="green">Green</label>
-            <input style="color:green;" value="{{req.query.greenSlider}}" type="number" name="green" min="0" max="256" />
+            <input style="color:green;" value="{{req.query.greenSlider}}" id="green" type="number" name="green" min="0" max="256" />
             <label class="visually-hidden" for="blue">Blue</label>
-            <input style="color:blue;" value="{{req.query.blueSlider}}" type="number" name="blue" min="0" max="256" />
+            <input style="color:blue;" value="{{req.query.blueSlider}}" id="blue" type="number" name="blue" min="0" max="256" />
 
           </div>
 
@@ -82,57 +82,59 @@ initial-scale=1.0">
 
         <button id="refresh" name="refresh" value="refresh">&#8635;</button>
 
-      </section>
+      </div>
 
-      <section id="right">
+      <div id="right">
 
-        <div class="control-wrapper">
-          <button style="background-color:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}}); border-color:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" value="home" name="home">
-          </button>
-        </div>
+        <fieldset id="mode">
 
-        <legend class="visually-hidden">Mode:</legend>
-        <div class="control-wrapper" id="paint-wrapper">
-          <label for="paint">Paint</label>
-          <svg id="bulb" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 89.6 140">
-            <path class="st0" style="fill: rgb(256, 0, 0);" d="M24.4,102.6l1,36.7l41.1,0.7l0.1-12.5l-0.7-25.7c0,0-7.5,3.8-19.6,4.3
-	C34.2,106.7,24.4,102.6,24.4,102.6z" />
-            <path style="fill: #FFFFFF; stroke: #000000;" class="st1" d="M89.1,44.2c0,12.1-8,26.7-15.8,40.4s-0.9,26-27.7,26.4c-28,0.4-21.5-14.7-29.7-28.4
-	S0.5,56.3,0.5,44.2c0-24.1,19.9-43.7,44.3-43.7S89.1,20,89.1,44.2z" />
-          </svg>
-          <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
+          <legend>Mode</legend>
 
-        </div>
+          <div class="control-wrapper">
+            <button style="background-color:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}}); border-color:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" value="home" name="home">
+            </button>
+          </div>
 
-        <div class="control-wrapper" id="copy-inner-wrapper">
-          <svg id="inner" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
-            <rect style="fill: rgb(0, 256, 0);" x="12" y="12" width="71.34" height="71.34" />
-          </svg>
-          <label for="copy-inner">Copy inner</label>
-          <input type="radio" name="mode" id="copy-inner" value="copy-inner" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
-        </div>
+          <div class="control-wrapper" id="paint-wrapper">
 
-        <div class="control-wrapper" id="copy-outer-wrapper">
+            <label for="paint">Paint</label>
+            <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
+            <svg id="bulb" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 89.6 140">
+              <path class="st0" style="fill: rgb(256, 0, 0);" d="M24.4,102.6l1,36.7l41.1,0.7l0.1-12.5l-0.7-25.7c0,0-7.5,3.8-19.6,4.3C34.2,106.7,24.4,102.6,24.4,102.6z"></path>
+              <path style="fill: #FFFFFF; stroke: #000000;" class="st1" d="M89.1,44.2c0,12.1-8,26.7-15.8,40.4s-0.9,26-27.7,26.4c-28,0.4-21.5-14.7-29.7-28.4S0.5,56.3,0.5,44.2c0-24.1,19.9-43.7,44.3-43.7S89.1,20,89.1,44.2z"></path>
+            </svg>
 
-          <label for="copy-outer">Copy outer</label>
-          <svg id="outer" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
-            <rect style="fill: transparent; stroke: rgb(0,0,256); stroke-width: 5px" x="12" y="12" width="71.34" height="71.34" />
-          </svg>
-          <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
-        </div>
+          </div>
 
-        <div class="control-wrapper">
-          <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current" value="current">
-          </button>
-        </div>
+          <div class="control-wrapper" id="copy-inner-wrapper">
+            <input type="radio" name="mode" id="copy-inner" value="copy-inner" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
+            <svg id="inner" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
+              <rect style="fill: rgb(0, 256, 0);" x="12" y="12" width="71.34" height="71.34"></rect>
+            </svg>
+            <label for="copy-inner">Copy inner</label>
+          </div>
 
-      </section>
+          <div class="control-wrapper" id="copy-outer-wrapper">
+
+            <label for="copy-outer">Copy outer</label>
+            <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
+            <svg id="outer" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
+              <rect style="fill: transparent; stroke: rgb(0,0,256); stroke-width: 5px" x="12" y="12" width="71.34" height="71.34"></rect>
+            </svg>
+          </div>
+
+          <div class="control-wrapper">
+            <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current" value="current">
+            </button>
+          </div>
+
+        </fieldset>
+
+      </div>
 
     </form>
 
-    <aside>
-
-      <a name="about"></a>
+    <aside id="about">
 
       <h2>About Coloured Squares</h2>
 
