@@ -44,8 +44,7 @@ initial-scale=1.0">
 
           <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})">
             <time datetime="{{this.machineTime}}">{{this.humanTime}}</time>
-            Colour: {{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}
-            Author: {{this.author.red}},{{this.author.green}},{{this.author.blue}}
+            Colour: {{this.colour.red}},{{this.colour.green}},{{this.colour.blue}} Author: {{this.author.red}},{{this.author.green}},{{this.author.blue}}
           </button>
 
           {{/each}}
@@ -80,20 +79,20 @@ initial-scale=1.0">
 
         </fieldset>
 
-        <button id="refresh" name="refresh" value="refresh">&#8635;</button>
+        <button id="refresh" name="refresh" value="refresh">Refresh</button>
 
       </div>
 
       <div id="right">
 
+        <div class="control-wrapper">
+          <button style="background-color:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}}); border-color:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" value="home" name="home">
+          </button>
+        </div>
+
         <fieldset id="mode">
 
           <legend>Mode</legend>
-
-          <div class="control-wrapper">
-            <button style="background-color:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}}); border-color:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" value="home" name="home">
-            </button>
-          </div>
 
           <div class="control-wrapper" id="paint-wrapper">
 
