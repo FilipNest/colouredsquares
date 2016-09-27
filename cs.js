@@ -293,7 +293,7 @@ app.use(express.static('public'));
 
 var colourFromString = function (colour) {
 
-  var colour = colour.split("-");
+  colour = colour.split("-");
 
   if (colour.length !== 3) {
 
@@ -301,11 +301,11 @@ var colourFromString = function (colour) {
 
   } else {
 
-    var colour = {
+    colour = {
       red: parseInt(colour[0]),
       green: parseInt(colour[1]),
       blue: parseInt(colour[2])
-    }
+    };
 
     if (checkColours(colour)) {
 
@@ -317,13 +317,13 @@ var colourFromString = function (colour) {
 
     }
 
-  };
+  }
 
-}
+};
 
 // Fetch squarefield ready for use
 
-app.use("/field/:colour", function (req, res, next) {
+app.use("/fields/:colour", function (req, res, next) {
 
   // Split colour into components and check if valid
 
@@ -349,13 +349,13 @@ app.use("/field/:colour", function (req, res, next) {
 
     res.status(400).send("Bad request");
 
-  })
+  });
 
 });
 
 // Set sliders to random colour if not set. Also set default paint mode if not set.
 
-app.use("/field/:colour", function (req, res, next) {
+app.use("/fields/:colour", function (req, res, next) {
 
   if (!req.query.redSlider) {
 
@@ -379,7 +379,7 @@ app.use("/field/:colour", function (req, res, next) {
 
 // Get home squarefield
 
-app.use("/field/:colour", function (req, res, next) {
+app.use("/fields/:colour", function (req, res, next) {
 
   cs.fetchSquarefield(req.session.colour).then(function (field) {
 
@@ -419,7 +419,7 @@ app.use("/field/:colour", function (req, res, next) {
 
 // Getting squarefield
 
-app.get("/field/:colour", function (req, res) {
+app.get("/fields/:colour", function (req, res) {
 
   var source = fs.readFileSync(__dirname + "/index.html", "utf8");
 
@@ -442,7 +442,7 @@ app.get("/field/:colour", function (req, res) {
 
 // Post and paint
 
-app.post("/field/:colour", function (req, res, next) {
+app.post("/fields/:colour", function (req, res, next) {
 
   if (req.body.mode !== "paint") {
 
@@ -470,7 +470,7 @@ app.post("/field/:colour", function (req, res, next) {
       req.query.blue = req.query.blueSlider;
       req.query.green = req.query.greenSlider;
 
-      res.redirect("/field/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query));
+      res.redirect("/fields/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query));
 
       return false;
 
@@ -496,7 +496,7 @@ app.post("/field/:colour", function (req, res, next) {
 
 // Post and copy inner
 
-app.post("/field/:colour", function (req, res, next) {
+app.post("/fields/:colour", function (req, res, next) {
 
   if (req.body.mode !== "copy-inner") {
 
@@ -548,7 +548,7 @@ app.post("/field/:colour", function (req, res, next) {
 
 // Post and copy outer
 
-app.post("/field/:colour", function (req, res, next) {
+app.post("/fields/:colour", function (req, res, next) {
 
   if (req.body.mode !== "copy-outer") {
 
@@ -598,7 +598,7 @@ app.post("/field/:colour", function (req, res, next) {
 
 // Final post function tidy up (not called when travelling)
 
-app.post("/field/:colour", function (req, res) {
+app.post("/fields/:colour", function (req, res) {
 
   // Always make the mode paint after post
 
@@ -611,7 +611,7 @@ app.post("/field/:colour", function (req, res) {
 
   return false;
 
-})
+});
 
 // 404 catching
 
