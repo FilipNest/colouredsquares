@@ -16,6 +16,54 @@ var getColours = function () {
 
 };
 
+// Pulse
+
+window.setInterval(function () {
+
+  try {
+
+    // Double, dashed, dotted (solid to start)
+
+    var decay = [5, 30, 60];
+
+    var squares = document.querySelectorAll(".square time");
+
+    for (var i = 0; i < squares.length; i += 1) {
+
+      var timestamp = new Date(squares[i].getAttribute("datetime"));
+
+      var timeDiff = Math.floor(((Math.abs(timestamp - Date.now())) / 1000) / 60); // Timedif in seconds
+
+      var square = squares[i].parentNode;
+
+      if (timeDiff < decay[0]) {
+
+        square.className = "square decay-0";
+
+      } else if (timeDiff < decay[1]) {
+
+        square.className = "square decay-1";
+
+      } else if (timeDiff < decay[2]) {
+
+        square.className = "square decay-2";
+
+      } else {
+
+        square.className = "square decay-3";
+
+      }
+
+    }
+
+  } catch (e) {
+
+    // Does not support queryselector
+
+  }
+
+}, 500);
+
 var updateColour = function () {
 
   var colours = getColours();
@@ -61,7 +109,7 @@ var lightSquare = function (square) {
 };
 
 if (window.WebSocket) {
-  
+
   document.getElementById("refresh").style.display = "none";
 
   var websocket = new WebSocket("ws://" + document.location.host);
