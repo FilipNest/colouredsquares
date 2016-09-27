@@ -49,6 +49,17 @@ h1 {
   font-weight: normal;
   margin: 0px;
   font-size: 2em;
+  display: inline-block;
+}
+nav {
+  display: inline-block;
+}
+nav li {
+  list-style: none;
+}
+nav ul {
+  margin: 0px 0px 0px 10px;
+  padding: 0px;
 }
 
 /* Layout */
@@ -59,6 +70,13 @@ aside {
   padding: 1em;
   background-color: white;
   margin: auto;
+}
+dd {
+  line-height: 1.5em;
+}
+dt {
+  font-weight: bold;
+  line-height: 1.5em;
 }
 form {
   border-style: solid;
