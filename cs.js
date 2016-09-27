@@ -52,8 +52,11 @@ var square = function (id, author = {
   blue: 256
 }) {
 
+  var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"];
+
   return {
     "id": id,
+    "letter": letters[id - 1],
     "author": author,
     "colour": {
       "red": 256,
