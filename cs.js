@@ -323,11 +323,21 @@ var colourFromString = function (colour) {
 
 // Fetch squarefield ready for use
 
-app.use("/fields/:colour", function (req, res, next) {
+app.use("/:colour?", function (req, res, next) {
 
   // Split colour into components and check if valid
 
-  var colour = colourFromString(req.params.colour);
+  var colour;
+
+  if (!req.params.colour) {
+
+    colour = req.session.colour;
+
+  } else {
+
+    colour = colourFromString(req.params.colour);
+
+  }
 
   if (!colour) {
 
@@ -355,7 +365,7 @@ app.use("/fields/:colour", function (req, res, next) {
 
 // Set sliders to random colour if not set. Also set default paint mode if not set.
 
-app.use("/fields/:colour", function (req, res, next) {
+app.use("/:colour?", function (req, res, next) {
 
   if (!req.query.redSlider) {
 
@@ -379,7 +389,7 @@ app.use("/fields/:colour", function (req, res, next) {
 
 // Get home squarefield
 
-app.use("/fields/:colour", function (req, res, next) {
+app.use("/:colour?", function (req, res, next) {
 
   cs.fetchSquarefield(req.session.colour).then(function (field) {
 
@@ -419,7 +429,7 @@ app.use("/fields/:colour", function (req, res, next) {
 
 // Getting squarefield
 
-app.get("/fields/:colour", function (req, res) {
+app.get("/:colour?", function (req, res) {
 
   var source = fs.readFileSync(__dirname + "/index.html", "utf8");
 
@@ -442,7 +452,7 @@ app.get("/fields/:colour", function (req, res) {
 
 // Post and paint
 
-app.post("/fields/:colour", function (req, res, next) {
+app.post("/:colour?", function (req, res, next) {
 
   if (req.body.mode !== "paint") {
 
@@ -470,7 +480,7 @@ app.post("/fields/:colour", function (req, res, next) {
       req.query.blue = req.query.blueSlider;
       req.query.green = req.query.greenSlider;
 
-      res.redirect("/fields/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query));
+      res.redirect("/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query));
 
       return false;
 
@@ -496,7 +506,7 @@ app.post("/fields/:colour", function (req, res, next) {
 
 // Post and copy inner
 
-app.post("/fields/:colour", function (req, res, next) {
+app.post("/:colour?", function (req, res, next) {
 
   if (req.body.mode !== "copy-inner") {
 
@@ -548,7 +558,7 @@ app.post("/fields/:colour", function (req, res, next) {
 
 // Post and copy outer
 
-app.post("/fields/:colour", function (req, res, next) {
+app.post("/:colour?", function (req, res, next) {
 
   if (req.body.mode !== "copy-outer") {
 
@@ -598,7 +608,7 @@ app.post("/fields/:colour", function (req, res, next) {
 
 // Final post function tidy up (not called when travelling)
 
-app.post("/fields/:colour", function (req, res) {
+app.post("/:colour?", function (req, res) {
 
   // Always make the mode paint after post
 
