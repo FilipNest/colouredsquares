@@ -61,6 +61,8 @@ var lightSquare = function (square) {
 };
 
 if (window.WebSocket) {
+  
+  document.getElementById("refresh").style.display = "none";
 
   var websocket = new WebSocket("ws://" + document.location.host);
 
