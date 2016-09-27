@@ -43,9 +43,9 @@ initial-scale=1.0">
           {{#each field.squares}}
 
           <button type="submit" name="square" value={{@index}} class="square" style="background-color:rgb({{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}); border-color:rgb({{this.author.red}},{{this.author.green}},{{this.author.blue}})">
-
-            Colour: {{this.colour.red}},{{this.colour.green}},{{this.colour.blue}} Author: {{this.author.red}},{{this.author.green}},{{this.author.blue}} Date : {{this.date}}
-
+            <time datetime="{{this.machineTime}}">{{this.humanTime}}</time>
+            Colour: {{this.colour.red}},{{this.colour.green}},{{this.colour.blue}}
+            Author: {{this.author.red}},{{this.author.green}},{{this.author.blue}}
           </button>
 
           {{/each}}

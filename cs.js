@@ -116,7 +116,8 @@ var formatField = function (field) {
 
     var date = new Date(square.date);
 
-    square.time = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getUTCHours() + ":" + date.getMinutes();
+    square.machineTime = date.toISOString();
+    square.humanTime = date.getDate() + "/" + date.getMonth() + "/" + date.getYear() + " @ " + date.getUTCHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
   });
 
@@ -146,13 +147,13 @@ cs.fetchSquarefield = function (colours) {
 
         cs.squarefields.insert(field, function (err, newField) {
 
-          resolve(formatField(newField));
+          resolve(newField);
 
         });
 
       } else {
 
-        resolve(formatField(fields[0]));
+        resolve(fields[0]);
 
       }
 
@@ -457,7 +458,7 @@ app.get("/:colour?", function (req, res) {
   } else {
 
     res.send(template({
-      field: req.squarefieldEntity,
+      field: formatField(req.squarefieldEntity),
       req: req
     }));
 
