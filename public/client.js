@@ -128,59 +128,73 @@ if (window.WebSocket) {
 
   document.getElementById("refresh").style.display = "none";
 
-  var websocket = new WebSocket("ws://" + document.location.host);
+  var connectSocket = function () {
 
-  websocket.onmessage = function (evt) {
+    var websocket = new WebSocket("ws://" + document.location.host);
 
-    var message;
+    websocket.onmessage = function (evt) {
 
-    try {
+      var message;
 
-      message = JSON.parse(evt.data);
+      try {
 
-    } catch (e) {
+        message = JSON.parse(evt.data);
 
-      console.log(e);
+      } catch (e) {
 
-    }
-
-    if (message) {
-
-      if (message.type === "square") {
-
-        lightSquare(message.content);
-
-      } else if (message.type === "home") {
-
-        lightHome(message.content);
+        console.log(e);
 
       }
 
-    }
+      if (message) {
 
-  };
+        if (message.type === "square") {
 
-  websocket.onopen = function () {
+          lightSquare(message.content);
 
-    var message = {
-      type: "pair",
-      squarefield: window.squarefieldName
+        } else if (message.type === "home") {
+
+          lightHome(message.content);
+
+        }
+
+      }
+
     };
 
-    websocket.send(JSON.stringify(message));
+    websocket.onopen = function () {
 
-    if (window.isHome) {
-
-      var homeMessage = {
-        type: "homePair",
+      var message = {
+        type: "pair",
         squarefield: window.squarefieldName
       };
 
-      websocket.send(JSON.stringify(homeMessage));
+      websocket.send(JSON.stringify(message));
 
-    }
+      if (window.isHome) {
+
+        var homeMessage = {
+          type: "homePair",
+          squarefield: window.squarefieldName
+        };
+
+        websocket.send(JSON.stringify(homeMessage));
+
+      }
+
+    };
+
+    websocket.onclose = function (close) {
+      
+      setTimeout(function () {
+        connectSocket();
+      }, 2000);
+
+    };
 
   };
+  
+  connectSocket();
 
   // Allow light without refresh
 
