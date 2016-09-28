@@ -110,14 +110,26 @@ cs.squarefields = new Datastore({
 
 // Function for transforming the field for viewing
 
+var formatSquare = function (square) {
+
+  var date = new Date(square.date);
+
+  var machineTime = date.toISOString();
+  var humanTime = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getUTCFullYear() + " @ " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + " UTC";
+
+  square.contents = '<time datetime="' + machineTime + '">' + humanTime + '</time>';
+  square.contents += "<span>Colour:" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + "</span><br />";
+  square.contents += "<span>Author:" + square.author.red + "," + square.author.green + "," + square.author.blue + "</span>";
+
+  return square;
+
+};
+
 var formatField = function (field) {
 
   field.squares.forEach(function (square) {
 
-    var date = new Date(square.date);
-
-    square.machineTime = date.toISOString();
-    square.humanTime = date.getDate() + "/" + date.getMonth() + "/" + date.getYear() + " @ " + date.getUTCHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    square = formatSquare(square);
 
   });
 
@@ -166,7 +178,7 @@ cs.fetchSquarefield = function (colours) {
 // Light square in field
 
 cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
-
+  
   return new Promise(function (resolve, reject) {
 
     // Check index number is valid
@@ -206,7 +218,15 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
 
             cs.connections[connectionString].forEach(function (socket) {
 
-              socket.send(JSON.stringify(fetchedField.squares[index]));
+              // Format time and date
+
+              var square = fetchedField.squares[index];
+
+              var date = new Date(square.date);
+
+              square = formatSquare(square);
+
+              socket.send(JSON.stringify(square));
 
             });
 
@@ -502,7 +522,7 @@ app.post("/:colour?", function (req, res, next) {
       return false;
 
     }
-    
+
     cs.lightSquare(req.session.colour, req.squarefieldColour, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),

@@ -102,6 +102,10 @@ var lightSquare = function (square) {
 
   var target = document.getElementsByName("square")[square.id - 1];
 
+  target.firstElementChild.setAttribute("datetime", square.machineTime);
+
+  target.innerHTML = square.contents;
+
   target.style.backgroundColor = "rgb(" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + ")";
 
   target.style.borderColor = "rgb(" + square.author.red + "," + square.author.green + "," + square.author.blue + ")";
@@ -124,6 +128,7 @@ if (window.WebSocket) {
 
     } catch (e) {
 
+      console.log(e);
 
     }
 
@@ -146,7 +151,7 @@ if (window.WebSocket) {
   var squares = document.querySelectorAll(".square");
 
   var sendRequest = function (event) {
-
+    
     var red = document.getElementById("red").value;
     var green = document.getElementById("green").value;
     var blue = document.getElementById("blue").value;
@@ -154,12 +159,14 @@ if (window.WebSocket) {
     var square = event.target.value;
 
     var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
+    
+    console.log(string);
 
     var http = new XMLHttpRequest();
     http.open("POST", document.location.pathname, true);
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     var params = string;
-    
+
     http.send(params);
 
     event.preventDefault();
