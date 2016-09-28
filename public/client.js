@@ -116,6 +116,14 @@ var lightSquare = function (square) {
 
 };
 
+var lightHome = function (square) {
+  
+  document.getElementById("home-notification-colour").style.fill = "rgb(" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + ")";
+
+  document.getElementById("home-notification-author").style.fill = "rgb(" + square.author.red + "," + square.author.green + "," + square.author.blue + ")";
+
+};
+
 if (window.WebSocket) {
 
   document.getElementById("refresh").style.display = "none";
@@ -124,11 +132,11 @@ if (window.WebSocket) {
 
   websocket.onmessage = function (evt) {
 
-    var square;
+    var message;
 
     try {
 
-      square = JSON.parse(evt.data);
+      message = JSON.parse(evt.data);
 
     } catch (e) {
 
@@ -136,9 +144,17 @@ if (window.WebSocket) {
 
     }
 
-    if (square) {
+    if (message) {
 
-      lightSquare(square);
+      if (message.type === "square") {
+
+        lightSquare(message.content);
+
+      } else if (message.type === "home") {
+        
+        lightHome(message.content);
+
+      }
 
     }
 
@@ -146,7 +162,23 @@ if (window.WebSocket) {
 
   websocket.onopen = function () {
 
-    websocket.send(squarefieldName);
+    var message = {
+      type: "pair",
+      squarefield: window.squarefieldName
+    };
+
+    websocket.send(JSON.stringify(message));
+
+    if (window.home) {
+
+      var homeMessage = {
+        type: "homePair",
+        squarefield: window.squarefieldName
+      };
+
+      websocket.send(JSON.stringify(homeMessage));
+
+    }
 
   };
 

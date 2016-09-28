@@ -1,6 +1,6 @@
 {
   "node": true,
   "esversion": 6,
-  "predef": ["cs","squarefieldName"],
+  "predef": ["cs"],
   "browser": true
 }

@@ -178,7 +178,7 @@ cs.fetchSquarefield = function (colours) {
 // Light square in field
 
 cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
-  
+
   return new Promise(function (resolve, reject) {
 
     // Check index number is valid
@@ -211,6 +211,8 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
         }, fetchedField, {}, function (err, updated) {
 
           var connectionString = field.colours.red + "-" + field.colours.green + "-" + field.colours.blue;
+          var homeString = squarefieldColours.red + "-" + squarefieldColours.green + "-" + squarefieldColours.blue;
+          var square = formatSquare(fetchedField.squares[index]);
 
           // Send websocket message
 
@@ -220,15 +222,31 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
 
               // Format time and date
 
-              var square = fetchedField.squares[index];
-
               var date = new Date(square.date);
 
-              square = formatSquare(square);
+              var message = {
+                type: "square",
+                content: square
+              };
 
-              socket.send(JSON.stringify(square));
+              socket.send(JSON.stringify(message));
 
             });
+
+            if (cs.homeConnections[homeString]) {
+
+              cs.homeConnections[homeString].forEach(function (socket) {
+
+                var homeMessage = {
+                  type: "home",
+                  content: square
+                };
+
+                socket.send(JSON.stringify(homeMessage));
+
+              });
+
+            }
 
           }
 
@@ -269,6 +287,7 @@ var server = require('http').createServer(),
   compression = require('compression');
 
 cs.connections = {};
+cs.homeConnections = {};
 
 app.use(compression());
 
@@ -421,9 +440,15 @@ app.use("/:colour?", function (req, res, next) {
 
 });
 
-// Get home squarefield
+// Get home squarefield and detect if home
 
 app.use("/:colour?", function (req, res, next) {
+
+  if (req.session.colour.red === req.squarefieldColour.red && req.session.colour.green === req.squarefieldColour.green && req.session.colour.blue === req.squarefieldColour.blue) {
+
+    req.homeSquarefield = true;
+
+  }
 
   cs.fetchSquarefield(req.session.colour).then(function (field) {
 
@@ -678,29 +703,81 @@ wss.on('connection', function connection(ws) {
 
   ws.on("message", function (message) {
 
-    if (!cs.connections[message]) {
+    try {
 
-      cs.connections[message] = [];
+      message = JSON.parse(message);
+
+      if (message.type === "pair") {
+
+        if (!cs.connections[message.squarefield]) {
+
+          cs.connections[message.squarefield] = [];
+
+        }
+
+        cs.connections[message.squarefield].push(ws);
+
+        ws.subscribed = message.squarefield;
+
+      } else if (message.type === "homePair") {
+
+        if (!cs.homeConnections[message.squarefield]) {
+
+          cs.homeConnections[message.squarefield] = [];
+
+        }
+
+        cs.homeConnections[message.squarefield].push(ws);
+
+        ws.home = message.squarefield;
+
+      }
+
+    } catch (e) {
+
+      console.log(e);
 
     }
-
-    cs.connections[message].push(ws);
-
-    ws.subscribed = message;
 
   });
 
   ws.on("close", function () {
 
-    cs.connections[ws.subscribed].forEach(function (socket, index) {
+    try {
 
-      if (socket === ws) {
+      cs.connections[ws.subscribed].forEach(function (socket, index) {
 
-        delete cs.connections[ws.subscribed][index];
+        if (socket === ws) {
 
-      }
+          delete cs.connections[ws.subscribed][index];
 
-    });
+        }
+
+      });
+
+    } catch (e) {
+
+      // Not stored
+
+    }
+
+    try {
+
+      cs.homeConnections[ws.home].forEach(function (socket, index) {
+
+        if (socket === ws) {
+
+          delete cs.homeConnections[ws.home][index];
+
+        }
+
+      });
+
+    } catch (e) {
+
+      // Not stored
+
+    }
 
   });
 
