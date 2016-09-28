@@ -422,7 +422,7 @@ app.use("/:colour?", function (req, res, next) {
 
 app.use("/:colour?", function (req, res, next) {
 
-  if (!req.query.redSlider) {
+  if (!req.query.redSlider && !req.body.redSlider) {
 
     req.query.redSlider = req.session.colour.red;
     req.query.greenSlider = req.session.colour.green;
@@ -559,8 +559,8 @@ app.post("/:colour?", function (req, res, next) {
 
       // Was going to be light up square on home squarefield. Instead, make travel home.
 
-      res.redirect("/" + req.session.colour.red + "-" + req.session.colour.green + "-" + req.session.colour.blue + "#home?" + querystring.stringify(req.query));
-      
+      res.redirect("/" + req.session.colour.red + "-" + req.session.colour.green + "-" + req.session.colour.blue + "?" + querystring.stringify(req.query) + "#home");
+
       return false;
 
     }
@@ -571,7 +571,7 @@ app.post("/:colour?", function (req, res, next) {
       req.query.blue = req.query.blueSlider;
       req.query.green = req.query.greenSlider;
 
-      res.redirect("/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "#home?" + querystring.stringify(req.query));
+      res.redirect("/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query) + "#home");
 
       return false;
 
@@ -717,7 +717,7 @@ app.post("/:colour?", function (req, res) {
 
     var currentPath = url.parse(req.url).pathname;
 
-    res.redirect(currentPath + "#home?" + querystring.stringify(req.query));
+    res.redirect(currentPath + "?" + querystring.stringify(req.query) + "#home");
 
   }
 
