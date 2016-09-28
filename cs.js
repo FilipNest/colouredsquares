@@ -559,7 +559,7 @@ app.post("/:colour?", function (req, res, next) {
 
       // Was going to be light up square on home squarefield. Instead, make travel home.
 
-      res.redirect("/" + req.session.colour.red + "-" + req.session.colour.green + "-" + req.session.colour.blue + "?" + querystring.stringify(req.query) + "#home");
+      res.redirect("/" + req.session.colour.red + "-" + req.session.colour.green + "-" + req.session.colour.blue + "?" + querystring.stringify(req.query) + "#top");
 
       return false;
 
@@ -571,7 +571,7 @@ app.post("/:colour?", function (req, res, next) {
       req.query.blue = req.query.blueSlider;
       req.query.green = req.query.greenSlider;
 
-      res.redirect("/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query) + "#home");
+      res.redirect("/" + req.query.red + "-" + req.query.green + "-" + req.query.blue + "?" + querystring.stringify(req.query) + "#top");
 
       return false;
 
@@ -717,7 +717,7 @@ app.post("/:colour?", function (req, res) {
 
     var currentPath = url.parse(req.url).pathname;
 
-    res.redirect(currentPath + "?" + querystring.stringify(req.query) + "#home");
+    res.redirect(currentPath + "?" + querystring.stringify(req.query) + "#top");
 
   }
 
