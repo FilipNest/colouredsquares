@@ -117,9 +117,9 @@ var formatSquare = function (square) {
   var machineTime = date.toISOString();
   var humanTime = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getUTCFullYear() + " @ " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + " UTC";
 
-  square.contents = '<time datetime="' + machineTime + '">' + humanTime + '</time>';
-  square.contents += "<span>Colour:" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + "</span><br />";
-  square.contents += "<span>Author:" + square.author.red + "," + square.author.green + "," + square.author.blue + "</span>";
+  square.contents = '<time class="visually-hidden" datetime="' + machineTime + '">' + humanTime + '</time>';
+  square.contents += "<span class='visually-hidden'>Colour:" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + "</span><br />";
+  square.contents += "<span class='visually-hidden'>Author:" + square.author.red + "," + square.author.green + "," + square.author.blue + "</span>";
 
   return square;
 
