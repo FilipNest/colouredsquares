@@ -193,9 +193,9 @@ if (window.WebSocket) {
 
     for (var m = 0; m < modes.length; m += 1) {
 
-      if (modes[i].checked) {
+      if (modes[m].checked) {
 
-        currentMode = modes[i].value;
+        currentMode = modes[m].value;
 
       }
 
