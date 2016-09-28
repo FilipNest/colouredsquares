@@ -7,7 +7,6 @@ html,
 body {
   padding: 0px;
   margin: 0px;
-  height: 100%;
 }
 fieldset {
   padding: 0px;
@@ -192,10 +191,13 @@ input[type=range] {
   height: 100%;
 }
 #home {
+  top:0px;
+  width: 100%;
+  left:0px;
+  background-color: transparent;
   position: absolute;
   z-index: 2;
   border-style: none;
-  background-color: transparent;
 }
 input[type=radio] {
   width: 50%;
