@@ -156,12 +156,10 @@ if (window.WebSocket) {
     var green = document.getElementById("green").value;
     var blue = document.getElementById("blue").value;
 
-    var square = event.target.value;
+    var square = event.currentTarget.value;
 
     var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
     
-    console.log(string);
-
     var http = new XMLHttpRequest();
     http.open("POST", document.location.pathname, true);
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
