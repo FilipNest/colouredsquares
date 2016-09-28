@@ -519,6 +519,10 @@ app.post("/:colour?", function (req, res, next) {
     return false;
 
   } else {
+    
+    req.query.redSlider = parseInt(req.body.red);
+    req.query.blueSlider = parseInt(req.body.blue);
+    req.query.greenSlider = parseInt(req.body.green);
 
     if (req.body.home) {
 
@@ -529,10 +533,6 @@ app.post("/:colour?", function (req, res, next) {
       return false;
 
     }
-
-    req.query.redSlider = parseInt(req.body.red);
-    req.query.blueSlider = parseInt(req.body.blue);
-    req.query.greenSlider = parseInt(req.body.green);
 
     if (req.body.current) {
 
