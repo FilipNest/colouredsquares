@@ -141,4 +141,36 @@ if (window.WebSocket) {
 
   };
 
+  // Allow light without refresh
+
+  var squares = document.querySelectorAll(".square");
+
+  var sendRequest = function (event) {
+
+    var red = document.getElementById("red").value;
+    var green = document.getElementById("green").value;
+    var blue = document.getElementById("blue").value;
+
+    var square = event.target.value;
+
+    var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
+
+    var http = new XMLHttpRequest();
+    http.open("POST", document.location.pathname, true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    var params = string;
+    
+    http.send(params);
+
+    event.preventDefault();
+    return false;
+
+  };
+
+  for (var i = 0; i < squares.length; i += 1) {
+
+    squares[i].addEventListener("click", sendRequest, false);
+
+  }
+
 }
