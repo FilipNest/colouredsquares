@@ -470,7 +470,7 @@ app.get("/:colour?", function (req, res) {
 
 app.post("/:colour?", function (req, res, next) {
 
-  if (req.body.mode !== "paint") {
+  if (req.body.mode !== "paint" && req.body.mode) {
 
     next();
     return false;
@@ -502,7 +502,7 @@ app.post("/:colour?", function (req, res, next) {
       return false;
 
     }
-
+    
     cs.lightSquare(req.session.colour, req.squarefieldColour, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),
@@ -627,16 +627,24 @@ app.post("/:colour?", function (req, res, next) {
 
 app.post("/:colour?", function (req, res) {
 
-  // Always make the mode paint after post
+  // Check if posted from the api
 
-  req.query.mode = "paint";
+  if (!req.body.mode) {
 
-  var url = require('url');
-  var currentPath = url.parse(req.url).pathname;
+    res.json("success");
 
-  res.redirect(currentPath + "?" + querystring.stringify(req.query));
+  } else {
 
-  return false;
+    // Always make the mode paint after post
+
+    req.query.mode = "paint";
+
+    var url = require('url');
+    var currentPath = url.parse(req.url).pathname;
+
+    res.redirect(currentPath + "?" + querystring.stringify(req.query));
+
+  }
 
 });
 
