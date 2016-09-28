@@ -289,7 +289,7 @@ var server = require('http').createServer(),
 cs.connections = {};
 cs.homeConnections = {};
 
-//app.use(compression());
+app.use(compression());
 
 // Equality Handlebars helper
 
