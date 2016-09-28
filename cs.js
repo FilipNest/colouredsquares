@@ -399,17 +399,15 @@ app.use("/:colour?", function (req, res, next) {
 
 });
 
-// Set sliders to random colour if not set. Also set default paint mode if not set.
+// Set sliders to session colour if not set. Also set default paint mode if not set.
 
 app.use("/:colour?", function (req, res, next) {
 
   if (!req.query.redSlider) {
 
-    var colour = randomColour();
-
-    req.query.redSlider = colour.red;
-    req.query.blueSlider = colour.blue;
-    req.query.greenSlider = colour.green;
+    req.query.redSlider = req.session.colour.red;
+    req.query.greenSlider = req.session.colour.green;
+    req.query.blueSlider = req.session.colour.blue;
 
   }
 
