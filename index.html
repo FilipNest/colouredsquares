@@ -19,10 +19,10 @@ initial-scale=1.0">
 
   <header>
 
-    <h1>Coloured Squares</h1>
-
     <nav>
       <ul>
+        <li>
+          <a href="/"><h1>Coloured Squares</h1></a></li>
         <li>
           <a href="#about">About</a></li>
       </ul>
@@ -145,9 +145,9 @@ initial-scale=1.0">
         <dt>Colour</dt>
         <dd>One of around 16 million colours. Made up of red, green and blue values between 0 and 256 each.</dd>
         <dt>User</dt>
-        <dd>Every user is assigned a single colour. Yours is {{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}</dd>
+        <dd>Every user is assigned a single colour. <strong>Your colour is {{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}</strong>.</dd>
         <dt>Squarefields/squares</dt>
-        <dd>For every colour/user there is a squarefield. This consists of 16 squares which store two colour values. The colour of the user who changed the colour and the colour they changed it to.</dd>
+        <dd>For every colour/user there is a squarefield. This consists of 16 squares which store two colour values and a time stamp. The two colours stored are the user who changed the colour and the colour they changed it to.</dd>
       </dl>
 
       <h3>Controls</h3>
