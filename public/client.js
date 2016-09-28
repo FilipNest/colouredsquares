@@ -101,7 +101,7 @@ if (sliders[0].type === "range") {
 var lightSquare = function (square) {
 
   var target = document.getElementsByName("square")[square.id - 1];
-
+  
   target.firstElementChild.setAttribute("datetime", square.machineTime);
 
   target.innerHTML = square.contents;
@@ -119,7 +119,7 @@ if (window.WebSocket) {
   var websocket = new WebSocket("ws://" + document.location.host);
 
   websocket.onmessage = function (evt) {
-
+    
     var square;
 
     try {
@@ -141,8 +141,8 @@ if (window.WebSocket) {
   };
 
   websocket.onopen = function () {
-
-    websocket.send(document.location.pathname.split("/")[document.location.pathname.split("/").length - 1]);
+    
+    websocket.send(squarefieldName);
 
   };
 
@@ -157,9 +157,9 @@ if (window.WebSocket) {
     var blue = document.getElementById("blue").value;
 
     var square = event.currentTarget.value;
-
-    var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
     
+    var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
+        
     var http = new XMLHttpRequest();
     http.open("POST", document.location.pathname, true);
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
