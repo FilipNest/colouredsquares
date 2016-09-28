@@ -446,8 +446,8 @@ app.use("/:colour?", function (req, res, next) {
 
   if (req.session.colour.red === req.squarefieldColour.red && req.session.colour.green === req.squarefieldColour.green && req.session.colour.blue === req.squarefieldColour.blue) {
 
-    req.homeSquarefield = true;
-
+    req.isHome = true;
+    
   }
 
   cs.fetchSquarefield(req.session.colour).then(function (field) {
