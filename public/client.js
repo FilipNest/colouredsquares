@@ -117,7 +117,7 @@ var lightSquare = function (square) {
 };
 
 var lightHome = function (square) {
-  
+
   document.getElementById("home-notification-colour").style.fill = "rgb(" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + ")";
 
   document.getElementById("home-notification-author").style.fill = "rgb(" + square.author.red + "," + square.author.green + "," + square.author.blue + ")";
@@ -151,7 +151,7 @@ if (window.WebSocket) {
         lightSquare(message.content);
 
       } else if (message.type === "home") {
-        
+
         lightHome(message.content);
 
       }
@@ -188,23 +188,40 @@ if (window.WebSocket) {
 
   var sendRequest = function (event) {
 
-    var red = document.getElementById("red").value;
-    var green = document.getElementById("green").value;
-    var blue = document.getElementById("blue").value;
+    var modes = document.getElementsByName('mode');
+    var currentMode;
 
-    var square = event.currentTarget.value;
+    for (var m = 0; m < modes.length; m += 1) {
 
-    var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
+      if (modes[i].checked) {
 
-    var http = new XMLHttpRequest();
-    http.open("POST", document.location.pathname, true);
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    var params = string;
+        currentMode = modes[i].value;
 
-    http.send(params);
+      }
 
-    event.preventDefault();
-    return false;
+    }
+
+    if (currentMode === "paint") {
+
+      var red = document.getElementById("red").value;
+      var green = document.getElementById("green").value;
+      var blue = document.getElementById("blue").value;
+
+      var square = event.currentTarget.value;
+
+      var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
+
+      var http = new XMLHttpRequest();
+      http.open("POST", document.location.pathname, true);
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      var params = string;
+
+      http.send(params);
+
+      event.preventDefault();
+      return false;
+
+    }
 
   };
 
