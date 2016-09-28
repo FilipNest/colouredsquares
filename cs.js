@@ -479,9 +479,10 @@ app.post("/:colour?", function (req, res, next) {
 
     if (req.body.home) {
 
-      // light up square on home squarefield
+      // Was going to be light up square on home squarefield. Instead, make travel home.
 
-      next();
+      res.redirect("/" + req.session.colour.red + "-" + req.session.colour.green + "-" + req.session.colour.blue + "?" + querystring.stringify(req.query));
+
       return false;
 
     }
