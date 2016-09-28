@@ -169,7 +169,7 @@ if (window.WebSocket) {
 
     websocket.send(JSON.stringify(message));
 
-    if (window.home) {
+    if (window.isHome) {
 
       var homeMessage = {
         type: "homePair",
