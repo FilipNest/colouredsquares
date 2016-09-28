@@ -72,9 +72,13 @@ var updateColour = function () {
 
 };
 
+document.getElementById("red").addEventListener("change", updateColour);
+document.getElementById("green").addEventListener("change", updateColour);
+document.getElementById("blue").addEventListener("change", updateColour);
+
 if (sliders[0].type === "range") {
 
-  var change = function (e) {
+  var changeSlider = function (e) {
 
     var value = e.target.value;
     var colour = document.getElementsByName(e.target.name.replace("slide-", ""))[0];
@@ -87,7 +91,7 @@ if (sliders[0].type === "range") {
 
   for (var i = 0; i < sliders.length; i += 1) {
 
-    sliders[i].addEventListener("change", change);
+    sliders[i].addEventListener("change", changeSlider);
 
     // Range type supported, enable range type
 
@@ -101,7 +105,7 @@ if (sliders[0].type === "range") {
 var lightSquare = function (square) {
 
   var target = document.getElementsByName("square")[square.id - 1];
-  
+
   target.firstElementChild.setAttribute("datetime", square.machineTime);
 
   target.innerHTML = square.contents;
@@ -119,7 +123,7 @@ if (window.WebSocket) {
   var websocket = new WebSocket("ws://" + document.location.host);
 
   websocket.onmessage = function (evt) {
-    
+
     var square;
 
     try {
@@ -141,7 +145,7 @@ if (window.WebSocket) {
   };
 
   websocket.onopen = function () {
-    
+
     websocket.send(squarefieldName);
 
   };
@@ -151,15 +155,15 @@ if (window.WebSocket) {
   var squares = document.querySelectorAll(".square");
 
   var sendRequest = function (event) {
-    
+
     var red = document.getElementById("red").value;
     var green = document.getElementById("green").value;
     var blue = document.getElementById("blue").value;
 
     var square = event.currentTarget.value;
-    
+
     var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
-        
+
     var http = new XMLHttpRequest();
     http.open("POST", document.location.pathname, true);
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
