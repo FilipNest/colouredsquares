@@ -193,21 +193,18 @@ input[type=range] {
 
 /* Right */
 
-#this {
-  border-radius: 50%;
-}
 #current {
-  border-style:none;
+  border-style: none;
   width: 50%;
   height: 100%;
-  float:left;
+  float: left;
 }
 [name=memory] {
   padding: 0px;
   background-color: transparent;
   width: 50%;
   height: 50%;
-  border-style:none;
+  border-style: none;
   box-sizing: border-box;
   display: block;
 }
@@ -241,7 +238,7 @@ input[type=range] {
 .current-wrapper {
   width: 100%;
   height: 20%;
-  margin-left:10%;
+  margin-left: 10%;
 }
 
 /* Range slider browser styling ugh */
