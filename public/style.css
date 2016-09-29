@@ -267,6 +267,15 @@ label[for=copy] {
 .current-wrapper {
   margin-left: 10%;
 }
+.active {
+  border-color: white;
+  border-style: solid;
+  margin: 1em;
+  display: inline-block;
+  width: 4em;
+  height: 4em;
+  color:transparent;
+}
 
 /* Range slider browser styling ugh */
 

@@ -155,9 +155,14 @@ initial-scale=1.0">
 
       </div>
 
-      <!--      <button type="submit" id="claim">Claim</button>-->
-
     </form>
+
+    {{#each req.activeSessions}}
+
+    <a href="/{{this.red}}-{{this.green}}-{{this.blue}}" class="active" style="background-color:rgb({{this.red}},{{this.green}},{{this.blue}})">
+      {{this.red}}-{{this.green}}-{{this.blue}}
+    </a>
+    {{/each}}
 
     <aside id="about">
 

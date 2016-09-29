@@ -441,6 +441,58 @@ app.use(function (req, res, next) {
 
 });
 
+// Add timestamp to session
+
+app.use(function (req, res, next) {
+
+  req.session.timestamp = Date.now();
+
+  next();
+
+});
+
+// Send latest active users
+
+app.use(function (req, res, next) {
+
+  cs.sessionStore.all(function (err, sessions) {
+
+    sessions.sort(function (a, b) {
+
+      if (a.timestamp < b.timestamp) {
+
+        return 1;
+
+      } else if (a.timestamp > b.timestamp) {
+
+        return -1;
+
+      } else {
+
+        return 0;
+
+      }
+
+    });
+
+    req.activeSessions = [];
+
+    for (var i = 0; i < 16; i += 1) {
+
+      if (sessions[i] && sessions[i].colour && sessions[i].colour.red !== req.session.colour.red && sessions[i].colour.blue !== req.session.colour.blue && sessions[i].colour.green !== req.session.colour.green) {
+
+        req.activeSessions.push(sessions[i].colour);
+
+      }
+
+    }
+
+    next();
+
+  });
+
+});
+
 // Client side assets
 
 app.use(express.static('public'));
@@ -550,7 +602,7 @@ app.use("/:colour?", function (req, res, next) {
     req.query.blueSlider = req.session.colour.blue;
 
   }
-  
+
   if (!req.query.redMemory1) {
 
     req.query.redMemory1 = 256;
