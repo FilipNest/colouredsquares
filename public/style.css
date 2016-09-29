@@ -193,6 +193,19 @@ input[type=range] {
 
 /* Right */
 
+#mode {
+  height: 100%;
+}
+#mode label {
+  width: 50%;
+  height: 100%;
+  display: block;
+  float: left;
+}
+#mode label input {
+  width: 50%;
+  height: 50%;
+}
 #current {
   border-style: none;
   width: 50%;

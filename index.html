@@ -104,10 +104,12 @@ initial-scale=1.0">
 
             <legend class="visually-hidden">Modes</legend>
 
-            <label class="visually-hidden" for="paint">Light</label>
-            <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
-            <label class="visually-hidden" for="copy-inner">Copy</label>
-            <input type="radio" name="mode" id="copy" value="copy" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
+            <label for="paint">Light
+              <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
+            </label>
+            <label for="copy-inner">Copy
+              <input type="radio" name="mode" id="copy" value="copy" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
+            </label>
 
           </fieldset>
 
