@@ -85,57 +85,72 @@ initial-scale=1.0">
       <div id="right">
 
         <div class="control-wrapper">
-          <button title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" value="home" name="home">Copy/Home
-          </button>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 65">
-            <polygon id="home-notification-author" style="stroke:white; fill:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" points="8.83 65 61.17 65 61.17 32.5 64.17 35.67 70 27 56.67 18 56.67 1.83 47.83 1.83 47.5 10.17 35 0 0 27 5.33 34 9 30.83 8.83 65" />
-            <polygon id="home-notification-colour" style="fill:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}});" points="14.83 59.33 54.83 59.33 54.83 28.17 35 13.33 14.83 28.33 14.83 59.33" />
-          </svg>
+
+          {{#if req.claimed}}
+
+          <button>No claim</button>
+
+          {{else}}
+
+          <button type="submit" id="claim" name="claim" value="claim">Claim</button>
+
+          {{/if}}
+
         </div>
 
-        <fieldset id="mode">
+        <div class="control-wrapper">
 
-          <legend class="visually-hidden">Modes</legend>
+          <fieldset id="mode">
 
-          <div class="control-wrapper" id="paint-wrapper">
+            <legend class="visually-hidden">Modes</legend>
 
             <label class="visually-hidden" for="paint">Light</label>
             <input type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
-            <svg id="bulb" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 89.6 140">
-              <path class="st0" style="fill: rgb(256, 0, 0);" d="M24.4,102.6l1,36.7l41.1,0.7l0.1-12.5l-0.7-25.7c0,0-7.5,3.8-19.6,4.3C34.2,106.7,24.4,102.6,24.4,102.6z"></path>
-              <path style="fill: #FFFFFF; stroke: #000000;" class="st1" d="M89.1,44.2c0,12.1-8,26.7-15.8,40.4s-0.9,26-27.7,26.4c-28,0.4-21.5-14.7-29.7-28.4S0.5,56.3,0.5,44.2c0-24.1,19.9-43.7,44.3-43.7S89.1,20,89.1,44.2z"></path>
-            </svg>
+            <label class="visually-hidden" for="copy-inner">Copy</label>
+            <input type="radio" name="mode" id="copy" value="copy" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
 
-          </div>
+          </fieldset>
 
-          <div class="control-wrapper" id="copy-inner-wrapper">
-            <input type="radio" name="mode" id="copy-inner" value="copy-inner" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
-            <svg id="inner" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
-              <rect style="fill: rgb(0, 256, 0);" x="12" y="12" width="71.34" height="71.34"></rect>
-            </svg>
-            <label class="visually-hidden" for="copy-inner">Copy in</label>
-          </div>
-
-          <div class="control-wrapper" id="copy-outer-wrapper">
-
-            <label class="visually-hidden" for="copy-outer">Copy out</label>
-            <input type="radio" name="mode" id="copy-outer" value="copy-outer" {{#ifCond req.query.mode "copy-outer"}}checked{{/ifCond}}/>
-            <svg id="outer" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.9 94.9">
-              <rect style="fill: transparent; stroke: rgb(0,0,256); stroke-width: 5px" x="12" y="12" width="71.34" height="71.34"></rect>
-            </svg>
-          </div>
-
-        </fieldset>
+        </div>
 
         <div class="control-wrapper">
-          <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current" value="current">
-            Copy/Travel
+          <button title="Paint: Paint over latest, Copy: Copy latest" type="submit" id="home" value="home" name="home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 65">
+              <polygon id="home-notification-author" style="stroke:white; fill:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" points="8.83 65 61.17 65 61.17 32.5 64.17 35.67 70 27 56.67 18 56.67 1.83 47.83 1.83 47.5 10.17 35 0 0 27 5.33 34 9 30.83 8.83 65" />
+              <polygon id="home-notification-colour" style="fill:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}});" points="14.83 59.33 54.83 59.33 54.83 28.17 35 13.33 14.83 28.33 14.83 59.33" />
+            </svg>
+            <span class="visually-hidden">Home</span>
           </button>
+        </div>
+
+        <div class="control-wrapper">
+          <button title="Copy: Copy current, Paint: Travel" style="border-color:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}); background-color:rgb({{req.squarefieldColour.red}},{{req.squarefieldColour.green}},{{req.squarefieldColour.blue}})" id="this" type="submit" name="this" value="this">This
+          </button>
+        </div>
+
+        <div class="current-wrapper">
+
+          <button title="Copy: Copy current, Paint: Travel" style="background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current" value="current">
+            Travel
+          </button>
+          <button type="submit" name="memory" value="1" id="memory1">
+            <svg viewBox="0 0 64 64">
+              <polygon fill="rgb({{req.query.redMemory1}},{{req.query.greenMemory1}},{{req.query.blueMemory1}}" points="4,30 60,4 60,60">
+              </polygon>
+            </svg>
+          </button>
+          <button type="submit" name="memory" value="2" id="memory1">
+            <svg viewBox="0 0 64 64">
+              <polygon fill="rgb({{req.query.redMemory2}},{{req.query.greenMemory2}},{{req.query.blueMemory2}}" points="4,30 60,4 60,60">
+              </polygon>
+            </svg>
+          </button>
+
         </div>
 
       </div>
 
-      <button type="submit" id="claim">Claim</button>
+      <!--      <button type="submit" id="claim">Claim</button>-->
 
     </form>
 

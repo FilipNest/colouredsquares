@@ -477,6 +477,12 @@ var colourFromString = function (colour) {
 
 };
 
+var stringFromColour = function (colour) {
+
+  return colour.red + "-" + colour.green + "-" + colour.blue;
+
+};
+
 // Fetch squarefield ready for use
 
 app.use("/:colour?", function (req, res, next) {
@@ -710,30 +716,43 @@ app.post("/:colour?", function (req, res, next) {
 
 });
 
-// Post and copy inner
+// Post and copy
 
 app.post("/:colour?", function (req, res, next) {
 
-  if (req.body.mode !== "copy-inner") {
+  if (req.body.mode !== "copy") {
 
     next();
     return false;
 
   }
 
-  var square;
+  var copy = function (colour1, colour2) {
+
+    req.query.redMemory1 = colour1.red;
+    req.query.redMemory2 = colour2.red;
+    req.query.greenMemory1 = colour1.green;
+    req.query.greenMemory2 = colour2.green;
+    req.query.blueMemory1 = colour1.blue;
+    req.query.blueMemory2 = colour2.blue;
+
+  };
 
   if (req.body.square) {
-    square = req.squarefieldEntity.squares[req.body.square];
+
+    var square = req.squarefieldEntity.squares[req.body.square];
+
+    copy(square.colour, square.author);
+
+    next();
+
+    return false;
+
   }
 
   if (req.body.home) {
 
-    // Copy current squarefield
-
-    req.query.redSlider = req.homeLastUpdated.colour.red;
-    req.query.blueSlider = req.homeLastUpdated.colour.blue;
-    req.query.greenSlider = req.homeLastUpdated.colour.green;
+    copy(req.homeLastUpdated.colour, req.homeLastUpdated.author);
 
     next();
 
@@ -741,74 +760,59 @@ app.post("/:colour?", function (req, res, next) {
 
   }
 
-  if (req.body.current) {
+  if (req.body.this) {
 
-    // Copy current squarefield
-
-    req.query.redSlider = req.session.colour.red;
-    req.query.blueSlider = req.session.colour.blue;
-    req.query.greenSlider = req.session.colour.green;
+    copy(req.session.colour, req.squarefieldColour);
 
     next();
+
     return false;
 
   }
-
-  req.query.redSlider = parseInt(square.colour.red);
-  req.query.blueSlider = parseInt(square.colour.blue);
-  req.query.greenSlider = parseInt(square.colour.green);
 
   next();
 
 });
 
-// Post and copy outer
+app.post("/:colour?", function (req, res, next) {
+
+  if (!req.body.memory) {
+
+    next();
+    return false;
+
+  }
+
+  var memory = req.body.memory;
+
+  req.query.redSlider = req.query["redMemory" + memory];
+  req.query.greenSlider = req.query["greenMemory" + memory];
+  req.query.blueSlider = req.query["blueMemory" + memory];
+
+  next();
+
+});
 
 app.post("/:colour?", function (req, res, next) {
 
-  if (req.body.mode !== "copy-outer") {
+  if (!req.body.claim) {
 
     next();
     return false;
 
   }
 
-  var square;
+  exists(req.squarefieldColour).then(function (taken) {
 
-  if (req.body.square) {
-    square = req.squarefieldEntity.squares[req.body.square];
-  }
+    if (!taken) {
 
-  if (req.body.home) {
+      req.session.colour = req.squarefieldColour;
 
-    // Copy current squarefield
-
-    req.query.redSlider = req.homeLastUpdated.author.red;
-    req.query.blueSlider = req.homeLastUpdated.author.blue;
-    req.query.greenSlider = req.homeLastUpdated.author.green;
-
-    next();
-    return false;
-
-  }
-
-  if (req.body.current) {
-
-    req.query.redSlider = req.squarefieldColour.red;
-    req.query.blueSlider = req.squarefieldColour.blue;
-    req.query.greenSlider = req.squarefieldColour.green;
+    }
 
     next();
 
-    return false;
-
-  }
-
-  req.query.redSlider = parseInt(square.author.red);
-  req.query.blueSlider = parseInt(square.author.blue);
-  req.query.greenSlider = parseInt(square.author.green);
-
-  next();
+  });
 
 });
 
