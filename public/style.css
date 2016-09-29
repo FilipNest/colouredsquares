@@ -194,6 +194,7 @@ input[type=range] {
 /* Right */
 
 #mode {
+  transform: rotate(90deg);
   height: 100%;
   text-align: center;
 }
@@ -262,6 +263,8 @@ label[for=copy] {
 .mode-wrapper {
   width: 100%;
   height: 20%;
+}
+.current-wrapper {
   margin-left: 10%;
 }
 
