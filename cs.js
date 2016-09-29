@@ -67,6 +67,12 @@ var square = function (id, author = {
 
 // Create squarefield generator
 
+var key = function () {
+
+  crypto.randomBytes(8).toString('hex');
+
+};
+
 var squarefield = function (colours) {
 
   if (!checkColours(colours)) {
@@ -91,7 +97,7 @@ var squarefield = function (colours) {
       blue: colours.blue
     },
     squares: squares,
-    claimed: null,
+    key: new key(),
     updated: Date.now()
 
   };
@@ -306,37 +312,92 @@ app.use(bodyParser.urlencoded({
 
 var crypto = require("crypto");
 
+var NedbStore = require('nedb-session-store')(session);
+
 var sessionConfig = {
   secret: crypto.randomBytes(8).toString('hex'),
   resave: false,
   saveUninitialized: true,
+  store: new NedbStore({
+    filename: "sessions.db"
+  })
 };
 
-var sessions = require("express-session")(sessionConfig);
+cs.sessionStore = sessionConfig.store;
+
+var sessions = session(sessionConfig);
 
 app.use(sessions);
 
 // Random anonymous session (for now)
 
+// Function for checking if session exists
+
 var randomColour = function () {
 
-  return {
-    red: Math.floor(Math.random() * 256) + 1,
-    green: Math.floor(Math.random() * 256) + 1,
-    blue: Math.floor(Math.random() * 256) + 1
-  };
+  return new Promise(function (resolve, reject) {
+
+    var check = function () {
+
+      var colour = {
+        red: Math.floor(Math.random() * 256) + 1,
+        green: Math.floor(Math.random() * 256) + 1,
+        blue: Math.floor(Math.random() * 256) + 1
+      };
+
+      var exists;
+
+      cs.sessionStore.all(function (err, output) {
+
+        output.forEach(function (session) {
+
+          if (session.red === colour.red && session.blue === colour.blue && session.green === colour.green) {
+
+            exists = true;
+
+          }
+
+        });
+
+      });
+
+      if (!exists) {
+
+        resolve(colour);
+
+      } else {
+
+        return check();
+
+      }
+
+    };
+
+    check();
+
+  });
 
 };
+
+// Check all current sessions and assign one if no session
 
 app.use(function (req, res, next) {
 
   if (!req.session.colour) {
 
-    req.session.colour = randomColour();
+    randomColour().then(function (colour) {
+
+      req.session.colour = colour;
+
+      next();
+
+    });
+
+  } else {
+
+    next();
 
   }
-
-  next();
 
 });
 
