@@ -550,6 +550,17 @@ app.use("/:colour?", function (req, res, next) {
     req.query.blueSlider = req.session.colour.blue;
 
   }
+  
+  if (!req.query.redMemory1) {
+
+    req.query.redMemory1 = 256;
+    req.query.redMemory2 = 256;
+    req.query.greenMemory1 = 256;
+    req.query.greenMemory2 = 256;
+    req.query.blueMemory1 = 256;
+    req.query.blueMemory2 = 256;
+
+  }
 
   if (!req.query.mode) {
 

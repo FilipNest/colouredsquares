@@ -198,7 +198,7 @@ input[type=range] {
   text-align: center;
 }
 #mode label {
-  font-size:0px;
+  font-size: 0px;
   width: 50%;
   height: 100%;
   display: block;
@@ -207,6 +207,14 @@ input[type=range] {
 #mode label input {
   width: 50%;
   height: 100%;
+}
+label[for=paint] {
+  background-repeat: no-repeat;
+  background-image: url(arrowdown.svg);
+}
+label[for=copy] {
+  background-repeat: no-repeat;
+  background-image: url(arrowup.svg);
 }
 #current {
   border-style: none;
