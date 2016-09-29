@@ -121,7 +121,6 @@ initial-scale=1.0">
               <polygon id="home-notification-author" style="stroke:white; fill:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" points="8.83 65 61.17 65 61.17 32.5 64.17 35.67 70 27 56.67 18 56.67 1.83 47.83 1.83 47.5 10.17 35 0 0 27 5.33 34 9 30.83 8.83 65" />
               <polygon id="home-notification-colour" style="fill:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}});" points="14.83 59.33 54.83 59.33 54.83 28.17 35 13.33 14.83 28.33 14.83 59.33" />
             </svg>
-            <span class="visually-hidden">Home</span>
           </button>
         </div>
 
@@ -141,13 +140,13 @@ initial-scale=1.0">
           </button>
           <button type="submit" name="memory" value="1" id="memory1">
             <svg viewBox="0 0 64 64">
-              <polygon fill="rgb({{req.query.redMemory1}},{{req.query.greenMemory1}},{{req.query.blueMemory1}}" points="4,30 60,4 60,60">
+              <polygon style="fill:rgb({{req.query.redMemory1}},{{req.query.greenMemory1}},{{req.query.blueMemory1}}" points="4,30 60,4 60,60">
               </polygon>
             </svg>
           </button>
           <button type="submit" name="memory" value="2" id="memory1">
             <svg viewBox="0 0 64 64">
-              <polygon fill="rgb({{req.query.redMemory2}},{{req.query.greenMemory2}},{{req.query.blueMemory2}}" points="4,30 60,4 60,60">
+              <polygon style="fill:rgb({{req.query.redMemory2}},{{req.query.greenMemory2}},{{req.query.blueMemory2}}" points="4,30 60,4 60,60">
               </polygon>
             </svg>
           </button>
