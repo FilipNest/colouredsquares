@@ -171,21 +171,17 @@ if (window.WebSocket) {
 
       websocket.send(JSON.stringify(message));
 
-      if (window.isHome) {
+      var homeMessage = {
+        type: "homePair",
+        squarefield: window.sessionSquarefieldName
+      };
 
-        var homeMessage = {
-          type: "homePair",
-          squarefield: window.squarefieldName
-        };
-
-        websocket.send(JSON.stringify(homeMessage));
-
-      }
+      websocket.send(JSON.stringify(homeMessage));
 
     };
 
     websocket.onclose = function (close) {
-      
+
       setTimeout(function () {
         connectSocket();
       }, 2000);
@@ -193,7 +189,7 @@ if (window.WebSocket) {
     };
 
   };
-  
+
   connectSocket();
 
   // Allow light without refresh

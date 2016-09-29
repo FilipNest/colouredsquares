@@ -5,7 +5,8 @@ global.cs = {};
 cs.config = {
   "squarefieldSize": 16,
   "dbFile": "squarefields.db",
-  "port": 1616
+  "port": 1616,
+  "sessionHours": 1
 };
 
 // Function for checking colour objects are valid
@@ -320,7 +321,11 @@ var sessionConfig = {
   saveUninitialized: true,
   store: new NedbStore({
     filename: "sessions.db"
-  })
+  }),
+  cookie: {
+    maxAge: 3600000 * cs.config.sessionHours
+  },
+  rolling: true
 };
 
 cs.sessionStore = sessionConfig.store;
@@ -329,9 +334,44 @@ var sessions = session(sessionConfig);
 
 app.use(sessions);
 
-// Random anonymous session (for now)
+// Function for checking if session colour exists (for allowing switching)
 
-// Function for checking if session exists
+var exists = function (colour) {
+
+  return new Promise(function (resolve, reject) {
+
+    var exists;
+
+    cs.sessionStore.all(function (err, output) {
+
+      output.forEach(function (session) {
+
+        if (session.colour) {
+
+          if (session.colour.red === colour.red && session.colour.blue === colour.blue && session.colour.green === colour.green) {
+
+            exists = true;
+
+          }
+        }
+
+      });
+
+      if (exists) {
+
+        resolve(true);
+
+      } else {
+
+        resolve(false);
+
+      }
+
+    });
+
+  });
+
+};
 
 var randomColour = function () {
 
@@ -474,6 +514,20 @@ app.use("/:colour?", function (req, res, next) {
   }, function (fail) {
 
     res.status(400).send("Bad request");
+
+  });
+
+});
+
+// Check if squarefield has been claimed
+
+app.use("/:colour?", function (req, res, next) {
+
+  exists(req.squarefieldColour).then(function (claimed) {
+
+    req.claimed = claimed;
+
+    next();
 
   });
 
