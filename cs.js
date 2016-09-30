@@ -584,7 +584,15 @@ app.use("/:colour?", function (req, res, next) {
 
   exists(req.squarefieldColour).then(function (claimed) {
 
-    req.claimed = claimed;
+    if (req.squarefieldColour.red !== req.session.colour.red && req.squarefieldColour.blue !== req.session.colour.blue && req.squarefieldColour.green !== req.session.colour.green) {
+
+      req.claimed = claimed;
+
+    } else {
+
+      req.claimed = true;
+
+    }
 
     next();
 
