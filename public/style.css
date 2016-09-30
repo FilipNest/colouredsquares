@@ -237,7 +237,6 @@ label[for=copy] {
 #current {
   border-color: white;
   border-style: solid;
-  background-image: url("arrow.svg");
   background-repeat: no-repeat;
   background-position: center;
   width: 50%;
