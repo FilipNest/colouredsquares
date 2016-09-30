@@ -6,7 +6,8 @@ cs.config = {
   "squarefieldSize": 16,
   "dbFile": "squarefields.db",
   "port": 1616,
-  "sessionHours": 1
+  "sessionHours": 1,
+  "secret": "colouredsquares"
 };
 
 // Function for checking colour objects are valid
@@ -316,7 +317,7 @@ var crypto = require("crypto");
 var NedbStore = require('nedb-session-store')(session);
 
 var sessionConfig = {
-  secret: crypto.randomBytes(8).toString('hex'),
+  secret: cs.config.secret,
   resave: false,
   saveUninitialized: true,
   store: new NedbStore({
