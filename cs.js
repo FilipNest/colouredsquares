@@ -581,25 +581,25 @@ app.use("/:colour?", function (req, res, next) {
 // Check if squarefield has been claimed
 
 app.use("/:colour?", function (req, res, next) {
-  
+
   exists(req.squarefieldColour).then(function (claimed) {
-        
-    if (req.squarefieldColour.red !== req.session.colour.red && req.squarefieldColour.blue !== req.session.colour.blue && req.squarefieldColour.green !== req.session.colour.green) {
 
-      req.claimed = claimed;
-
-    } else {
+    if (req.squarefieldColour.red === req.session.colour.red && req.squarefieldColour.blue === req.session.colour.blue && req.squarefieldColour.green === req.session.colour.green) {
 
       req.claimed = true;
 
+    } else {
+
+      req.claimed = claimed;
+
     }
-  
+
     next();
 
-  }, function(fail){
-    
+  }, function (fail) {
+
     console.log(fail);
-    
+
   });
 
 });
