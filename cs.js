@@ -123,7 +123,7 @@ var formatSquare = function (square) {
   var date = new Date(square.date);
 
   var machineTime = date.toISOString();
-  var humanTime = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getUTCFullYear() + " @ " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + " UTC";
+  var humanTime = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getUTCFullYear() + " @ " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + " UTC ";
 
   square.contents = '<time class="visually-hidden" datetime="' + machineTime + '">' + humanTime + '</time>';
   square.contents += "<span class='visually-hidden'>Colour:" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + "</span><br />";
