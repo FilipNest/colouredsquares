@@ -218,6 +218,9 @@ label[for=copy] {
   background-image: url(arrowup.svg);
 }
 #current {
+  background-image: url("spiral.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   border-style: none;
   width: 50%;
   height: 100%;
@@ -274,7 +277,7 @@ label[for=copy] {
   display: inline-block;
   width: 4em;
   height: 4em;
-  color:transparent;
+  color: transparent;
 }
 
 /* Range slider browser styling ugh */
