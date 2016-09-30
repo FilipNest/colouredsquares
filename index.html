@@ -161,18 +161,16 @@ initial-scale=1.0">
 
       <p>Coloured Squares is a social network, art project and web controller. This version was created from scratch for the <a href="https://a-k-apart.com/">A List Apart 10kb challenge</a>.</p>
 
-      <h3>Definitions</h3>
+      <h3>Instructions</h3>
 
-      <dl>
-        <dt>Colour</dt>
-        <dd>One of around 16 million colours. Made up of red, green and blue values between 0 and 256 each.</dd>
-        <dt>User</dt>
-        <dd>Every user is assigned a single colour. <strong>Your colour is {{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}</strong>.</dd>
-        <dt>Squarefields/squares</dt>
-        <dd>For every colour/user there is a squarefield. This consists of 16 squares which store two colour values and a time stamp. The two colours stored are the user who changed the colour and the colour they changed it to.</dd>
-      </dl>
+      <p>You've been assigned a colour (or an id of three numbers between 0 and 256. Yours is <strong>{{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}}</strong>). Each colour has a squarefield of 16 squares associated with it. You can change the colour value of these squares (also stamping it with your colour and the time). You can also switch your colour (if the colour is not already taken). A copy mode is available to quickly take extract colours. You can transport between squarefields and go back to your home anytime with other buttons. How it is used is completely up to you.</p>
 
-      <h3>Controls</h3>
+      <h3>API</h3>
+
+      <ul>
+        <li>Pass a "format=JSON" parameter to the squarefield URL to get the squarefield as JSON</li>
+        <li>HTTP POST with values for "square" (1-16) and "red" "green" and "blue" values to light a square.</li>
+      </ul>
 
     </aside>
 
