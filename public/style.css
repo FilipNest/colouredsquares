@@ -147,10 +147,18 @@ form {
 
 /* Bottom */
 
+#active-sessions {
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  clear: both;
+  display: block;
+  width: 100%;
+}
 #bottom {
   height: 20%;
   top: -20%;
-  padding:1%;
+  padding: 1%;
   position: relative;
 }
 #sliders {
@@ -270,7 +278,7 @@ label[for=copy] {
 }
 .current-wrapper {
   margin-left: 10%;
-  padding:10%;
+  padding: 10%;
   box-sizing: border-box;
 }
 .active {

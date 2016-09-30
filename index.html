@@ -143,11 +143,15 @@ initial-scale=1.0">
 
     </form>
 
-    {{#each req.activeSessions}}
+    <div id="active-sessions">
 
-    <a href="/{{this.red}}-{{this.green}}-{{this.blue}}" class="active" style="background-color:rgb({{this.red}},{{this.green}},{{this.blue}})">
+      <h2 class="visually-hidden">Active sessions</h2> {{#each req.activeSessions}}
+
+      <a href="/{{this.red}}-{{this.green}}-{{this.blue}}" class="active" style="background-color:rgb({{this.red}},{{this.green}},{{this.blue}})">
       {{this.red}}-{{this.green}}-{{this.blue}}
     </a> {{/each}}
+
+    </div>
 
     <aside id="about">
 
