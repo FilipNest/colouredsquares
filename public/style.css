@@ -293,6 +293,7 @@ label[for=copy] {
   border-color: white;
   border-style: solid;
   margin: 1em;
+  font-size:0px;
   display: inline-block;
   width: 4em;
   height: 4em;
