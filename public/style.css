@@ -218,10 +218,11 @@ label[for=copy] {
   background-image: url(arrowup.svg);
 }
 #current {
+  border-color: white;
+  border-style: solid;
   background-image: url("spiral.svg");
   background-repeat: no-repeat;
   background-position: center;
-  border-style: none;
   width: 50%;
   height: 100%;
   float: left;
