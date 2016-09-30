@@ -120,6 +120,14 @@ var lightHome = function (square) {
 
   document.getElementById("home-notification-author").style.fill = "rgb(" + square.author.red + "," + square.author.green + "," + square.author.blue + ")";
 
+  // Assemble hometext: 
+
+  var homeText = "Go home/Copy notifications. ";
+  homeText += "Latest update: " + square.colour.red + "-" + square.colour.green + "-" + square.colour.blue + " ";
+  homeText += "by " + square.author.red + "-" + square.author.green + "-" + square.author.blue;
+
+  document.getElementById("homeText").innerHTML = homeText;
+
 };
 
 if (window.WebSocket) {
@@ -151,7 +159,7 @@ if (window.WebSocket) {
           if (message.content && message.content.squares) {
 
             message.content.squares.forEach(function (square) {
-              
+
               lightSquare(square);
 
             });

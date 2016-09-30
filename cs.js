@@ -219,7 +219,7 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
         }, fetchedField, {
           returnUpdatedDocs: true
         }, function (err, number, updated) {
-          
+
           var connectionString = field.colours.red + "-" + field.colours.green + "-" + field.colours.blue;
           var homeString = squarefieldColours.red + "-" + squarefieldColours.green + "-" + squarefieldColours.blue;
           var square = formatSquare(fetchedField.squares[index]);
@@ -230,6 +230,12 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
             cs.connections[connectionString].forEach(function (socket) {
 
               // Format time and date
+
+              updated.squares.forEach(function (square) {
+
+                square = formatSquare(square);
+
+              });
 
               var message = {
                 type: "squares",
