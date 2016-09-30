@@ -5,7 +5,7 @@ global.cs = {};
 cs.config = {
   "squarefieldSize": 16,
   "dbFile": "squarefields.db",
-  "port": 1616,
+  "port": 80,
   "sessionHours": 1,
   "secret": "colouredsquares"
 };
