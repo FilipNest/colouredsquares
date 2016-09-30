@@ -106,8 +106,6 @@ var lightSquare = function (square) {
 
   var target = document.getElementsByName("square")[square.id - 1];
 
-  target.firstElementChild.setAttribute("datetime", square.machineTime);
-
   target.innerHTML = square.contents;
 
   target.style.backgroundColor = "rgb(" + square.colour.red + "," + square.colour.green + "," + square.colour.blue + ")";
@@ -148,9 +146,17 @@ if (window.WebSocket) {
 
       if (message) {
 
-        if (message.type === "square") {
+        if (message.type === "squares") {
 
-          lightSquare(message.content);
+          if (message.content && message.content.squares) {
+
+            message.content.squares.forEach(function (square) {
+              
+              lightSquare(square);
+
+            });
+
+          }
 
         } else if (message.type === "home") {
 

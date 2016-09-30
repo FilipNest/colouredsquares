@@ -216,8 +216,10 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
 
         cs.squarefields.update({
           _id: id
-        }, fetchedField, {}, function (err, updated) {
-
+        }, fetchedField, {
+          returnUpdatedDocs: true
+        }, function (err, number, updated) {
+          
           var connectionString = field.colours.red + "-" + field.colours.green + "-" + field.colours.blue;
           var homeString = squarefieldColours.red + "-" + squarefieldColours.green + "-" + squarefieldColours.blue;
           var square = formatSquare(fetchedField.squares[index]);
@@ -225,18 +227,14 @@ cs.lightSquare = function (author, squarefieldColours, index, squareColours) {
           // Send websocket message
 
           if (cs.connections[connectionString]) {
-
             cs.connections[connectionString].forEach(function (socket) {
 
               // Format time and date
 
-              var date = new Date(square.date);
-
               var message = {
-                type: "square",
-                content: square
+                type: "squares",
+                content: updated
               };
-
               socket.send(JSON.stringify(message));
 
             });
