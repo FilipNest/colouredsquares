@@ -86,7 +86,7 @@ initial-scale=1.0">
 
         <div class="control-wrapper">
 
-         
+
 
         </div>
 
@@ -117,7 +117,7 @@ initial-scale=1.0">
         </div>
 
         <div class="control-wrapper">
-          <button title="Copy: Copy current, Paint: Travel" style="background-color:rgb({{req.squarefieldColour.red}},{{req.squarefieldColour.green}},{{req.squarefieldColour.blue}})" id="this" type="submit" name="this" value="this">
+          <button title="Copy: Copy current, Paint: Travel" style="{{#if req.claimed}}border-style:dashed;{{/if}} background-color:rgb({{req.squarefieldColour.red}},{{req.squarefieldColour.green}},{{req.squarefieldColour.blue}})" id="this" type="submit" name="this" value="this">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 157 173.94">
               <circle style="stroke:white; stroke-width:2%; fill:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}})" cx="79.81" cy="46.49" r="45.99" />
               <path style="stroke:white; stroke-width:2%; fill:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}})" d="M489.57,216.5c-43.08,0-78,34-78,78h156C567.57,250.5,532.65,216.5,489.57,216.5Z" transform="translate(-411.07 -121.06)" />
@@ -153,8 +153,7 @@ initial-scale=1.0">
 
     <a href="/{{this.red}}-{{this.green}}-{{this.blue}}" class="active" style="background-color:rgb({{this.red}},{{this.green}},{{this.blue}})">
       {{this.red}}-{{this.green}}-{{this.blue}}
-    </a>
-    {{/each}}
+    </a> {{/each}}
 
     <aside id="about">
 
