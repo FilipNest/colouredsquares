@@ -36,7 +36,7 @@ initial-scale=1.0">
 
       <div id="left">
 
-        <fieldset id="squarefield">
+        <fieldset id="squarefield" aria-live="polite">
 
           <legend class="visually-hidden">Squarefield squares:</legend>
 
@@ -72,7 +72,7 @@ initial-scale=1.0">
         </div>
 
         <div class="control-wrapper">
-          <button title="Home/Notifications" type="submit" id="home" value="home" name="home">
+          <button aria-live="polite" title="Home/Notifications" type="submit" id="home" value="home" name="home">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 65">
               <polygon id="home-notification-author" style="stroke:white; fill:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" points="8.83 65 61.17 65 61.17 32.5 64.17 35.67 70 27 56.67 18 56.67 1.83 47.83 1.83 47.5 10.17 35 0 0 27 5.33 34 9 30.83 8.83 65" />
               <polygon id="home-notification-colour" style="fill:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}});" points="14.83 59.33 54.83 59.33 54.83 28.17 35 13.33 14.83 28.33 14.83 59.33" />
