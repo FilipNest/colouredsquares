@@ -770,6 +770,26 @@ app.post("/:colour?", function (req, res, next) {
 
     }
 
+    // Claim
+
+    if (req.body.this) {
+
+      exists(req.squarefieldColour).then(function (taken) {
+
+        if (!taken) {
+
+          req.session.colour = req.squarefieldColour;
+
+        }
+
+        next();
+
+      });
+
+      return false;
+
+    }
+
     cs.lightSquare(req.session.colour, req.squarefieldColour, req.body.square, {
       red: parseInt(req.body.red),
       green: parseInt(req.body.green),
@@ -862,29 +882,6 @@ app.post("/:colour?", function (req, res, next) {
   req.query.blueSlider = req.query["blueMemory" + memory];
 
   next();
-
-});
-
-app.post("/:colour?", function (req, res, next) {
-
-  if (!req.body.claim) {
-
-    next();
-    return false;
-
-  }
-
-  exists(req.squarefieldColour).then(function (taken) {
-
-    if (!taken) {
-
-      req.session.colour = req.squarefieldColour;
-
-    }
-
-    next();
-
-  });
 
 });
 
