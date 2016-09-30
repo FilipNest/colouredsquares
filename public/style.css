@@ -23,7 +23,7 @@ fieldset {
   border: none;
 }
 button {
-  font-size:0px;
+  font-size: 0px;
   border-color: white;
   border-style: solid;
   border-width: 4px;
@@ -203,9 +203,9 @@ input[type=range] {
 /* Right */
 
 #mode {
-  transform: rotate(90deg);
   height: 100%;
   text-align: center;
+  transform: rotate(-90deg);
 }
 #mode label {
   font-size: 0px;
@@ -213,23 +213,26 @@ input[type=range] {
   height: 100%;
   display: block;
   float: left;
+  background-image: url(arrow.svg);
 }
 #mode label input {
   width: 50%;
   height: 100%;
 }
 label[for=paint] {
+  display: block;
+  width:50%;
   background-repeat: no-repeat;
-  background-image: url(arrowdown.svg);
+  transform: rotate(180deg);
 }
 label[for=copy] {
+  transform: rotate(0deg);
   background-repeat: no-repeat;
-  background-image: url(arrowup.svg);
 }
 #current {
   border-color: white;
   border-style: solid;
-  background-image: url("spiral.svg");
+  background-image: url("arrow.svg");
   background-repeat: no-repeat;
   background-position: center;
   width: 50%;
