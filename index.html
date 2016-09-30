@@ -74,7 +74,7 @@ initial-scale=1.0">
         <div class="control-wrapper">
           <button aria-live="polite" title="Home/Notifications" type="submit" id="home" value="home" name="home">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 65">
-              <polygon id="home-notification-author" style="stroke:white; fill:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}})" points="8.83 65 61.17 65 61.17 32.5 64.17 35.67 70 27 56.67 18 56.67 1.83 47.83 1.83 47.5 10.17 35 0 0 27 5.33 34 9 30.83 8.83 65"></polygon>
+              <polygon id="home-notification-author" style="stroke:white; fill:rgb({{req.homeLastUpdated.author.red}},{{req.homeLastUpdated.author.green}},{{req.homeLastUpdated.author.blue}});" points="8.83 65 61.17 65 61.17 32.5 64.17 35.67 70 27 56.67 18 56.67 1.83 47.83 1.83 47.5 10.17 35 0 0 27 5.33 34 9 30.83 8.83 65"></polygon>
               <polygon id="home-notification-colour" style="fill:rgb({{req.homeLastUpdated.colour.red}},{{req.homeLastUpdated.colour.green}},{{req.homeLastUpdated.colour.blue}});" points="14.83 59.33 54.83 59.33 54.83 28.17 35 13.33 14.83 28.33 14.83 59.33"></polygon>
             </svg>
             <span id="homeText">Go Home/Copy notifications.
@@ -88,28 +88,28 @@ initial-scale=1.0">
           <button title="You and here" style="{{#if req.claimed}}border-style:dashed;{{/if}} background-color:rgb({{req.squarefieldColour.red}},{{req.squarefieldColour.green}},{{req.squarefieldColour.blue}})" id="this" type="submit" name="this" value="this">
             You: {{req.session.colour.red}}-{{req.session.colour.green}}-{{req.session.colour.blue}}, This: {{req.squarefieldColour.red}}-{{req.squarefieldColour.green}}-{{req.squarefieldColour.blue}}. {{#unless req.claimed}}Claim this colour {{else}} Refresh (already claimed). {{/unless}}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 157 173.94">
-              <circle style="stroke:white; stroke-width:2%; fill:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}})" cx="79.81" cy="46.49" r="45.99" />
-              <path style="stroke:white; stroke-width:2%; fill:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}})" d="M489.57,216.5c-43.08,0-78,34-78,78h156C567.57,250.5,532.65,216.5,489.57,216.5Z" transform="translate(-411.07 -121.06)" />
+              <circle style="stroke:white; stroke-width:2%; fill:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}});" cx="79.81" cy="46.49" r="45.99" />
+              <path style="stroke:white; stroke-width:2%; fill:rgb({{req.session.colour.red}},{{req.session.colour.green}},{{req.session.colour.blue}});" d="M489.57,216.5c-43.08,0-78,34-78,78h156C567.57,250.5,532.65,216.5,489.57,216.5Z" transform="translate(-411.07 -121.06)" />
             </svg>
           </button>
         </div>
 
         <div class="current-wrapper">
 
-          <button title="Current colour - travel or copy" style="background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}})" id="current" type="submit" name="current" value="current">
+          <button title="Current colour - travel or copy" style="background-color:rgb({{req.query.redSlider}},{{req.query.greenSlider}},{{req.query.blueSlider}});" id="current" type="submit" name="current" value="current">
             Copy or Travel to {{req.query.redSlider}}-{{req.query.greenSlider}}-{{req.query.blueSlider}}
           </button>
           <button type="submit" name="memory" value="1" id="memory1">
             Copy {{req.query.redMemory1}}-{{req.query.greenMemory1}}-{{req.query.blueMemory1}} to current.
             <svg viewBox="0 0 64 64">
-              <polygon style="fill:rgb({{req.query.redMemory1}},{{req.query.greenMemory1}},{{req.query.blueMemory1}}" points="4,30 60,4 60,60">
+              <polygon style="fill:rgb({{req.query.redMemory1}},{{req.query.greenMemory1}},{{req.query.blueMemory1}});" points="4,30 60,4 60,60">
               </polygon>
             </svg>
           </button>
           <button type="submit" name="memory" value="2" id="memory2">
             Copy {{req.query.redMemory2}}-{{req.query.greenMemory2}}-{{req.query.blueMemory2}} to current.
             <svg viewBox="0 0 64 64">
-              <polygon style="fill:rgb({{req.query.redMemory2}},{{req.query.greenMemory2}},{{req.query.blueMemory2}}" points="4,30 60,4 60,60">
+              <polygon style="fill:rgb({{req.query.redMemory2}},{{req.query.greenMemory2}},{{req.query.blueMemory2}})" points="4,30 60,4 60,60">
               </polygon>
             </svg>
           </button>
