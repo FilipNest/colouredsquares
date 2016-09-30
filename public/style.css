@@ -30,7 +30,8 @@ button {
   color: transparent;
 }
 button:focus {
-  transform: scale(1.05)
+  transform: scale(1.05);
+  -webkit-transform: scale(1.05);
 }
 [hidden] {
   display: none;
@@ -207,6 +208,7 @@ input[type=range] {
   height: 100%;
   text-align: center;
   transform: rotate(270deg);
+  -webkit-transform: rotate(270deg);
   position: relative;
 }
 #mode label {
@@ -230,9 +232,11 @@ label[for=paint] {
   display: block;
   background-repeat: no-repeat;
   transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
 }
 label[for=copy] {
   transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
   background-repeat: no-repeat;
 }
 #current {
