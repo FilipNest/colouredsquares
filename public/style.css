@@ -148,10 +148,10 @@ form {
 /* Bottom */
 
 #bottom {
-  padding: 1%;
-  box-sizing: border-box;
-  width: 100%;
   height: 20%;
+  top: -20%;
+  padding:1%;
+  position: relative;
 }
 #sliders {
   height: 100%;
@@ -270,6 +270,8 @@ label[for=copy] {
 }
 .current-wrapper {
   margin-left: 10%;
+  padding:10%;
+  box-sizing: border-box;
 }
 .active {
   border-color: white;

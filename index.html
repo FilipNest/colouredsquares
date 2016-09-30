@@ -50,45 +50,9 @@ initial-scale=1.0">
 
         </fieldset>
 
-        <fieldset id="bottom">
-
-          <legend class="visually-hidden">Colour:</legend>
-
-          <div id="sliders" style="display:none">
-
-            <label class="visually-hidden" for="slide-red">Red</label>
-            <input id="slide-red" value="{{req.query.redSlider}}" type="range" name="slide-red" min="0" max="256" />
-            <label class="visually-hidden" for="slide-green">Green</label>
-            <input id="slide-green" value="{{req.query.greenSlider}}" type="range" name="slide-green" min="0" max="256" />
-            <label class="visually-hidden" for="slide-blue">Blue</label>
-            <input id="slide-blue" value="{{req.query.blueSlider}}" type="range" name="slide-blue" min="0" max="256" />
-
-          </div>
-
-          <div id="text-colours">
-
-            <label class="visually-hidden" for="red">Red</label>
-            <input style="color:red;" value="{{req.query.redSlider}}" id="red" type="number" name="red" min="0" max="256" />
-            <label class="visually-hidden" for="green">Green</label>
-            <input style="color:green;" value="{{req.query.greenSlider}}" id="green" type="number" name="green" min="0" max="256" />
-            <label class="visually-hidden" for="blue">Blue</label>
-            <input style="color:blue;" value="{{req.query.blueSlider}}" id="blue" type="number" name="blue" min="0" max="256" />
-
-          </div>
-
-        </fieldset>
-
-        <button id="refresh" name="refresh" value="refresh">Refresh</button>
-
       </div>
 
       <div id="right">
-
-        <div class="control-wrapper">
-
-
-
-        </div>
 
         <div class="mode-wrapper">
 
@@ -146,6 +110,36 @@ initial-scale=1.0">
         </div>
 
       </div>
+
+      <fieldset id="bottom">
+
+        <legend class="visually-hidden">Colour:</legend>
+
+        <div id="sliders" style="display:none">
+
+          <label class="visually-hidden" for="slide-red">Red</label>
+          <input id="slide-red" value="{{req.query.redSlider}}" type="range" name="slide-red" min="0" max="256" />
+          <label class="visually-hidden" for="slide-green">Green</label>
+          <input id="slide-green" value="{{req.query.greenSlider}}" type="range" name="slide-green" min="0" max="256" />
+          <label class="visually-hidden" for="slide-blue">Blue</label>
+          <input id="slide-blue" value="{{req.query.blueSlider}}" type="range" name="slide-blue" min="0" max="256" />
+
+        </div>
+
+        <div id="text-colours">
+
+          <label class="visually-hidden" for="red">Red</label>
+          <input style="color:red;" value="{{req.query.redSlider}}" id="red" type="number" name="red" min="0" max="256" />
+          <label class="visually-hidden" for="green">Green</label>
+          <input style="color:green;" value="{{req.query.greenSlider}}" id="green" type="number" name="green" min="0" max="256" />
+          <label class="visually-hidden" for="blue">Blue</label>
+          <input style="color:blue;" value="{{req.query.blueSlider}}" id="blue" type="number" name="blue" min="0" max="256" />
+
+        </div>
+
+      </fieldset>
+
+      <button id="refresh" name="refresh" value="refresh">Refresh</button>
 
     </form>
 
