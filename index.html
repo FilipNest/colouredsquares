@@ -62,12 +62,10 @@ initial-scale=1.0">
 
             <legend class="visually-hidden">Modes</legend>
 
-            <label for="paint">Paint
-              <input title="Paint mode" type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
-            </label>
-            <label for="copy">Copy to memory
-              <input title="Copy to memory mode" type="radio" name="mode" id="copy" value="copy" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
-            </label>
+            <label class="visually-hidden" for="paint">Paint</label>
+            <input title="Paint mode" type="radio" name="mode" id="paint" value="paint" {{#ifCond req.query.mode "paint"}} checked {{/ifCond}}/>
+            <label class="visually-hidden" for="copy">Copy to memory</label>
+            <input title="Copy to memory mode" type="radio" name="mode" id="copy" value="copy" {{#ifCond req.query.mode "copy-inner"}}checked{{/ifCond}}/>
 
           </fieldset>
 
@@ -145,8 +143,8 @@ initial-scale=1.0">
           <input style="color:blue;" value="{{req.query.blueSlider}}" id="blue" type="number" name="blue" min="0" max="256" />
 
         </div>
-        
-      <button id="refresh" name="refresh" value="refresh">Refresh</button>
+
+        <button id="refresh" name="refresh" value="refresh">Refresh</button>
 
       </fieldset>
 
