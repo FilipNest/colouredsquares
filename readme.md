@@ -1,7 +1,3 @@
-**Note: There is a pull request (https://github.com/FilipNest/colouredsquares/pull/1) that fixes a possible server bug if JS is enabled, the websocket connection is supported, works and then fails. This is not merged in as it was sadly made 8 hours after the A List Apart 10k competition deadline. It'll be merged in at a later date.**
-
-A hopefully working version of the app is available at http://10k.colouredsquares.com
-
 # Coloured squares
 
 Coloured Squares is a social network, art project and web-based controller. This version was created from scratch for the [A List Apart 10kb challenge](https://a-k-apart.com/).
