@@ -1,5 +1,8 @@
 {
   "name": "colouredsquares",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "version": "4.0.0",
   "description": "A social network/art project/web controller",
   "main": "index.js",
