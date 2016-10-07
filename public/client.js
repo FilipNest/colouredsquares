@@ -243,6 +243,32 @@ if (window.WebSocket) {
 
       var square = event.currentTarget.value;
 
+      // Light square on client side, fallback if socket stuff breaks
+
+      try {
+
+        var sessionColour = window.sessionSquarefieldName.split("-");
+        
+        lightSquare({
+          id: parseInt(square) + 1,
+          colour: {
+            red: red,
+            green: green,
+            blue: blue
+          },
+          author: {
+            red: sessionColour[0],
+            green: sessionColour[1],
+            blue: sessionColour[2]
+          }
+        });
+
+      } catch(e){
+        
+        console.log(e);
+        
+      }
+      
       var string = "square=" + square + "&red=" + red + "&green=" + green + "&blue=" + blue;
 
       var http = new XMLHttpRequest();
