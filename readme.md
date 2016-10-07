@@ -1,3 +1,5 @@
+Note: This master branch is currently static until the end of October 2016 when the A List Apart 10k competition finishes. New changes are going into the develop branch.
+
 # Coloured squares
 
 Coloured Squares is a social network, art project and web-based controller. This version was created from scratch for the [A List Apart 10kb challenge](https://a-k-apart.com/).
