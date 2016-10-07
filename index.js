@@ -5,7 +5,7 @@ global.cs = {};
 cs.config = {
   "squarefieldSize": 16,
   "dbFile": "squarefields.db",
-  "port": process.env.port || 1337,
+  "port": process.env.port || 80,
   "sessionHours": 1,
   "secret": "colouredsquares"
 };
@@ -687,13 +687,12 @@ app.use("/:colour?", function (req, res, next) {
 
 });
 
+cs.source = fs.readFileSync(__dirname + "/index.html", "utf8");
+cs.template = Handlebars.compile(cs.source);
+
 // Getting squarefield
 
 app.get("/:colour?", function (req, res) {
-
-  var source = fs.readFileSync(__dirname + "/index.html", "utf8");
-
-  var template = Handlebars.compile(source);
 
   if (req.query.format && req.query.format.toUpperCase() === "JSON") {
 
@@ -703,7 +702,7 @@ app.get("/:colour?", function (req, res) {
 
     var minify = require('html-minifier').minify;
 
-    var output = template({
+    var output = cs.template({
       field: formatField(req.squarefieldEntity),
       req: req
     });
