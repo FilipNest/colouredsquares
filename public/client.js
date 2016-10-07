@@ -135,8 +135,18 @@ if (window.WebSocket) {
   document.getElementById("refresh").style.display = "none";
 
   var connectSocket = function () {
-
-    var websocket = new WebSocket("ws://" + document.location.host);
+    
+    var websocket;
+    
+    if(window.location.protocol === "https:"){
+      
+      websocket = new WebSocket("wss://" + document.location.host);
+      
+    } else {
+      
+      websocket = new WebSocket("ws://" + document.location.host);
+      
+    }
 
     websocket.onmessage = function (evt) {
 

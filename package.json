@@ -1,12 +1,15 @@
 {
   "name": "colouredsquares",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "version": "4.0.0",
   "description": "A social network/art project/web controller",
-  "main": "cs.js",
+  "main": "index.js",
   "author": "FilipNest",
   "license": "ISC",
   "scripts": {
-    "start": "node cs.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
