@@ -8,6 +8,8 @@ Each squarefield has 16 squares. These can be lit up in any of the 16 million co
 
 ## How do I use it?
 
+### Live on the site
+
 If you head over to a server it's hosted on (coloured-squares-10kapart2016.azurewebsites.net for example) you can light squares, change your colour and explore and light up colours on any of the 16 million squarefields.
 
 As each colour is an id of 3 numbers from 0-255, a square can be used to send a lot of information of various types. Coloured Squares comes with an API for this purpose.
