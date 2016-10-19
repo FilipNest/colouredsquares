@@ -6,7 +6,7 @@ Coloured Squares is made up of 16 million or so squarefields, each one is asigne
 
 Each squarefield has 16 squares. These can be lit up in any of the 16 million colours and also get a stamp saying who lit it up (colour) and when (a slowly disolving border). Buttons can be used to copy square and author colours, transport to new squarefields and go home/view home notifications of who's been lighting up your home squarefield and how.
 
-## What is it for?
+## How do I use it?
 
 If you head over to a server it's hosted on (coloured-squares-10kapart2016.azurewebsites.net for example) you can light squares, change your colour and explore and light up colours on any of the 16 million squarefields.
 
